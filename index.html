@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kế hoạch du lịch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF4F7;
+    --paper:#FFFFFF;
+    --ink:#1C1218;
+    --muted:#8C7280;
+    --line:#F1DEE7;
+    --moss:#D6336C;
+    --moss-deep:#A61E4D;
+    --moss-soft:#FBE1EC;
+    --rose:#1C1218;
+    --rose-soft:#EFE3EA;
+    --plum:#7A2946;
+    --plum-soft:#F3E3EA;
+    --sky:#2B1F27;
+    --sky-deep:#171014;
+    --sand:#FAEAF1;
+    --radius:14px;
+    --font-body:'Be Vietnam Pro',-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-display:'Lora',Georgia,'Times New Roman',serif;
+    --font-mono:'IBM Plex Mono','SF Mono',Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:15px;
+    line-height:1.5;
+    padding:28px 16px 80px;
+  }
+  .wrap{max-width:1120px;margin:0 auto}
+
+  /* ---------- Header ---------- */
+  .eyebrow{
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--moss);font-weight:600;margin-bottom:6px;
+  }
+  .title-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 18px}
+  #tripTitle{
+    font-family:var(--font-display);font-weight:600;font-size:clamp(28px,5vw,40px);
+    color:var(--ink);border:none;background:transparent;outline:none;
+    width:100%;max-width:640px;padding:2px 0;
+    border-bottom:2px dashed transparent;transition:border-color .2s;
+  }
+  #tripTitle:hover,#tripTitle:focus{border-bottom-color:var(--line)}
+  .save-badge{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:12.5px;color:var(--muted);white-space:nowrap;
+  }
+  .save-badge .dot{
+    width:8px;height:8px;border-radius:50%;background:#D9BFCC;transition:background .3s;
+  }
+  .save-badge.saved .dot{background:var(--moss)}
+  .lede{color:var(--muted);margin-top:8px;max-width:640px}
+
+  /* ---------- Luggage tag section headers (signature) ---------- */
+  .tag{
+    position:relative;display:inline-flex;align-items:center;gap:9px;
+    background:var(--ink);color:#fff;
+    font-size:13px;font-weight:600;letter-spacing:.06em;
+    padding:9px 18px 9px 30px;margin-bottom:14px;
+    clip-path:polygon(16px 0,100% 0,100% 100%,16px 100%,0 50%);
+    border-radius:4px;
+  }
+  .tag::before{
+    content:"";position:absolute;left:13px;top:50%;transform:translateY(-50%);
+    width:7px;height:7px;border-radius:50%;background:var(--bg);
+  }
+  .tag.rose{background:var(--rose)}
+  .tag.moss{background:var(--moss)}
+  .tag.sky{background:var(--sky)}
+  .tag .paid-chip{
+    background:var(--moss);font-size:11px;font-weight:600;
+    padding:2px 9px;border-radius:99px;letter-spacing:.06em;
+  }
+  .tag .tag-icon{font-size:14px;line-height:1}
+
+  .mini-fx{
+    display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 22px;
+    padding:16px 18px;border-bottom:1px solid var(--line);
+  }
+  .mini-fx .fx-rate{width:150px}
+  .mini-fx .fx-status{margin-top:0;padding-bottom:2px}
+  .mini-fx .fx-fetch{background:var(--sky)}
+  .mini-fx .fx-fetch:hover{background:var(--sky-deep)}
+  .hotel-info{
+    padding:16px 18px;border-bottom:1px solid var(--line);background:#FBF1F6;
+  }
+  .hotel-info-title{
+    font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--moss-deep);margin-bottom:10px;
+  }
+  .hotel-fields{display:flex;flex-wrap:wrap;gap:12px 20px}
+  .hotel-fields .fx-field{flex:1;min-width:220px}
+  .hotel-fields .fx-field.hotel-addr{flex:1.6;min-width:260px}
+  .hotel-fields input{
+    width:100%;font-family:var(--font-body);font-size:14.5px;color:var(--ink);
+    border:1px solid var(--line);border-radius:9px;background:#fff;
+    padding:9px 12px;outline:none;transition:border-color .15s,box-shadow .15s;
+  }
+  .hotel-fields input:focus{border-color:var(--moss);box-shadow:0 0 0 3px var(--moss-soft)}
+  .hotel-fields input::placeholder{color:#C4A9B7}
+  .hotel-fields .fx-field.hotel-dates{flex:none;min-width:0}
+  .hotel-fields .fx-field.hotel-dates input{width:160px}
+  .hotel-fields .fx-field.hotel-stay{flex:none;min-width:0}
+  .stay-badge{
+    display:inline-flex;align-items:center;min-height:39px;
+    font-family:var(--font-mono);font-size:14px;font-weight:500;
+    background:var(--ink);color:#FF8FBB;
+    border-radius:9px;padding:8px 14px;white-space:nowrap;
+  }
+  .stay-badge.err{
+    background:#FBEFEF;color:#C25454;
+    font-family:var(--font-body);font-size:13px;font-weight:500;
+  }
+  td.vnd.sky-vnd{color:var(--sky-deep)}
+  tfoot td.vnd-total.sky-vnd{color:var(--sky-deep)}
+  .grand-card.sky-big{background:var(--sky);border-color:var(--sky);color:#fff}
+  .grand-card.sky-big .g-label{color:#C9B3C0}
+  .grand-card.sky-big .g-value{color:#FF8FBB}
+
+  section{margin-top:44px}
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:0 1px 3px rgba(28,18,24,.05);
+  }
+
+  /* ---------- Currency bar ---------- */
+  .fx-card{
+    display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 26px;
+    padding:18px 20px;margin-top:22px;
+  }
+  .fx-field{display:flex;flex-direction:column;gap:6px}
+  .fx-field label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+  select,.fx-rate{
+    font-family:var(--font-body);font-size:15px;color:var(--ink);
+    border:1px solid var(--line);border-radius:9px;background:#fff;
+    padding:9px 12px;outline:none;transition:border-color .15s,box-shadow .15s;
+  }
+  .fx-rate{font-family:var(--font-mono);width:180px}
+  select:focus,.fx-rate:focus{border-color:var(--moss);box-shadow:0 0 0 3px var(--moss-soft)}
+  .fx-hint{font-size:13px;color:var(--muted);flex:1;min-width:220px;padding-bottom:9px}
+  .fx-eq{font-family:var(--font-mono);font-size:14px;color:var(--ink);padding-bottom:10px;white-space:nowrap}
+  .fx-fetch{
+    border:none;background:var(--moss);color:#fff;
+    font-family:var(--font-body);font-size:14px;font-weight:600;
+    padding:10px 16px;border-radius:9px;cursor:pointer;white-space:nowrap;
+    transition:background .15s;
+  }
+  .fx-fetch:hover{background:var(--moss-deep)}
+  .fx-fetch:disabled{opacity:.65;cursor:wait}
+  .fx-status{width:100%;font-size:12.5px;color:var(--muted);margin-top:-4px}
+  .fx-status.ok{color:var(--moss-deep)}
+  .fx-status.err{color:#C25454}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .fx-fetch .spin{display:inline-block;animation:spin 1s linear infinite}
+
+  /* ---------- Itinerary table ---------- */
+  .section-note{font-size:13.5px;color:var(--muted);margin:-4px 0 14px;max-width:640px}
+  .table-scroll{overflow-x:auto;border-radius:var(--radius)}
+  table{border-collapse:collapse;width:100%;min-width:1060px}
+  table.cash-table{min-width:780px}
+  table.booking-table{min-width:920px}
+  thead th{
+    font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;
+    text-align:left;padding:13px 12px;border-bottom:1.5px solid var(--line);
+    background:#FDF8FA;white-space:nowrap;
+  }
+  thead th.num,tbody td.num,tfoot td.num{text-align:right}
+  tbody td{border-bottom:1px solid var(--line);padding:4px 6px;vertical-align:middle}
+  tbody tr:hover{background:#FCF6F9}
+  td input{
+    width:100%;border:1px solid transparent;border-radius:7px;background:transparent;
+    font-family:var(--font-body);font-size:14.5px;color:var(--ink);
+    padding:8px 8px;outline:none;transition:border-color .15s,background .15s;
+  }
+  td input:hover{background:#F9EFF4}
+  td input:focus{border-color:var(--moss);background:#fff;box-shadow:0 0 0 3px var(--moss-soft)}
+  td input.cost{font-family:var(--font-mono);text-align:right}
+  td input::placeholder{color:#C4A9B7}
+  td.vnd{
+    font-family:var(--font-mono);font-size:14px;text-align:right;
+    color:var(--moss-deep);font-weight:500;white-space:nowrap;padding-right:14px;
+  }
+  td.vnd.empty{color:#C4A9B7;font-weight:400}
+  .del-btn{
+    border:none;background:transparent;color:#CBB2BF;font-size:17px;line-height:1;
+    cursor:pointer;padding:7px 9px;border-radius:7px;transition:color .15s,background .15s;
+  }
+  .del-btn:hover{color:#C25454;background:#FBEFEF}
+  tfoot td{
+    padding:13px 12px;border-top:2px solid var(--ink);
+    font-weight:600;background:var(--sand);white-space:nowrap;
+  }
+  tfoot td.num,tfoot td.vnd-total{font-family:var(--font-mono);text-align:right}
+  tfoot td.vnd-total{color:var(--moss-deep);padding-right:14px}
+  .add-row{
+    display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+    border:1.5px dashed var(--moss);color:var(--moss);background:transparent;
+    font-family:var(--font-body);font-size:14px;font-weight:600;
+    padding:9px 18px;border-radius:10px;cursor:pointer;
+    transition:background .15s,color .15s;
+  }
+  .add-row:hover{background:var(--moss-soft)}
+
+  .grand{
+    display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;
+  }
+  .grand-card{
+    flex:1;min-width:230px;background:var(--paper);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px 18px;
+  }
+  .grand-card .g-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+  .grand-card .g-value{font-family:var(--font-mono);font-size:22px;font-weight:500;margin-top:4px}
+  .grand-card.vnd-big{background:var(--ink);border-color:var(--ink);color:#fff}
+  .grand-card.vnd-big .g-label{color:#C79FB2}
+  .grand-card.vnd-big .g-value{color:#FF8FBB}
+
+  /* ---------- Packing lists (tabs) ---------- */
+  .pack-shell{padding:0;overflow:hidden;margin-top:6px}
+  .pack-tabs{display:grid;grid-template-columns:repeat(3,1fr)}
+  .pack-tabs.two{grid-template-columns:repeat(2,1fr)}
+  .pack-tab{
+    appearance:none;-webkit-appearance:none;border:none;background:transparent;
+    font-family:var(--font-body);text-align:left;cursor:pointer;
+    padding:14px 16px 12px;border-bottom:2.5px solid var(--line);
+    display:flex;flex-direction:column;gap:7px;transition:background .15s;
+  }
+  .pack-tab + .pack-tab{border-left:1px solid var(--line)}
+  .pack-tab:hover{background:#FCF6F9}
+  .pack-tab:focus-visible{outline:2px solid var(--moss);outline-offset:-2px}
+  .pt-head{display:flex;align-items:center;gap:7px;font-weight:600;font-size:14px;color:var(--ink)}
+  .pt-icon{font-size:16px;line-height:1}
+  .pt-count{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+  .pt-bar{display:block;height:6px;border-radius:99px;background:#F3E4EC;overflow:hidden}
+  .pt-fill{display:block;height:100%;width:0%;border-radius:99px;transition:width .35s ease}
+  .pack-tab.moss .pt-fill{background:var(--moss)}
+  .pack-tab.rose .pt-fill{background:var(--rose)}
+  .pack-tab.plum .pt-fill{background:var(--plum)}
+  .pack-tab.active{border-bottom-width:3.5px;padding-bottom:11px}
+  .pack-tab.moss.active{border-bottom-color:var(--moss);background:var(--moss-soft)}
+  .pack-tab.rose.active{border-bottom-color:var(--rose);background:var(--rose-soft)}
+  .pack-tab.plum.active{border-bottom-color:var(--plum);background:var(--plum-soft)}
+  .pack-card{padding:20px 20px 22px}
+  .pack-panel{display:none}
+  .pack-panel.active{display:block}
+  ul.pack-list{list-style:none}
+  .pack-item{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 4px;border-bottom:1px dashed var(--line);
+  }
+  .pack-item:last-child{border-bottom:none}
+  .pack-item input[type=checkbox]{
+    appearance:none;-webkit-appearance:none;flex:none;
+    width:20px;height:20px;border:1.5px solid #CBB2BF;border-radius:6px;background:#fff;
+    cursor:pointer;position:relative;transition:background .15s,border-color .15s;
+  }
+  .pack-item input[type=checkbox]:checked{background:var(--moss);border-color:var(--moss)}
+  .pack-card.rose .pack-item input[type=checkbox]:checked{background:var(--rose);border-color:var(--rose)}
+  .pack-item input[type=checkbox]:checked::after{
+    content:"";position:absolute;left:6px;top:2.5px;width:5px;height:10px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg);
+  }
+  .pack-item input[type=checkbox]:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+  .pack-item .p-name{
+    flex:1;border:none;background:transparent;outline:none;
+    font-family:var(--font-body);font-size:14.5px;color:var(--ink);padding:4px 2px;
+    border-bottom:1px solid transparent;
+  }
+  .pack-item .p-name:focus{border-bottom-color:var(--moss)}
+  .pack-item.done .p-name{color:#B39AA8;text-decoration:line-through}
+  .pack-item .p-note{
+    flex:none;width:34%;border:none;background:transparent;outline:none;
+    font-size:12.5px;color:var(--muted);font-style:italic;padding:4px 2px;
+    border-bottom:1px solid transparent;
+  }
+  .pack-item .p-note:focus{border-bottom-color:var(--moss)}
+  .pack-item .p-note::placeholder{color:#D7C2CD;font-style:italic}
+  .pack-empty{font-size:13.5px;color:var(--muted);padding:6px 2px 2px}
+  .pack-add{display:flex;gap:8px;margin-top:14px}
+  .pack-add input{
+    flex:1;border:1px solid var(--line);border-radius:9px;background:#fff;
+    font-family:var(--font-body);font-size:14px;padding:9px 12px;outline:none;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .pack-add input:focus{border-color:var(--moss);box-shadow:0 0 0 3px var(--moss-soft)}
+  .pack-add button{
+    border:none;background:var(--moss);color:#fff;font-family:var(--font-body);
+    font-size:14px;font-weight:600;padding:9px 16px;border-radius:9px;cursor:pointer;
+    transition:background .15s;white-space:nowrap;
+  }
+  .pack-add button:hover{background:var(--moss-deep)}
+  .pack-card.rose .pack-add input:focus{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-soft)}
+  .pack-card.rose .pack-add button{background:var(--rose)}
+  .pack-card.rose .pack-add button:hover{background:#3A2B34}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .chips .chip{
+    border:1px solid var(--line);background:#FDF8FA;color:var(--muted);
+    font-family:var(--font-body);font-size:12.5px;padding:5px 11px;border-radius:99px;
+    cursor:pointer;transition:all .15s;
+  }
+  .chips .chip:hover{border-color:var(--moss);color:var(--moss);background:var(--moss-soft)}
+  .pack-card.rose .chips .chip:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-soft)}
+  .tag.plum{background:var(--plum)}
+  .pack-card.plum .pack-item input[type=checkbox]:checked{background:var(--plum);border-color:var(--plum)}
+  .pack-card.plum .pack-add input:focus{border-color:var(--plum);box-shadow:0 0 0 3px var(--plum-soft)}
+  .pack-card.plum .pack-add button{background:var(--plum)}
+  .pack-card.plum .pack-add button:hover{background:#5E1F36}
+  .pack-card.plum .chips .chip:hover{border-color:var(--plum);color:var(--plum);background:var(--plum-soft)}
+  .chips-label{font-size:11.5px;color:#C4A9B7;letter-spacing:.05em;text-transform:uppercase;margin-top:16px;font-weight:600}
+
+  /* ---------- Grand trip total ---------- */
+  .total-card{padding:4px 20px}
+  .total-row{
+    display:flex;justify-content:space-between;align-items:center;gap:14px;
+    padding:13px 0;border-bottom:1px dashed var(--line);font-size:14.5px;
+  }
+  .total-row:last-of-type{border-bottom:none}
+  .total-row .t-name{display:flex;align-items:center;gap:9px}
+  .total-row .t-amt{
+    font-family:var(--font-mono);font-weight:500;color:var(--moss-deep);white-space:nowrap;
+  }
+  .total-row .t-amt.miss{color:#C4A9B7;font-family:var(--font-body);font-size:13px;font-weight:400}
+  .total-warn{font-size:12.5px;color:#C25454;padding:2px 0 13px;display:none}
+  .fund-strip{
+    margin:6px 0 16px;border:1.5px dashed var(--moss);background:var(--moss-soft);
+    padding:11px 14px;border-radius:10px;font-size:13.5px;
+  }
+  .fund-strip b{font-family:var(--font-mono);font-weight:500;color:var(--moss-deep)}
+  .fund-fx{font-family:var(--font-mono);color:var(--muted);font-size:12.5px}
+  .fund-status{margin-top:3px;font-weight:500}
+  .fund-status.ok{color:var(--moss-deep)}
+  .fund-status.short{color:#C25454}
+  .fund-note{margin-top:4px;font-size:12px;color:var(--muted)}
+  .grand-card.moss-big{background:var(--moss);border-color:var(--moss);color:#fff}
+  .grand-card.moss-big .g-label{color:#F7C9DB}
+  .grand-card.moss-big .g-value{color:#fff}
+
+  button:focus-visible,select:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+
+  @media (max-width:640px){
+    body{padding:20px 12px 60px}
+    .fx-card{padding:16px}
+    .pack-item .p-note{width:40%}
+    .pack-tab{padding:11px 10px 9px}
+    .pack-tab.active{padding-bottom:8px}
+    .pt-head{font-size:13px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;animation:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <header>
+    <div class="eyebrow">Sổ tay du lịch</div>
+    <div class="title-row">
+      <input id="tripTitle" value="Chuyến đi của mình" aria-label="Tên chuyến đi" spellcheck="false">
+      <span class="save-badge" id="saveBadge"><span class="dot"></span><span id="saveText">Lưu tự động</span></span>
+    </div>
+    <p class="lede">Lên lịch trình, theo dõi chi phí kèm quy đổi sang tiền Việt, và kiểm soát đồ skincare, makeup cần mang theo.</p>
+  </header>
+
+  <!-- ============ CURRENCY ============ -->
+  <div class="card fx-card">
+    <div class="fx-field">
+      <label for="fxCurrency">Loại ngoại tệ</label>
+      <select id="fxCurrency" aria-label="Chọn loại ngoại tệ">
+        <option value="USD">USD – Đô la Mỹ ($)</option>
+        <option value="GBP">GBP – Bảng Anh (£)</option>
+        <option value="EUR">EUR – Euro (€)</option>
+        <option value="JPY">JPY – Yên Nhật (¥)</option>
+        <option value="KRW">KRW – Won Hàn (₩)</option>
+        <option value="CNY">CNY – Nhân dân tệ (¥)</option>
+        <option value="THB">THB – Baht Thái (฿)</option>
+        <option value="SGD">SGD – Đô Singapore (S$)</option>
+        <option value="TWD">TWD – Đài tệ (NT$)</option>
+        <option value="MYR">MYR – Ringgit Malaysia (RM)</option>
+        <option value="AUD">AUD – Đô Úc (A$)</option>
+        <option value="HKD">HKD – Đô Hồng Kông (HK$)</option>
+      </select>
+    </div>
+    <div class="fx-field">
+      <label for="fxRate">Tỷ giá quy đổi</label>
+      <input type="number" min="0" step="any" class="fx-rate" id="fxRate" placeholder="Ví dụ: 26000" inputmode="decimal" aria-label="Tỷ giá quy đổi sang VNĐ">
+    </div>
+    <div class="fx-field">
+      <label>&nbsp;</label>
+      <button type="button" class="fx-fetch" id="fxFetchBtn">⟳ Lấy tỷ giá tự động</button>
+    </div>
+    <div class="fx-eq" id="fxEq">1 USD = ? VNĐ</div>
+    <div class="fx-hint">Nhấn «Lấy tỷ giá tự động» để cập nhật theo tỷ giá thị trường (mid-market, loại tỷ giá Wise hiển thị), hoặc tự nhập tay nếu muốn.</div>
+    <div class="fx-status" id="fxStatus" role="status"></div>
+  </div>
+
+  <!-- ============ ITINERARY ============ -->
+  <section>
+    <div class="tag moss"><span class="tag-icon">🗓</span> LỊCH TRÌNH &amp; CHI PHÍ</div>
+    <div class="card table-scroll">
+      <table aria-label="Bảng lịch trình chuyến đi">
+        <thead>
+          <tr>
+            <th style="width:19%">Hoạt động</th>
+            <th style="width:13%">Ngày</th>
+            <th style="width:15%">Địa điểm</th>
+            <th style="width:19%">Ghi chú</th>
+            <th class="num" style="width:10%">Chi phí chuyến đi</th>
+            <th class="num" style="width:10%">Chi phí trước chuyến đi</th>
+            <th class="num" style="width:12%">Quy đổi VNĐ</th>
+            <th style="width:2%"></th>
+          </tr>
+        </thead>
+        <tbody id="rowsBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">Tổng cộng</td>
+            <td class="num" id="totalTrip">0</td>
+            <td class="num" id="totalPre">0</td>
+            <td class="vnd-total" id="totalVnd">—</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <button class="add-row" id="addRowBtn" type="button">＋ Thêm hoạt động</button>
+
+    <div class="grand">
+      <div class="grand-card">
+        <div class="g-label">Tổng chi phí (ngoại tệ)</div>
+        <div class="g-value" id="grandFx">0 USD</div>
+      </div>
+      <div class="grand-card vnd-big">
+        <div class="g-label">Tổng chi phí quy đổi</div>
+        <div class="g-value" id="grandVnd">Chưa có tỷ giá</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BOOKINGS (PAID PACKAGE, GBP) ============ -->
+  <section>
+    <div class="tag sky"><span class="tag-icon">✈️🏨</span> GÓI VÉ MÁY BAY + KHÁCH SẠN <span class="paid-chip">✓ ĐÃ THANH TOÁN</span></div>
+    <p class="section-note">Vé máy bay và khách sạn được mua chung một gói nên chỉ cần ghi tổng chi phí của gói, không cần tách chi tiết. Mục này có tỷ giá riêng vì thanh toán bằng loại tiền khác với chi tiêu trong chuyến. Nếu có thêm khoản trả trước khác (bảo hiểm du lịch, đưa đón sân bay...), thêm dòng mới bên dưới.</p>
+    <div class="card">
+      <div class="mini-fx">
+        <div class="fx-field">
+          <label for="bkCurrency">Thanh toán bằng</label>
+          <select id="bkCurrency" aria-label="Loại tiền đã thanh toán">
+            <option value="GBP">GBP – Bảng Anh (£)</option>
+            <option value="USD">USD – Đô la Mỹ ($)</option>
+            <option value="EUR">EUR – Euro (€)</option>
+            <option value="JPY">JPY – Yên Nhật (¥)</option>
+            <option value="KRW">KRW – Won Hàn (₩)</option>
+            <option value="CNY">CNY – Nhân dân tệ (¥)</option>
+            <option value="THB">THB – Baht Thái (฿)</option>
+            <option value="SGD">SGD – Đô Singapore (S$)</option>
+            <option value="TWD">TWD – Đài tệ (NT$)</option>
+            <option value="MYR">MYR – Ringgit Malaysia (RM)</option>
+            <option value="AUD">AUD – Đô Úc (A$)</option>
+            <option value="HKD">HKD – Đô Hồng Kông (HK$)</option>
+          </select>
+        </div>
+        <div class="fx-field">
+          <label for="bkRate">Tỷ giá → VNĐ</label>
+          <input type="number" min="0" step="any" class="fx-rate" id="bkRate" placeholder="Ví dụ: 34000" inputmode="decimal" aria-label="Tỷ giá quy đổi sang VNĐ cho khoản đã thanh toán">
+        </div>
+        <div class="fx-field">
+          <label>&nbsp;</label>
+          <button type="button" class="fx-fetch" id="bkFetchBtn">⟳ Lấy tỷ giá tự động</button>
+        </div>
+        <div class="fx-status" id="bkStatus" role="status"></div>
+      </div>
+      <div class="hotel-info">
+        <div class="hotel-info-title">🏨 Thông tin khách sạn</div>
+        <div class="hotel-fields">
+          <div class="fx-field">
+            <label for="htName">Tên khách sạn</label>
+            <input id="htName" placeholder="Ví dụ: ibis Bangkok Riverside" aria-label="Tên khách sạn">
+          </div>
+          <div class="fx-field hotel-addr">
+            <label for="htAddress">Địa chỉ khách sạn</label>
+            <input id="htAddress" placeholder="Số nhà, đường, quận, thành phố" aria-label="Địa chỉ khách sạn">
+          </div>
+          <div class="fx-field hotel-dates">
+            <label for="htCheckin">Ngày check-in</label>
+            <input id="htCheckin" type="date" aria-label="Ngày check-in khách sạn">
+          </div>
+          <div class="fx-field hotel-dates">
+            <label for="htCheckout">Ngày check-out</label>
+            <input id="htCheckout" type="date" aria-label="Ngày check-out khách sạn">
+          </div>
+          <div class="fx-field hotel-stay">
+            <label>Số ngày lưu trú</label>
+            <div class="stay-badge" id="stayLength" role="status">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="booking-table" aria-label="Bảng gói vé máy bay và khách sạn đã thanh toán">
+          <thead>
+            <tr>
+              <th style="width:23%">Hạng mục</th>
+              <th style="width:17%">Nơi mua / nhà cung cấp</th>
+              <th style="width:13%">Ngày thanh toán</th>
+              <th class="num" style="width:12%">Chi phí (<span class="bookcur">GBP</span>)</th>
+              <th class="num" style="width:14%">Quy đổi VNĐ</th>
+              <th style="width:18%">Ghi chú</th>
+              <th style="width:3%"></th>
+            </tr>
+          </thead>
+          <tbody id="bkBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Tổng cộng</td>
+              <td class="num" id="bkTotalFx">—</td>
+              <td class="vnd-total sky-vnd" id="bkTotalVnd">—</td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <button class="add-row" id="addBkBtn" type="button">＋ Thêm khoản trả trước khác</button>
+
+    <div class="grand">
+      <div class="grand-card">
+        <div class="g-label">Tổng đã thanh toán (<span class="bookcur">GBP</span>)</div>
+        <div class="g-value" id="bkGrandFx">0 GBP</div>
+      </div>
+      <div class="grand-card sky-big">
+        <div class="g-label">Quy đổi sang tiền Việt</div>
+        <div class="g-value" id="bkGrandVnd">Chưa có tỷ giá</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CASH PREPARATION ============ -->
+  <section>
+    <div class="tag moss"><span class="tag-icon">💵</span> TIỀN MẶT DỰ TRÙ · VNĐ → <span class="curcode">THB</span></div>
+    <p class="section-note">Ghi lại các lần đổi tiền mặt trước chuyến đi: bỏ ra bao nhiêu VNĐ, nhận được bao nhiêu tiền mặt, tỷ giá thực tế sẽ tự tính. Loại ngoại tệ theo lựa chọn ở thanh tỷ giá phía trên.</p>
+    <div class="card table-scroll">
+      <table class="cash-table" aria-label="Bảng tiền mặt dự trù">
+        <thead>
+          <tr>
+            <th style="width:15%">Ngày đổi</th>
+            <th class="num" style="width:19%">Số VNĐ đã đổi</th>
+            <th class="num" style="width:19%">Nhận được (<span class="curcode">THB</span>)</th>
+            <th class="num" style="width:17%">Tỷ giá thực tế (₫/1 <span class="curcode">THB</span>)</th>
+            <th style="width:27%">Nơi đổi / ghi chú</th>
+            <th style="width:3%"></th>
+          </tr>
+        </thead>
+        <tbody id="cashBody"></tbody>
+        <tfoot>
+          <tr>
+            <td>Tổng cộng</td>
+            <td class="num" id="cashTotalVnd">—</td>
+            <td class="num" id="cashTotalFx">—</td>
+            <td class="num" id="cashAvgRate">—</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <button class="add-row" id="addCashBtn" type="button">＋ Thêm lần đổi tiền</button>
+
+    <div class="grand">
+      <div class="grand-card">
+        <div class="g-label">Tổng VNĐ đã bỏ ra</div>
+        <div class="g-value" id="cashGrandVnd">0 ₫</div>
+      </div>
+      <div class="grand-card vnd-big">
+        <div class="g-label">Tiền mặt mang theo</div>
+        <div class="g-value" id="cashGrandFx">0 THB</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GRAND TOTAL ============ -->
+  <section>
+    <div class="tag moss"><span class="tag-icon">💰</span> TỔNG CHI PHÍ CẢ CHUYẾN ĐI</div>
+    <p class="section-note">Tự động cộng hai khoản chi thật: gói vé máy bay + khách sạn và chi phí lịch trình, quy hết về VNĐ theo tỷ giá bạn đã nhập. Tiền mặt dự trù là nguồn tiền để chi trả cho lịch trình nên hiển thị riêng bên dưới, không cộng vào tổng để tránh đếm một khoản hai lần.</p>
+    <div class="card total-card">
+      <div class="total-row">
+        <span class="t-name">✈️🏨 Gói vé máy bay + khách sạn (<span class="bookcur">GBP</span> → VNĐ)</span>
+        <span class="t-amt" id="sumBk">—</span>
+      </div>
+      <div class="total-row">
+        <span class="t-name">🗓 Lịch trình &amp; chi phí (<span class="curcode">THB</span> → VNĐ)</span>
+        <span class="t-amt" id="sumRows">—</span>
+      </div>
+      <div class="total-warn" id="totalWarn" role="status"></div>
+      <div class="fund-strip">
+        <div class="fund-line">💵 Tiền mặt đã đổi: <b id="fundVnd">0 ₫</b> <span class="fund-fx" id="fundFx"></span></div>
+        <div class="fund-status" id="fundStatus" role="status"></div>
+        <div class="fund-note">Khoản này là nguồn tiền bạn sẽ dùng để chi cho lịch trình, nên không cộng vào tổng (cộng vào sẽ đếm cùng một cục tiền hai lần).</div>
+      </div>
+    </div>
+
+    <div class="grand">
+      <div class="grand-card vnd-big">
+        <div class="g-label">Tổng cả chuyến đi (VNĐ)</div>
+        <div class="g-value" id="grandAllVnd">0 ₫</div>
+      </div>
+      <div class="grand-card moss-big">
+        <div class="g-label">Tổng quy đổi (<span class="curcode">THB</span>)</div>
+        <div class="g-value" id="grandAllFx">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PACKING ============ -->
+  <section>
+    <div class="tag" style="background:var(--ink)"><span class="tag-icon">🧳</span> HÀNH LÝ CẦN MANG</div>
+    <p class="section-note">Ba nhóm đồ gọn trong một khung: chạm vào từng thẻ để chuyển nhóm. Thanh nhỏ trên mỗi thẻ cho biết tiến độ đóng gói của cả ba, dù bạn đang mở nhóm nào.</p>
+    <div class="card pack-shell">
+      <div class="pack-tabs" role="tablist" aria-label="Nhóm đồ hành lý">
+      <button class="pack-tab moss" id="tab-skincare" data-tab="skincare" role="tab" aria-selected="false" aria-controls="panel-skincare">
+        <span class="pt-head"><span class="pt-icon" aria-hidden="true">✨</span><span class="pt-name">Skincare</span></span>
+        <span class="pt-count" id="count-skincare">0/0</span>
+        <span class="pt-bar" role="progressbar" aria-label="Tiến độ đóng gói skincare"><span class="pt-fill" id="fill-skincare"></span></span>
+      </button>
+      <button class="pack-tab rose" id="tab-makeup" data-tab="makeup" role="tab" aria-selected="false" aria-controls="panel-makeup">
+        <span class="pt-head"><span class="pt-icon" aria-hidden="true">💄</span><span class="pt-name">Makeup</span></span>
+        <span class="pt-count" id="count-makeup">0/0</span>
+        <span class="pt-bar" role="progressbar" aria-label="Tiến độ đóng gói makeup"><span class="pt-fill" id="fill-makeup"></span></span>
+      </button>
+      <button class="pack-tab plum" id="tab-essentials" data-tab="essentials" role="tab" aria-selected="false" aria-controls="panel-essentials">
+        <span class="pt-head"><span class="pt-icon" aria-hidden="true">🎒</span><span class="pt-name">Đồ dùng</span></span>
+        <span class="pt-count" id="count-essentials">0/0</span>
+        <span class="pt-bar" role="progressbar" aria-label="Tiến độ đóng gói đồ dùng cần thiết"><span class="pt-fill" id="fill-essentials"></span></span>
+      </button>
+      </div>
+      <div class="pack-panel pack-card" id="panel-skincare" role="tabpanel" aria-labelledby="tab-skincare">
+        <ul class="pack-list" id="list-skincare"></ul>
+        <div class="pack-empty" id="empty-skincare">Chưa có món nào. Thêm món đầu tiên ở ô bên dưới, hoặc chọn nhanh từ gợi ý.</div>
+        <div class="pack-add">
+          <input id="input-skincare" placeholder="Ví dụ: kem chống nắng" aria-label="Thêm món skincare">
+          <button type="button" data-add="skincare">Thêm</button>
+        </div>
+        <div class="chips-label" id="chipslabel-skincare">Gợi ý nhanh</div>
+        <div class="chips" id="chips-skincare"></div>
+      </div>
+      <div class="pack-panel pack-card rose" id="panel-makeup" role="tabpanel" aria-labelledby="tab-makeup">
+        <ul class="pack-list" id="list-makeup"></ul>
+        <div class="pack-empty" id="empty-makeup">Chưa có món nào. Thêm món đầu tiên ở ô bên dưới, hoặc chọn nhanh từ gợi ý.</div>
+        <div class="pack-add">
+          <input id="input-makeup" placeholder="Ví dụ: son môi" aria-label="Thêm món makeup">
+          <button type="button" data-add="makeup">Thêm</button>
+        </div>
+        <div class="chips-label" id="chipslabel-makeup">Gợi ý nhanh</div>
+        <div class="chips" id="chips-makeup"></div>
+      </div>
+      <div class="pack-panel pack-card plum" id="panel-essentials" role="tabpanel" aria-labelledby="tab-essentials">
+        <ul class="pack-list" id="list-essentials"></ul>
+        <div class="pack-empty" id="empty-essentials">Chưa có món nào. Thêm món đầu tiên ở ô bên dưới, hoặc chọn nhanh từ gợi ý.</div>
+        <div class="pack-add">
+          <input id="input-essentials" placeholder="Ví dụ: pin dự phòng" aria-label="Thêm đồ dùng cần thiết">
+          <button type="button" data-add="essentials">Thêm</button>
+        </div>
+        <div class="chips-label" id="chipslabel-essentials">Gợi ý nhanh</div>
+        <div class="chips" id="chips-essentials"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THAILAND NOTEBOOK ============ -->
+  <section>
+    <div class="tag moss"><span class="tag-icon">🇹🇭</span> SỔ TAY THÁI LAN</div>
+    <p class="section-note">Ghi lại những món nên mua mang về, những nơi muốn ghé và những món nhất định phải ăn thử. Tick khi đã mua xong hoặc đã đến nơi, dùng ô ghi chú cho mẹo nhỏ như mua ở đâu, giá bao nhiêu, đi bằng gì.</p>
+    <div class="card pack-shell">
+      <div class="pack-tabs" role="tablist" aria-label="Sổ tay Thái Lan">
+      <button class="pack-tab moss" id="tab-shopping" data-tab="shopping" role="tab" aria-selected="false" aria-controls="panel-shopping">
+        <span class="pt-head"><span class="pt-icon" aria-hidden="true">🛍️</span><span class="pt-name">Mua mang về</span></span>
+        <span class="pt-count" id="count-shopping">0/0</span>
+        <span class="pt-bar" role="progressbar" aria-label="Tiến độ mua sắm"><span class="pt-fill" id="fill-shopping"></span></span>
+      </button>
+      <button class="pack-tab rose" id="tab-places" data-tab="places" role="tab" aria-selected="false" aria-controls="panel-places">
+        <span class="pt-head"><span class="pt-icon" aria-hidden="true">📍</span><span class="pt-name">Đi đâu chơi</span></span>
+        <span class="pt-count" id="count-places">0/0</span>
+        <span class="pt-bar" role="progressbar" aria-label="Tiến độ các nơi đã ghé"><span class="pt-fill" id="fill-places"></span></span>
+      </button>
+      <button class="pack-tab plum" id="tab-food" data-tab="food" role="tab" aria-selected="false" aria-controls="panel-food">
+        <span class="pt-head"><span class="pt-icon" aria-hidden="true">🍜</span><span class="pt-name">Ăn gì ngon</span></span>
+        <span class="pt-count" id="count-food">0/0</span>
+        <span class="pt-bar" role="progressbar" aria-label="Tiến độ các món đã ăn thử"><span class="pt-fill" id="fill-food"></span></span>
+      </button>
+      </div>
+      <div class="pack-panel pack-card" id="panel-shopping" role="tabpanel" aria-labelledby="tab-shopping">
+        <ul class="pack-list" id="list-shopping"></ul>
+        <div class="pack-empty" id="empty-shopping">Chưa có món nào trong danh sách mua sắm. Thêm món đầu tiên ở ô bên dưới, hoặc chọn nhanh từ gợi ý.</div>
+        <div class="pack-add">
+          <input id="input-shopping" placeholder="Ví dụ: xoài sấy dẻo" aria-label="Thêm món cần mua">
+          <button type="button" data-add="shopping">Thêm</button>
+        </div>
+        <div class="chips-label" id="chipslabel-shopping">Gợi ý nhanh</div>
+        <div class="chips" id="chips-shopping"></div>
+      </div>
+      <div class="pack-panel pack-card rose" id="panel-places" role="tabpanel" aria-labelledby="tab-places">
+        <ul class="pack-list" id="list-places"></ul>
+        <div class="pack-empty" id="empty-places">Chưa có địa điểm nào. Thêm nơi đầu tiên ở ô bên dưới, hoặc chọn nhanh từ gợi ý.</div>
+        <div class="pack-add">
+          <input id="input-places" placeholder="Ví dụ: chợ Chatuchak" aria-label="Thêm địa điểm muốn ghé">
+          <button type="button" data-add="places">Thêm</button>
+        </div>
+        <div class="chips-label" id="chipslabel-places">Gợi ý nhanh</div>
+        <div class="chips" id="chips-places"></div>
+      </div>
+      <div class="pack-panel pack-card plum" id="panel-food" role="tabpanel" aria-labelledby="tab-food">
+        <ul class="pack-list" id="list-food"></ul>
+        <div class="pack-empty" id="empty-food">Chưa có món nào. Thêm món đầu tiên ở ô bên dưới, hoặc chọn nhanh từ gợi ý.</div>
+        <div class="pack-add">
+          <input id="input-food" placeholder="Ví dụ: xôi xoài" aria-label="Thêm món muốn ăn thử">
+          <button type="button" data-add="food">Thêm</button>
+        </div>
+        <div class="chips-label" id="chipslabel-food">Gợi ý nhanh</div>
+        <div class="chips" id="chips-food"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- State ---------------- */
+  var STORAGE_KEY = "ke-hoach-du-lich-v1";
+  var state = {
+    title: "Chuyến đi của mình",
+    currency: "THB",
+    rate: null,
+    rows: [],
+    cash: [],
+    bookings: [],
+    bkCurrency: "GBP",
+    bkRate: null,
+    hotel: { name:"", address:"", checkin:"", checkout:"" },
+    skincare: [],
+    makeup: [],
+    essentials: [],
+    activePack: "skincare",
+    packSeed1: false,
+    packSeed2: false,
+    shopping: [],
+    places: [],
+    food: [],
+    activeNote: "shopping"
+  };
+  /* Ưu tiên bộ nhớ Claude (khi chạy trong Claude.ai), nếu không có thì dùng
+     localStorage của trình duyệt (khi host trên web, ví dụ GitHub Pages) */
+  var hasClaudeStorage = (typeof window.storage !== "undefined" && !!window.storage);
+  var hasLocalStorage = false;
+  try{
+    var __t = "__khdl_test__";
+    window.localStorage.setItem(__t, "1");
+    window.localStorage.removeItem(__t);
+    hasLocalStorage = true;
+  }catch(e){ hasLocalStorage = false; }
+  var storageAvailable = hasClaudeStorage || hasLocalStorage;
+
+  var SUGGESTIONS = {
+    skincare: ["Sữa rửa mặt","Toner","Kem chống nắng","Kem dưỡng ẩm","Serum","Mặt nạ","Tẩy trang","Dưỡng môi","Xịt khoáng"],
+    makeup: ["Kem nền / Cushion","Son môi","Mascara","Phấn phủ","Kẻ mày","Má hồng","Kẻ mắt","Che khuyết điểm","Cọ trang điểm","Lens (kính áp tròng)","Nước rửa lens","Thuốc nhỏ mắt"],
+    essentials: ["Hộ chiếu / giấy tờ","Sạc điện thoại","Pin dự phòng","Ổ cắm chuyển đổi","Thuốc cá nhân","Bàn chải & kem đánh răng","Kính râm","Ô / áo mưa","Dép đi trong nhà","Tai nghe","Bình nước","Túi đựng đồ bẩn","Máy sấy tóc","Máy duỗi tóc"],
+    shopping: ["Xoài sấy dẻo","Dầu gió / dầu hít","Rong biển Tao Kae Noi","Trà sữa Thái (gói pha)","Kem đánh răng thảo dược","Mỹ phẩm Srichand / Mistine","Túi NaRaYa","Quần họa tiết voi","Snack 7-Eleven","Nước hoa khô","Sầu riêng sấy giòn","Kẹo me / me sấy","Mực rim Bento","Bánh dừa nướng","Mì MAMA (mì Thái)","Gia vị lẩu Tom Yum","Muối ớt chấm Thái","Dầu cù là Tiger Balm","Xà phòng thảo dược Madame Heng","Trà Thái ChaTraMue","Cà phê Thái hòa tan","Khăn lụa Jim Thompson","Móc khóa / lưu niệm voi","Lăn nách Thái"],
+    places: ["Chợ Chatuchak","Wat Arun","Wat Pho","Hoàng cung (Grand Palace)","ICONSIAM","Chinatown Yaowarat","Chợ đêm Jodd Fairs","Khao San Road","Terminal 21","Chợ nổi Damnoen Saduak"],
+    food: ["Pad Thái","Tom Yum","Som Tam (gỏi đu đủ)","Xôi xoài","Hủ tiếu thuyền (Boat Noodles)","Cơm gà Khao Man Gai","Cà ri xanh","Moo Ping (thịt xiên nướng)","Bánh dừa Khanom Krok","Kem dừa","Trà sữa Thái chính gốc","Roti chuối","Trứng chiên hàu (Hoi Tod)","Trái cây lề đường"]
+  };
+
+  var DONE_LABELS = {
+    skincare: "đã cho vào vali",
+    makeup: "đã cho vào vali",
+    essentials: "đã cho vào vali",
+    shopping: "đã mua",
+    places: "đã đến",
+    food: "đã ăn thử"
+  };
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+  /* ---------------- Formatting ---------------- */
+  var vndFmt = new Intl.NumberFormat("vi-VN");
+  function fmtVND(n){ return vndFmt.format(Math.round(n)) + " ₫"; }
+  function fmtFx(n){
+    return new Intl.NumberFormat("vi-VN",{maximumFractionDigits:2}).format(n);
+  }
+  function num(v){
+    var n = parseFloat(v);
+    return isFinite(n) ? n : 0;
+  }
+
+  /* ---------------- Persistence ---------------- */
+  var saveTimer = null;
+  var badge = document.getElementById("saveBadge");
+  var saveText = document.getElementById("saveText");
+
+  function scheduleSave(){
+    if(saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(doSave, 500);
+  }
+  async function doSave(){
+    if(!storageAvailable){
+      saveText.textContent = "Lưu tạm trong phiên này";
+      return;
+    }
+    try{
+      var json = JSON.stringify(state);
+      if(hasClaudeStorage){
+        var res = await window.storage.set(STORAGE_KEY, json);
+        if(!res) throw new Error("save failed");
+      }else{
+        window.localStorage.setItem(STORAGE_KEY, json);
+      }
+      badge.classList.add("saved");
+      saveText.textContent = "Đã lưu tự động";
+    }catch(e){
+      saveText.textContent = "Không lưu được, thử lại sau";
+    }
+  }
+  async function doLoad(){
+    if(!storageAvailable) return;
+    try{
+      var raw = null;
+      if(hasClaudeStorage){
+        var res = await window.storage.get(STORAGE_KEY);
+        raw = (res && res.value) ? res.value : null;
+      }else{
+        raw = window.localStorage.getItem(STORAGE_KEY);
+      }
+      if(raw){
+        var data = JSON.parse(raw);
+        if(data && typeof data === "object"){
+          state.title = typeof data.title === "string" ? data.title : state.title;
+          state.currency = typeof data.currency === "string" ? data.currency : state.currency;
+          state.rate = (typeof data.rate === "number" && isFinite(data.rate)) ? data.rate : null;
+          state.rows = Array.isArray(data.rows) ? data.rows : [];
+          state.cash = Array.isArray(data.cash) ? data.cash : [];
+          state.bookings = (Array.isArray(data.bookings) ? data.bookings : []).map(function(r){
+            if(!r) return null;
+            var hasData = !!(r.name || r.vendor || r.date || r.cost || r.note);
+            if(!hasData) return null; /* bỏ các dòng trống từ phiên bản cũ */
+            var name = r.name || "";
+            if(!name && r.type === "flight") name = "Vé máy bay";
+            if(!name && r.type === "hotel") name = "Khách sạn";
+            return { id: r.id || uid(), name: name, vendor: r.vendor || "", date: r.date || "", cost: r.cost || "", note: r.note || "" };
+          }).filter(Boolean);
+          state.bkCurrency = typeof data.bkCurrency === "string" ? data.bkCurrency : state.bkCurrency;
+          state.bkRate = (typeof data.bkRate === "number" && isFinite(data.bkRate)) ? data.bkRate : null;
+          if(data.hotel && typeof data.hotel === "object"){
+            state.hotel.name = typeof data.hotel.name === "string" ? data.hotel.name : "";
+            state.hotel.address = typeof data.hotel.address === "string" ? data.hotel.address : "";
+            state.hotel.checkin = typeof data.hotel.checkin === "string" ? data.hotel.checkin : "";
+            state.hotel.checkout = typeof data.hotel.checkout === "string" ? data.hotel.checkout : "";
+          }
+          state.skincare = Array.isArray(data.skincare) ? data.skincare : [];
+          state.makeup = Array.isArray(data.makeup) ? data.makeup : [];
+          state.essentials = Array.isArray(data.essentials) ? data.essentials : [];
+          state.activePack = (typeof data.activePack === "string") ? data.activePack : "skincare";
+          state.packSeed1 = !!data.packSeed1;
+          state.packSeed2 = !!data.packSeed2;
+          state.shopping = Array.isArray(data.shopping) ? data.shopping : [];
+          state.places = Array.isArray(data.places) ? data.places : [];
+          state.food = Array.isArray(data.food) ? data.food : [];
+          state.activeNote = (typeof data.activeNote === "string") ? data.activeNote : "shopping";
+        }
+      }
+    }catch(e){ /* chưa có dữ liệu lưu trước đó */ }
+  }
+
+  /* ---------------- Itinerary table ---------------- */
+  var rowsBody = document.getElementById("rowsBody");
+
+  function makeRow(){
+    return { id: uid(), activity:"", date:"", location:"", notes:"", tripCost:"", preCost:"" };
+  }
+
+  function bindCell(input, row, key){
+    input.addEventListener("input", function(){
+      row[key] = input.value;
+      if(key === "tripCost" || key === "preCost"){
+        updateRowVnd(row.id);
+        updateTotals();
+      }
+      scheduleSave();
+    });
+  }
+
+  function renderRows(){
+    rowsBody.textContent = "";
+    state.rows.forEach(function(row){
+      var tr = document.createElement("tr");
+      tr.dataset.id = row.id;
+
+      function cell(cls){
+        var td = document.createElement("td");
+        if(cls) td.className = cls;
+        tr.appendChild(td);
+        return td;
+      }
+      function textInput(td, key, placeholder, type){
+        var inp = document.createElement("input");
+        inp.type = type || "text";
+        if(type === "number"){ inp.min = "0"; inp.step = "any"; inp.inputMode = "decimal"; inp.className = "cost"; }
+        inp.placeholder = placeholder || "";
+        inp.value = row[key] || "";
+        inp.setAttribute("aria-label", placeholder || key);
+        bindCell(inp, row, key);
+        td.appendChild(inp);
+        return inp;
+      }
+
+      textInput(cell(), "activity", "Tên hoạt động");
+      textInput(cell(), "date", "", "date");
+      textInput(cell(), "location", "Địa điểm");
+      textInput(cell(), "notes", "Ghi chú");
+      textInput(cell("num"), "tripCost", "0", "number");
+      textInput(cell("num"), "preCost", "0", "number");
+
+      var vndTd = cell("vnd");
+      vndTd.id = "vnd-" + row.id;
+
+      var delTd = cell();
+      var del = document.createElement("button");
+      del.type = "button";
+      del.className = "del-btn";
+      del.textContent = "×";
+      del.setAttribute("aria-label","Xóa dòng này");
+      del.title = "Xóa dòng";
+      del.addEventListener("click", function(){
+        state.rows = state.rows.filter(function(r){ return r.id !== row.id; });
+        renderRows();
+        updateTotals();
+        scheduleSave();
+      });
+      delTd.appendChild(del);
+
+      rowsBody.appendChild(tr);
+      updateRowVnd(row.id);
+    });
+    updateTotals();
+  }
+
+  function rowTotal(row){ return num(row.tripCost) + num(row.preCost); }
+
+  function updateRowVnd(id){
+    var row = state.rows.find(function(r){ return r.id === id; });
+    var td = document.getElementById("vnd-" + id);
+    if(!row || !td) return;
+    var total = rowTotal(row);
+    if(state.rate && total > 0){
+      td.textContent = fmtVND(total * state.rate);
+      td.classList.remove("empty");
+    }else if(total > 0){
+      td.textContent = "nhập tỷ giá";
+      td.classList.add("empty");
+    }else{
+      td.textContent = "—";
+      td.classList.add("empty");
+    }
+  }
+
+  function updateAllVnd(){
+    state.rows.forEach(function(r){ updateRowVnd(r.id); });
+  }
+
+  function updateTotals(){
+    var trip = 0, pre = 0;
+    state.rows.forEach(function(r){ trip += num(r.tripCost); pre += num(r.preCost); });
+    var total = trip + pre;
+    document.getElementById("totalTrip").textContent = fmtFx(trip);
+    document.getElementById("totalPre").textContent = fmtFx(pre);
+    var totalVnd = document.getElementById("totalVnd");
+    totalVnd.textContent = (state.rate && total > 0) ? fmtVND(total * state.rate) : "—";
+
+    document.getElementById("grandFx").textContent = fmtFx(total) + " " + state.currency;
+    var grandVnd = document.getElementById("grandVnd");
+    grandVnd.textContent = (state.rate) ? fmtVND(total * state.rate) : "Chưa có tỷ giá";
+    updateGrandAll();
+  }
+
+  document.getElementById("addRowBtn").addEventListener("click", function(){
+    state.rows.push(makeRow());
+    renderRows();
+    scheduleSave();
+    var lastRow = rowsBody.lastElementChild;
+    if(lastRow){
+      var firstInput = lastRow.querySelector("input");
+      if(firstInput) firstInput.focus();
+    }
+  });
+
+  /* ---------------- Cash preparation (VNĐ → ngoại tệ) ---------------- */
+  var cashBody = document.getElementById("cashBody");
+
+  function makeCashRow(){
+    return { id: uid(), date:"", vnd:"", fx:"", place:"" };
+  }
+
+  function renderCash(){
+    cashBody.textContent = "";
+    state.cash.forEach(function(row){
+      var tr = document.createElement("tr");
+      tr.dataset.id = row.id;
+
+      function cell(cls){
+        var td = document.createElement("td");
+        if(cls) td.className = cls;
+        tr.appendChild(td);
+        return td;
+      }
+      function cashInput(td, key, placeholder, type){
+        var inp = document.createElement("input");
+        inp.type = type || "text";
+        if(type === "number"){ inp.min = "0"; inp.step = "any"; inp.inputMode = "decimal"; inp.className = "cost"; }
+        inp.placeholder = placeholder || "";
+        inp.value = row[key] || "";
+        inp.setAttribute("aria-label", placeholder || key);
+        inp.addEventListener("input", function(){
+          row[key] = inp.value;
+          if(key === "vnd" || key === "fx"){
+            updateCashRate(row.id);
+            updateCashTotals();
+          }
+          scheduleSave();
+        });
+        td.appendChild(inp);
+        return inp;
+      }
+
+      cashInput(cell(), "date", "", "date");
+      cashInput(cell("num"), "vnd", "Ví dụ: 8000000", "number");
+      cashInput(cell("num"), "fx", "Ví dụ: 10000", "number");
+
+      var rateTd = cell("vnd");
+      rateTd.id = "cashrate-" + row.id;
+
+      cashInput(cell(), "place", "Ngân hàng, tiệm vàng…");
+
+      var delTd = cell();
+      var del = document.createElement("button");
+      del.type = "button";
+      del.className = "del-btn";
+      del.textContent = "×";
+      del.title = "Xóa lần đổi này";
+      del.setAttribute("aria-label","Xóa lần đổi này");
+      del.addEventListener("click", function(){
+        state.cash = state.cash.filter(function(r){ return r.id !== row.id; });
+        renderCash();
+        updateCashTotals();
+        scheduleSave();
+      });
+      delTd.appendChild(del);
+
+      cashBody.appendChild(tr);
+      updateCashRate(row.id);
+    });
+    updateCashTotals();
+  }
+
+  function updateCashRate(id){
+    var row = state.cash.find(function(r){ return r.id === id; });
+    var td = document.getElementById("cashrate-" + id);
+    if(!row || !td) return;
+    var vnd = num(row.vnd), fx = num(row.fx);
+    if(vnd > 0 && fx > 0){
+      td.textContent = vndFmt.format(Math.round(vnd / fx)) + " ₫";
+      td.classList.remove("empty");
+    }else{
+      td.textContent = "—";
+      td.classList.add("empty");
+    }
+  }
+
+  function updateCashTotals(){
+    var vnd = 0, fx = 0;
+    state.cash.forEach(function(r){ vnd += num(r.vnd); fx += num(r.fx); });
+    document.getElementById("cashTotalVnd").textContent = vnd > 0 ? fmtVND(vnd) : "—";
+    document.getElementById("cashTotalFx").textContent = fx > 0 ? fmtFx(fx) : "—";
+    document.getElementById("cashAvgRate").textContent =
+      (vnd > 0 && fx > 0) ? vndFmt.format(Math.round(vnd / fx)) + " ₫" : "—";
+    document.getElementById("cashGrandVnd").textContent = fmtVND(vnd);
+    document.getElementById("cashGrandFx").textContent = fmtFx(fx) + " " + state.currency;
+    updateGrandAll();
+  }
+
+  function updateCurCodes(){
+    document.querySelectorAll(".curcode").forEach(function(el){
+      el.textContent = state.currency;
+    });
+  }
+
+  document.getElementById("addCashBtn").addEventListener("click", function(){
+    state.cash.push(makeCashRow());
+    renderCash();
+    scheduleSave();
+    var lastRow = cashBody.lastElementChild;
+    if(lastRow){
+      var firstInput = lastRow.querySelector("input");
+      if(firstInput) firstInput.focus();
+    }
+  });
+
+
+  /* ---------------- Tổng chi phí cả chuyến đi ---------------- */
+  function updateGrandAll(){
+    var tripFx = 0;
+    state.rows.forEach(function(r){ tripFx += rowTotal(r); });
+    var bkFx = 0;
+    state.bookings.forEach(function(r){ bkFx += num(r.cost); });
+    var cashVnd = 0, cashFx = 0;
+    state.cash.forEach(function(r){ cashVnd += num(r.vnd); cashFx += num(r.fx); });
+
+    var tripVnd = state.rate ? tripFx * state.rate : null;
+    var bkVnd = state.bkRate ? bkFx * state.bkRate : null;
+
+    var sumRows = document.getElementById("sumRows");
+    if(tripVnd !== null || tripFx === 0){
+      sumRows.textContent = fmtVND(tripVnd || 0);
+      sumRows.classList.remove("miss");
+    }else{
+      sumRows.textContent = "thiếu tỷ giá " + state.currency;
+      sumRows.classList.add("miss");
+    }
+
+    var sumBk = document.getElementById("sumBk");
+    if(bkVnd !== null || bkFx === 0){
+      sumBk.textContent = fmtVND(bkVnd || 0);
+      sumBk.classList.remove("miss");
+    }else{
+      sumBk.textContent = "thiếu tỷ giá " + state.bkCurrency;
+      sumBk.classList.add("miss");
+    }
+
+    var total = 0;
+    var missing = [];
+    if(tripFx > 0){
+      if(tripVnd !== null) total += tripVnd;
+      else missing.push("tỷ giá " + state.currency + " (thanh tỷ giá trên cùng)");
+    }
+    if(bkFx > 0){
+      if(bkVnd !== null) total += bkVnd;
+      else missing.push("tỷ giá " + state.bkCurrency + " (mục gói bay + khách sạn)");
+    }
+
+    document.getElementById("grandAllVnd").textContent = fmtVND(total);
+    document.getElementById("grandAllFx").textContent =
+      state.rate ? fmtFx(total / state.rate) + " " + state.currency
+                 : "Chưa có tỷ giá " + state.currency;
+
+    var warn = document.getElementById("totalWarn");
+    if(missing.length){
+      warn.textContent = "Chưa tính đủ vì còn thiếu: " + missing.join(", ") + ".";
+      warn.style.display = "block";
+    }else{
+      warn.textContent = "";
+      warn.style.display = "none";
+    }
+
+    /* Tiền mặt = nguồn tiền, hiển thị riêng + so với chi phí lịch trình */
+    document.getElementById("fundVnd").textContent = fmtVND(cashVnd);
+    document.getElementById("fundFx").textContent =
+      cashFx > 0 ? "(nhận " + fmtFx(cashFx) + " " + state.currency + " tiền mặt)" : "";
+    var fs = document.getElementById("fundStatus");
+    if(cashFx > 0 && tripFx > 0){
+      var diff = cashFx - tripFx;
+      if(diff >= 0){
+        fs.textContent = "✓ Đủ trang trải chi phí lịch trình, còn dư khoảng " + fmtFx(diff) + " " + state.currency + ".";
+        fs.className = "fund-status ok";
+      }else{
+        fs.textContent = "Còn thiếu khoảng " + fmtFx(-diff) + " " + state.currency + " so với chi phí lịch trình, cân nhắc đổi thêm nhé.";
+        fs.className = "fund-status short";
+      }
+    }else{
+      fs.textContent = "";
+      fs.className = "fund-status";
+    }
+  }
+
+  /* ---------------- Currency ---------------- */
+  var fxCurrency = document.getElementById("fxCurrency");
+  var fxRate = document.getElementById("fxRate");
+  var fxEq = document.getElementById("fxEq");
+
+  function updateFxEq(){
+    fxEq.textContent = "1 " + state.currency + " = " +
+      (state.rate ? vndFmt.format(state.rate) : "?") + " VNĐ";
+  }
+  fxCurrency.addEventListener("change", function(){
+    state.currency = fxCurrency.value;
+    fxStatus.textContent = "";
+    fxStatus.className = "fx-status";
+    updateFxEq();
+    updateTotals();
+    updateCurCodes();
+    updateCashTotals();
+    scheduleSave();
+  });
+  fxRate.addEventListener("input", function(){
+    var v = parseFloat(fxRate.value);
+    state.rate = (isFinite(v) && v > 0) ? v : null;
+    updateFxEq();
+    updateAllVnd();
+    updateTotals();
+    scheduleSave();
+  });
+
+  /* ---------------- Auto-fetch rate (mid-market, như Wise hiển thị) ---------------- */
+  var fxFetchBtn = document.getElementById("fxFetchBtn");
+  var fxStatus = document.getElementById("fxStatus");
+  var FETCH_LABEL = "⟳ Lấy tỷ giá tự động";
+
+  async function requestMidMarketRate(cur){
+    /* Cách 1: API tỷ giá công khai, miễn phí (chạy khi host trên web như GitHub Pages) */
+    try{
+      var pubRes = await fetch("https://open.er-api.com/v6/latest/" + encodeURIComponent(cur));
+      if(pubRes.ok){
+        var pub = await pubRes.json();
+        if(pub && pub.result === "success" && pub.rates && isFinite(pub.rates.VND) && pub.rates.VND > 0){
+          return pub.rates.VND;
+        }
+      }
+    }catch(e){ /* thử cách 2 */ }
+
+    /* Cách 2: hỏi Claude kèm tìm kiếm web (chạy khi mở trong Claude.ai) */
+    var response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{
+          role: "user",
+          content: "Search the web for the CURRENT mid-market exchange rate from " + cur +
+            " to Vietnamese dong (VND). This is the mid-market rate, the same type of rate wise.com displays. " +
+            "Respond with ONLY a raw JSON object, no markdown fences, no explanation: " +
+            "{\"rate\": <number of VND per 1 " + cur + ">}"
+        }],
+        tools: [{ "type": "web_search_20250305", "name": "web_search" }]
+      })
+    });
+    var data = await response.json();
+    var text = (data.content || [])
+      .filter(function(b){ return b.type === "text"; })
+      .map(function(b){ return b.text || ""; })
+      .join("\n");
+    var clean = text.replace(/```json|```/g, "").trim();
+    var match = clean.match(/\{[\s\S]*?\}/);
+    var parsed = JSON.parse(match ? match[0] : clean);
+    var r = parseFloat(parsed.rate);
+    if(!isFinite(r) || r <= 0) throw new Error("invalid rate");
+    return r;
+  }
+
+  function wireRateFetch(btn, statusEl, getCur, applyRate){
+    btn.addEventListener("click", async function(){
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin">⟳</span> Đang lấy tỷ giá…';
+      statusEl.textContent = "";
+      statusEl.className = "fx-status";
+      try{
+        var r = await requestMidMarketRate(getCur());
+        applyRate(r);
+        var now = new Date();
+        statusEl.textContent = "Đã cập nhật lúc " +
+          now.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) +
+          " theo tỷ giá thị trường (mid-market, loại Wise dùng). Con số có thể chênh nhẹ so với wise.com, bạn vẫn sửa tay được nhé.";
+        statusEl.classList.add("ok");
+      }catch(e){
+        statusEl.textContent = "Không lấy được tỷ giá tự động lúc này. Bạn xem trên wise.com rồi nhập tay giúp mình nhé.";
+        statusEl.classList.add("err");
+      }finally{
+        btn.disabled = false;
+        btn.textContent = FETCH_LABEL;
+      }
+    });
+  }
+
+  wireRateFetch(fxFetchBtn, fxStatus, function(){ return state.currency; }, function(r){
+    state.rate = r;
+    fxRate.value = r;
+    updateFxEq();
+    updateAllVnd();
+    updateTotals();
+    scheduleSave();
+  });
+
+  /* ---------------- Bookings (gói vé máy bay + khách sạn, đã thanh toán) ---------------- */
+  var bkBody = document.getElementById("bkBody");
+  var bkCurrency = document.getElementById("bkCurrency");
+  var bkRate = document.getElementById("bkRate");
+  var bkStatus = document.getElementById("bkStatus");
+  var bkFetchBtn = document.getElementById("bkFetchBtn");
+
+  function makeBooking(name){
+    return { id: uid(), name: name || "", vendor:"", date:"", cost:"", note:"" };
+  }
+
+  function renderBookings(){
+    bkBody.textContent = "";
+    state.bookings.forEach(function(row){
+      var tr = document.createElement("tr");
+      tr.dataset.id = row.id;
+
+      function cell(cls){
+        var td = document.createElement("td");
+        if(cls) td.className = cls;
+        tr.appendChild(td);
+        return td;
+      }
+      function bkInput(td, key, placeholder, type){
+        var inp = document.createElement("input");
+        inp.type = type || "text";
+        if(type === "number"){ inp.min = "0"; inp.step = "any"; inp.inputMode = "decimal"; inp.className = "cost"; }
+        inp.placeholder = placeholder || "";
+        inp.value = row[key] || "";
+        inp.setAttribute("aria-label", placeholder || key);
+        inp.addEventListener("input", function(){
+          row[key] = inp.value;
+          if(key === "cost"){
+            updateBookingVnd(row.id);
+            updateBookingTotals();
+          }
+          scheduleSave();
+        });
+        td.appendChild(inp);
+        return inp;
+      }
+
+      bkInput(cell(), "name", "Ví dụ: Gói bay + khách sạn 4N3Đ");
+      bkInput(cell(), "vendor", "Ví dụ: Expedia, Traveloka…");
+      bkInput(cell(), "date", "", "date");
+      bkInput(cell("num"), "cost", "0", "number");
+
+      var vndTd = cell("vnd sky-vnd");
+      vndTd.id = "bkvnd-" + row.id;
+
+      bkInput(cell(), "note", "Mã đặt chỗ, gói gồm những gì…");
+
+      var delTd = cell();
+      var del = document.createElement("button");
+      del.type = "button";
+      del.className = "del-btn";
+      del.textContent = "×";
+      del.title = "Xóa khoản này";
+      del.setAttribute("aria-label","Xóa khoản này");
+      del.addEventListener("click", function(){
+        state.bookings = state.bookings.filter(function(r){ return r.id !== row.id; });
+        renderBookings();
+        updateBookingTotals();
+        scheduleSave();
+      });
+      delTd.appendChild(del);
+
+      bkBody.appendChild(tr);
+      updateBookingVnd(row.id);
+    });
+    updateBookingTotals();
+  }
+
+  function updateBookingVnd(id){
+    var row = state.bookings.find(function(r){ return r.id === id; });
+    var td = document.getElementById("bkvnd-" + id);
+    if(!row || !td) return;
+    var cost = num(row.cost);
+    if(state.bkRate && cost > 0){
+      td.textContent = fmtVND(cost * state.bkRate);
+      td.classList.remove("empty");
+    }else if(cost > 0){
+      td.textContent = "nhập tỷ giá";
+      td.classList.add("empty");
+    }else{
+      td.textContent = "—";
+      td.classList.add("empty");
+    }
+  }
+
+  function updateAllBookingVnd(){
+    state.bookings.forEach(function(r){ updateBookingVnd(r.id); });
+  }
+
+  function updateBookingTotals(){
+    var total = 0;
+    state.bookings.forEach(function(r){ total += num(r.cost); });
+    document.getElementById("bkTotalFx").textContent = total > 0 ? fmtFx(total) : "—";
+    document.getElementById("bkTotalVnd").textContent =
+      (state.bkRate && total > 0) ? fmtVND(total * state.bkRate) : "—";
+    document.getElementById("bkGrandFx").textContent = fmtFx(total) + " " + state.bkCurrency;
+    document.getElementById("bkGrandVnd").textContent =
+      state.bkRate ? fmtVND(total * state.bkRate) : "Chưa có tỷ giá";
+    updateGrandAll();
+  }
+
+  function updateBookCurCodes(){
+    document.querySelectorAll(".bookcur").forEach(function(el){
+      el.textContent = state.bkCurrency;
+    });
+  }
+
+  bkCurrency.addEventListener("change", function(){
+    state.bkCurrency = bkCurrency.value;
+    bkStatus.textContent = "";
+    bkStatus.className = "fx-status";
+    updateBookCurCodes();
+    updateBookingTotals();
+    scheduleSave();
+  });
+  bkRate.addEventListener("input", function(){
+    var v = parseFloat(bkRate.value);
+    state.bkRate = (isFinite(v) && v > 0) ? v : null;
+    updateAllBookingVnd();
+    updateBookingTotals();
+    scheduleSave();
+  });
+
+  wireRateFetch(bkFetchBtn, bkStatus, function(){ return state.bkCurrency; }, function(r){
+    state.bkRate = r;
+    bkRate.value = r;
+    updateAllBookingVnd();
+    updateBookingTotals();
+    scheduleSave();
+  });
+
+  /* ---------------- Hotel info (trong gói) ---------------- */
+  var htName = document.getElementById("htName");
+  var htAddress = document.getElementById("htAddress");
+  var htCheckin = document.getElementById("htCheckin");
+  var htCheckout = document.getElementById("htCheckout");
+  var stayLength = document.getElementById("stayLength");
+
+  function updateStayLength(){
+    var ci = state.hotel.checkin, co = state.hotel.checkout;
+    if(ci && co){
+      var nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
+      if(nights > 0){
+        stayLength.textContent = (nights + 1) + " ngày " + nights + " đêm";
+        stayLength.className = "stay-badge";
+      }else if(nights === 0){
+        stayLength.textContent = "Trong ngày";
+        stayLength.className = "stay-badge";
+      }else{
+        stayLength.textContent = "Check-out cần sau check-in";
+        stayLength.className = "stay-badge err";
+      }
+    }else{
+      stayLength.textContent = "—";
+      stayLength.className = "stay-badge";
+    }
+  }
+
+  htName.addEventListener("input", function(){ state.hotel.name = htName.value; scheduleSave(); });
+  htAddress.addEventListener("input", function(){ state.hotel.address = htAddress.value; scheduleSave(); });
+  htCheckin.addEventListener("input", function(){
+    state.hotel.checkin = htCheckin.value;
+    updateStayLength();
+    scheduleSave();
+  });
+  htCheckout.addEventListener("input", function(){
+    state.hotel.checkout = htCheckout.value;
+    updateStayLength();
+    scheduleSave();
+  });
+
+  document.getElementById("addBkBtn").addEventListener("click", function(){
+    state.bookings.push(makeBooking());
+    renderBookings();
+    scheduleSave();
+    var lastRow = bkBody.lastElementChild;
+    if(lastRow){
+      var firstInput = lastRow.querySelector("input");
+      if(firstInput) firstInput.focus();
+    }
+  });
+
+  /* ---------------- Packing lists ---------------- */
+  function makeItem(name){ return { id: uid(), name: name || "", note:"", packed:false }; }
+
+  function renderList(kind){
+    var ul = document.getElementById("list-" + kind);
+    var empty = document.getElementById("empty-" + kind);
+    ul.textContent = "";
+    var items = state[kind];
+    empty.style.display = items.length ? "none" : "block";
+
+    items.forEach(function(item){
+      var li = document.createElement("li");
+      li.className = "pack-item" + (item.packed ? " done" : "");
+
+      var cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!item.packed;
+      cb.setAttribute("aria-label","Đánh dấu " + (DONE_LABELS[kind] || "hoàn thành") + ": " + (item.name || "mục này"));
+      cb.addEventListener("change", function(){
+        item.packed = cb.checked;
+        li.classList.toggle("done", cb.checked);
+        updateProgress(kind);
+        scheduleSave();
+      });
+
+      var nameInp = document.createElement("input");
+      nameInp.className = "p-name";
+      nameInp.value = item.name;
+      nameInp.placeholder = "Tên món";
+      nameInp.setAttribute("aria-label","Tên món");
+      nameInp.addEventListener("input", function(){
+        item.name = nameInp.value;
+        scheduleSave();
+      });
+
+      var noteInp = document.createElement("input");
+      noteInp.className = "p-note";
+      noteInp.value = item.note || "";
+      noteInp.placeholder = "ghi chú…";
+      noteInp.setAttribute("aria-label","Ghi chú cho món này");
+      noteInp.addEventListener("input", function(){
+        item.note = noteInp.value;
+        scheduleSave();
+      });
+
+      var del = document.createElement("button");
+      del.type = "button";
+      del.className = "del-btn";
+      del.textContent = "×";
+      del.title = "Xóa món";
+      del.setAttribute("aria-label","Xóa món này");
+      del.addEventListener("click", function(){
+        state[kind] = state[kind].filter(function(x){ return x.id !== item.id; });
+        renderList(kind);
+        updateProgress(kind);
+        renderChips(kind);
+        scheduleSave();
+      });
+
+      li.appendChild(cb);
+      li.appendChild(nameInp);
+      li.appendChild(noteInp);
+      li.appendChild(del);
+      ul.appendChild(li);
+    });
+    updateProgress(kind);
+  }
+
+  function updateProgress(kind){
+    var items = state[kind];
+    var done = items.filter(function(x){ return x.packed; }).length;
+    var pct = items.length ? Math.round(done / items.length * 100) : 0;
+    document.getElementById("fill-" + kind).style.width = pct + "%";
+    document.getElementById("count-" + kind).textContent = done + "/" + items.length;
+  }
+
+  function addItem(kind, name){
+    var trimmed = (name || "").trim();
+    if(!trimmed) return;
+    state[kind].push(makeItem(trimmed));
+    renderList(kind);
+    renderChips(kind);
+    scheduleSave();
+  }
+
+  function renderChips(kind){
+    var wrap = document.getElementById("chips-" + kind);
+    var label = document.getElementById("chipslabel-" + kind);
+    wrap.textContent = "";
+    var existing = state[kind].map(function(x){ return x.name.trim().toLowerCase(); });
+    var remaining = SUGGESTIONS[kind].filter(function(s){
+      return existing.indexOf(s.toLowerCase()) === -1;
+    });
+    label.style.display = remaining.length ? "block" : "none";
+    remaining.forEach(function(s){
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.textContent = "＋ " + s;
+      chip.addEventListener("click", function(){ addItem(kind, s); });
+      wrap.appendChild(chip);
+    });
+  }
+
+  ["skincare","makeup","essentials","shopping","places","food"].forEach(function(kind){
+    var input = document.getElementById("input-" + kind);
+    input.addEventListener("keydown", function(e){
+      if(e.key === "Enter"){
+        addItem(kind, input.value);
+        input.value = "";
+      }
+    });
+  });
+  document.querySelectorAll("[data-add]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var kind = btn.getAttribute("data-add");
+      var input = document.getElementById("input-" + kind);
+      addItem(kind, input.value);
+      input.value = "";
+      input.focus();
+    });
+  });
+
+  /* Tabs hành lý */
+  var PACK_KINDS = ["skincare","makeup","essentials"];
+  function setActivePack(kind, save){
+    if(PACK_KINDS.indexOf(kind) === -1) kind = "skincare";
+    state.activePack = kind;
+    PACK_KINDS.forEach(function(k){
+      var on = (k === kind);
+      var tabEl = document.getElementById("tab-" + k);
+      tabEl.classList.toggle("active", on);
+      tabEl.setAttribute("aria-selected", on ? "true" : "false");
+      document.getElementById("panel-" + k).classList.toggle("active", on);
+    });
+    if(save) scheduleSave();
+  }
+  PACK_KINDS.forEach(function(k){
+    document.getElementById("tab-" + k).addEventListener("click", function(){ setActivePack(k, true); });
+  });
+
+  /* Tabs sổ tay Thái Lan */
+  var NOTE_KINDS = ["shopping","places","food"];
+  function setActiveNote(kind, save){
+    if(NOTE_KINDS.indexOf(kind) === -1) kind = "shopping";
+    state.activeNote = kind;
+    NOTE_KINDS.forEach(function(k){
+      var on = (k === kind);
+      var tabEl = document.getElementById("tab-" + k);
+      tabEl.classList.toggle("active", on);
+      tabEl.setAttribute("aria-selected", on ? "true" : "false");
+      document.getElementById("panel-" + k).classList.toggle("active", on);
+    });
+    if(save) scheduleSave();
+  }
+  NOTE_KINDS.forEach(function(k){
+    document.getElementById("tab-" + k).addEventListener("click", function(){ setActiveNote(k, true); });
+  });
+
+  /* ---------------- Title ---------------- */
+  var titleInput = document.getElementById("tripTitle");
+  titleInput.addEventListener("input", function(){
+    state.title = titleInput.value;
+    scheduleSave();
+  });
+
+  /* ---------------- Init ---------------- */
+  async function init(){
+    await doLoad();
+
+    if(state.rows.length === 0){
+      state.rows.push(makeRow());
+      state.rows.push(makeRow());
+    }
+    if(state.cash.length === 0){
+      state.cash.push(makeCashRow());
+    }
+    if(state.bookings.length === 0){
+      state.bookings.push(makeBooking("Gói vé máy bay + khách sạn"));
+    }
+
+    titleInput.value = state.title;
+    fxCurrency.value = state.currency;
+    if(state.rate) fxRate.value = state.rate;
+    bkCurrency.value = state.bkCurrency;
+    if(state.bkRate) bkRate.value = state.bkRate;
+    htName.value = state.hotel.name || "";
+    htAddress.value = state.hotel.address || "";
+    htCheckin.value = state.hotel.checkin || "";
+    htCheckout.value = state.hotel.checkout || "";
+    updateStayLength();
+    updateFxEq();
+    updateCurCodes();
+    updateBookCurCodes();
+
+    renderRows();
+    renderCash();
+    renderBookings();
+    updateGrandAll();
+    /* Bổ sung một lần các món cá nhân vào danh sách */
+    var seed = function(kind, names){
+      names.forEach(function(n){
+        var exists = state[kind].some(function(x){
+          return (x.name || "").trim().toLowerCase() === n.toLowerCase();
+        });
+        if(!exists) state[kind].push(makeItem(n));
+      });
+    };
+    if(!state.packSeed1){
+      seed("makeup", ["Lens (kính áp tròng)","Nước rửa lens","Thuốc nhỏ mắt"]);
+      seed("essentials", ["Máy sấy tóc","Máy duỗi tóc"]);
+      state.packSeed1 = true;
+      scheduleSave();
+    }
+    if(!state.packSeed2){
+      seed("shopping", ["Lăn nách Thái"]);
+      state.packSeed2 = true;
+      scheduleSave();
+    }
+
+    renderList("skincare");
+    renderList("makeup");
+    renderList("essentials");
+    renderList("shopping");
+    renderList("places");
+    renderList("food");
+    renderChips("skincare");
+    renderChips("makeup");
+    renderChips("essentials");
+    renderChips("shopping");
+    renderChips("places");
+    renderChips("food");
+    setActivePack(state.activePack, false);
+    setActiveNote(state.activeNote, false);
+
+    if(!storageAvailable){
+      saveText.textContent = "Lưu tạm trong phiên này";
+    }else{
+      badge.classList.add("saved");
+      saveText.textContent = "Đã lưu tự động";
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
