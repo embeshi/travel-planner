@@ -63,6 +63,48 @@
   }
   .save-badge.saved .dot{background:var(--moss)}
   .lede{color:var(--muted);margin-top:8px;max-width:640px}
+  [hidden]{display:none !important}
+  .acct{display:inline-flex;align-items:center;gap:10px}
+  .acct-btn{
+    border:none;background:var(--moss);color:#fff;
+    font-family:var(--font-body);font-size:13px;font-weight:600;
+    padding:7px 14px;border-radius:9px;cursor:pointer;transition:background .15s;
+  }
+  .acct-btn:hover{background:var(--moss-deep)}
+  .acct-info{display:inline-flex;align-items:center;gap:8px;font-size:13px}
+  .acct-email{
+    font-family:var(--font-mono);font-size:12px;color:var(--muted);
+    max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .acct-link{
+    border:none;background:transparent;color:var(--moss);
+    font-family:var(--font-body);font-size:12.5px;font-weight:600;
+    cursor:pointer;text-decoration:underline;padding:2px;
+  }
+  .login-panel{
+    margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--paper);padding:14px 16px;max-width:470px;
+    box-shadow:0 1px 3px rgba(28,18,24,.05);
+  }
+  .lp-title{font-weight:600;font-size:14px;margin-bottom:9px}
+  .lp-row{display:flex;gap:8px;flex-wrap:wrap}
+  .lp-row input{
+    flex:1;min-width:200px;border:1px solid var(--line);border-radius:9px;
+    padding:9px 12px;font-family:var(--font-body);font-size:14px;outline:none;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .lp-row input:focus{border-color:var(--moss);box-shadow:0 0 0 3px var(--moss-soft)}
+  .lp-row button{
+    border:none;background:var(--moss);color:#fff;font-family:var(--font-body);
+    font-size:14px;font-weight:600;padding:9px 15px;border-radius:9px;cursor:pointer;
+    transition:background .15s;white-space:nowrap;
+  }
+  .lp-row button:hover{background:var(--moss-deep)}
+  .lp-row button:disabled{opacity:.6;cursor:wait}
+  .lp-status{margin-top:8px;font-size:13px;font-weight:500;display:none}
+  .lp-status.ok{display:block;color:var(--moss-deep)}
+  .lp-status.err{display:block;color:#C25454}
+  .lp-hint{margin-top:8px;font-size:12.5px;color:var(--muted)}
 
   /* ---------- Luggage tag section headers (signature) ---------- */
   .tag{
@@ -371,8 +413,24 @@
     <div class="title-row">
       <input id="tripTitle" value="Chuyến đi của mình" aria-label="Tên chuyến đi" spellcheck="false">
       <span class="save-badge" id="saveBadge"><span class="dot"></span><span id="saveText">Lưu tự động</span></span>
+      <span class="acct" id="acctArea" hidden>
+        <button type="button" class="acct-btn" id="loginBtn">Đăng nhập</button>
+        <span class="acct-info" id="acctInfo" hidden>
+          <span class="acct-email" id="acctEmail"></span>
+          <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
+        </span>
+      </span>
     </div>
     <p class="lede">Lên lịch trình, theo dõi chi phí kèm quy đổi sang tiền Việt, và kiểm soát đồ skincare, makeup cần mang theo.</p>
+    <div class="login-panel" id="loginPanel" hidden>
+      <div class="lp-title">Đăng nhập để đồng bộ mọi thiết bị</div>
+      <div class="lp-row">
+        <input type="email" id="loginEmail" placeholder="email-cua-ban@example.com" aria-label="Email đăng nhập">
+        <button type="button" id="sendLinkBtn">Gửi link đăng nhập</button>
+      </div>
+      <div class="lp-status" id="loginStatus" role="status"></div>
+      <p class="lp-hint">Không cần mật khẩu: mở hộp thư, bấm vào link trong email rồi quay lại trang này là xong. Link đôi khi rơi vào mục Spam nhé.</p>
+    </div>
   </header>
 
   <!-- ============ CURRENCY ============ -->
@@ -734,14 +792,27 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 (function(){
   "use strict";
+
+  /* ============================================================
+     ⚡ CẤU HÌNH SUPABASE · THỜI ĐẠI 4
+     Dán 2 nguyên liệu của bạn vào GIỮA hai dấu nháy kép bên dưới.
+     Ví dụ: var SUPABASE_URL = "https://abcxyz.supabase.co";
+     Chưa dán thì app vẫn chạy bình thường, chỉ lưu trên máy.
+     ============================================================ */
+  var SUPABASE_URL = "DAN_PROJECT_URL_VAO_DAY";
+  var SUPABASE_KEY = "DAN_PUBLISHABLE_KEY_VAO_DAY";
+  /* ============================================================ */
 
   /* ---------------- State ---------------- */
   var STORAGE_KEY = "ke-hoach-du-lich-v1";
   var state = {
     title: "Chuyến đi của mình",
+    _updatedAt: 0,
     currency: "THB",
     rate: null,
     rows: [],
@@ -813,24 +884,54 @@
     if(saveTimer) clearTimeout(saveTimer);
     saveTimer = setTimeout(doSave, 500);
   }
-  async function doSave(){
-    if(!storageAvailable){
+  /* Trạng thái đồng bộ Supabase (Thời đại 4-5) */
+  var booting = true;
+  var sb = null, sbReady = false, sbUser = null, cloudOk = false;
+
+  function updateSaveText(localErr){
+    if(sbUser){
+      saveText.textContent = cloudOk
+        ? "Đã đồng bộ tài khoản"
+        : (localErr ? "Không lưu được, thử lại sau" : "Đã lưu trên máy, chưa đồng bộ được");
+    }else if(!storageAvailable){
       saveText.textContent = "Lưu tạm trong phiên này";
-      return;
+    }else{
+      saveText.textContent = localErr ? "Không lưu được, thử lại sau" : "Đã lưu tự động";
     }
+  }
+
+  async function persistLocal(){
+    if(!storageAvailable) return;
+    var json = JSON.stringify(state);
+    if(hasClaudeStorage){
+      var res = await window.storage.set(STORAGE_KEY, json);
+      if(!res) throw new Error("save failed");
+    }else{
+      window.localStorage.setItem(STORAGE_KEY, json);
+    }
+  }
+
+  async function doSave(){
+    if(!booting) state._updatedAt = Date.now();
+    var localErr = false;
     try{
-      var json = JSON.stringify(state);
-      if(hasClaudeStorage){
-        var res = await window.storage.set(STORAGE_KEY, json);
-        if(!res) throw new Error("save failed");
-      }else{
-        window.localStorage.setItem(STORAGE_KEY, json);
-      }
-      badge.classList.add("saved");
-      saveText.textContent = "Đã lưu tự động";
-    }catch(e){
-      saveText.textContent = "Không lưu được, thử lại sau";
+      await persistLocal();
+    }catch(e){ localErr = true; }
+
+    if(sbUser && sbReady){
+      try{
+        var res = await sb.from("trips").upsert(
+          { user_id: sbUser.id, title: state.title, data: state,
+            updated_at: new Date().toISOString() },
+          { onConflict: "user_id" }
+        );
+        if(res.error) throw res.error;
+        cloudOk = true;
+      }catch(e){ cloudOk = false; }
     }
+
+    badge.classList.toggle("saved", !localErr || (sbUser && cloudOk));
+    updateSaveText(localErr);
   }
   async function doLoad(){
     if(!storageAvailable) return;
@@ -842,9 +943,12 @@
       }else{
         raw = window.localStorage.getItem(STORAGE_KEY);
       }
-      if(raw){
-        var data = JSON.parse(raw);
-        if(data && typeof data === "object"){
+      if(raw){ applyData(JSON.parse(raw)); }
+    }catch(e){ /* chưa có dữ liệu lưu trước đó */ }
+  }
+
+  function applyData(data){
+    if(data && typeof data === "object"){
           state.title = typeof data.title === "string" ? data.title : state.title;
           state.currency = typeof data.currency === "string" ? data.currency : state.currency;
           state.rate = (typeof data.rate === "number" && isFinite(data.rate)) ? data.rate : null;
@@ -877,9 +981,8 @@
           state.places = Array.isArray(data.places) ? data.places : [];
           state.food = Array.isArray(data.food) ? data.food : [];
           state.activeNote = (typeof data.activeNote === "string") ? data.activeNote : "shopping";
-        }
-      }
-    }catch(e){ /* chưa có dữ liệu lưu trước đó */ }
+          state._updatedAt = (typeof data._updatedAt === "number") ? data._updatedAt : 0;
+    }
   }
 
   /* ---------------- Itinerary table ---------------- */
@@ -1652,10 +1755,8 @@
     scheduleSave();
   });
 
-  /* ---------------- Init ---------------- */
-  async function init(){
-    await doLoad();
-
+  /* ---------------- Đổ dữ liệu ra giao diện ---------------- */
+  function hydrateUI(){
     if(state.rows.length === 0){
       state.rows.push(makeRow());
       state.rows.push(makeRow());
@@ -1669,9 +1770,9 @@
 
     titleInput.value = state.title;
     fxCurrency.value = state.currency;
-    if(state.rate) fxRate.value = state.rate;
+    fxRate.value = state.rate ? state.rate : "";
     bkCurrency.value = state.bkCurrency;
-    if(state.bkRate) bkRate.value = state.bkRate;
+    bkRate.value = state.bkRate ? state.bkRate : "";
     htName.value = state.hotel.name || "";
     htAddress.value = state.hotel.address || "";
     htCheckin.value = state.hotel.checkin || "";
@@ -1684,7 +1785,141 @@
     renderRows();
     renderCash();
     renderBookings();
-    updateGrandAll();
+    ["skincare","makeup","essentials","shopping","places","food"].forEach(function(k){
+      renderList(k);
+      renderChips(k);
+    });
+    setActivePack(state.activePack, false);
+    setActiveNote(state.activeNote, false);
+  }
+
+  /* ---------------- Đăng nhập & đồng bộ (Supabase, Thời đại 4-5) ---------------- */
+  var acctArea, acctInfo, acctEmail, loginBtn, logoutBtn, loginPanel, loginEmail, sendLinkBtn, loginStatus;
+  var lastUserId = null;
+
+  function cfgLooksValid(){
+    return /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(SUPABASE_URL) &&
+           (SUPABASE_KEY.indexOf("sb_publishable_") === 0 || SUPABASE_KEY.indexOf("eyJ") === 0);
+  }
+
+  async function initSupabase(){
+    acctArea = document.getElementById("acctArea");
+    acctInfo = document.getElementById("acctInfo");
+    acctEmail = document.getElementById("acctEmail");
+    loginBtn = document.getElementById("loginBtn");
+    logoutBtn = document.getElementById("logoutBtn");
+    loginPanel = document.getElementById("loginPanel");
+    loginEmail = document.getElementById("loginEmail");
+    sendLinkBtn = document.getElementById("sendLinkBtn");
+    loginStatus = document.getElementById("loginStatus");
+
+    if(!(window.supabase && cfgLooksValid())) return;
+    try{
+      sb = window.supabase.createClient(SUPABASE_URL.replace(/\/$/, ""), SUPABASE_KEY);
+    }catch(e){ return; }
+    sbReady = true;
+    acctArea.hidden = false;
+
+    loginBtn.addEventListener("click", function(){
+      loginPanel.hidden = !loginPanel.hidden;
+      if(!loginPanel.hidden) loginEmail.focus();
+    });
+    sendLinkBtn.addEventListener("click", sendMagicLink);
+    loginEmail.addEventListener("keydown", function(e){
+      if(e.key === "Enter") sendMagicLink();
+    });
+    logoutBtn.addEventListener("click", async function(){
+      try{ await sb.auth.signOut(); }catch(e){}
+    });
+
+    sb.auth.onAuthStateChange(function(event, session){
+      handleAuth(session ? session.user : null);
+    });
+    try{
+      var s = await sb.auth.getSession();
+      handleAuth(s && s.data && s.data.session ? s.data.session.user : null);
+    }catch(e){}
+  }
+
+  async function sendMagicLink(){
+    var email = (loginEmail.value || "").trim();
+    loginStatus.className = "lp-status";
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+      loginStatus.textContent = "Email chưa đúng định dạng, bạn kiểm tra lại nhé.";
+      loginStatus.classList.add("err");
+      return;
+    }
+    sendLinkBtn.disabled = true;
+    sendLinkBtn.textContent = "Đang gửi…";
+    try{
+      var res = await sb.auth.signInWithOtp({
+        email: email,
+        options: { emailRedirectTo: window.location.origin + window.location.pathname }
+      });
+      if(res.error) throw res.error;
+      loginStatus.textContent = "Đã gửi! Mở hộp thư (kể cả mục Spam), bấm vào link rồi quay lại trang này.";
+      loginStatus.classList.add("ok");
+    }catch(e){
+      loginStatus.textContent = "Không gửi được link. Kiểm tra lại email hoặc thử lại sau ít phút.";
+      loginStatus.classList.add("err");
+    }finally{
+      sendLinkBtn.disabled = false;
+      sendLinkBtn.textContent = "Gửi link đăng nhập";
+    }
+  }
+
+  async function handleAuth(user){
+    var uid = user ? user.id : null;
+    if(uid === lastUserId) return;
+    lastUserId = uid;
+    sbUser = user;
+    if(user){
+      acctEmail.textContent = user.email || "";
+      acctEmail.title = user.email || "";
+      acctInfo.hidden = false;
+      loginBtn.hidden = true;
+      loginPanel.hidden = true;
+      await mergeRemote();
+    }else{
+      acctInfo.hidden = true;
+      loginBtn.hidden = false;
+      cloudOk = false;
+    }
+    updateSaveText(false);
+  }
+
+  /* Hòa giải dữ liệu: bản nào mới hơn thì thắng */
+  async function mergeRemote(){
+    try{
+      var res = await sb.from("trips")
+        .select("data, updated_at")
+        .eq("user_id", sbUser.id)
+        .maybeSingle();
+      if(res.error) throw res.error;
+      var row = res.data;
+      if(row && row.data){
+        var remoteTime = Date.parse(row.updated_at) || 0;
+        var localTime = state._updatedAt || 0;
+        if(remoteTime >= localTime){
+          applyData(row.data);
+          hydrateUI();
+          try{ await persistLocal(); }catch(e){}
+          cloudOk = true;
+        }else{
+          await doSave();
+        }
+      }else{
+        await doSave();
+      }
+    }catch(e){
+      cloudOk = false;
+    }
+  }
+
+  /* ---------------- Init ---------------- */
+  async function init(){
+    await doLoad();
+
     /* Bổ sung một lần các món cá nhân vào danh sách */
     var seed = function(kind, names){
       names.forEach(function(n){
@@ -1706,27 +1941,13 @@
       scheduleSave();
     }
 
-    renderList("skincare");
-    renderList("makeup");
-    renderList("essentials");
-    renderList("shopping");
-    renderList("places");
-    renderList("food");
-    renderChips("skincare");
-    renderChips("makeup");
-    renderChips("essentials");
-    renderChips("shopping");
-    renderChips("places");
-    renderChips("food");
-    setActivePack(state.activePack, false);
-    setActiveNote(state.activeNote, false);
+    hydrateUI();
 
-    if(!storageAvailable){
-      saveText.textContent = "Lưu tạm trong phiên này";
-    }else{
-      badge.classList.add("saved");
-      saveText.textContent = "Đã lưu tự động";
-    }
+    badge.classList.toggle("saved", !!storageAvailable);
+    updateSaveText(false);
+
+    initSupabase();
+    booting = false;
   }
   init();
 })();
