@@ -108,6 +108,13 @@
   }
   .lp-row button:hover{background:var(--moss-deep)}
   .lp-row button:disabled{opacity:.6;cursor:wait}
+  .lp-row button.lp-ghost{background:transparent;color:var(--moss);border:1.5px solid var(--moss)}
+  .lp-row button.lp-ghost:hover{background:var(--moss-soft)}
+  .lp-link{
+    border:none;background:transparent;color:var(--moss);
+    font-family:var(--font-body);font-size:12.5px;font-weight:600;
+    cursor:pointer;text-decoration:underline;padding:2px;margin-top:10px;
+  }
   .lp-status{margin-top:8px;font-size:13px;font-weight:500;display:none}
   .lp-status.ok{display:block;color:var(--moss-deep)}
   .lp-status.err{display:block;color:#C25454}
@@ -451,17 +458,30 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
-      <span class="ver-tag" title="Phiên bản app">v4</span>
+      <span class="ver-tag" title="Phiên bản app">v5</span>
     </div>
     <p class="lede">Lên lịch trình, theo dõi chi phí kèm quy đổi sang tiền Việt, và kiểm soát đồ skincare, makeup cần mang theo.</p>
     <div class="login-panel" id="loginPanel" hidden>
       <div class="lp-title">Đăng nhập để đồng bộ mọi thiết bị</div>
       <div class="lp-row">
-        <input type="email" id="loginEmail" placeholder="email-cua-ban@example.com" aria-label="Email đăng nhập">
-        <button type="button" id="sendLinkBtn">Gửi link đăng nhập</button>
+        <input type="email" id="loginEmail" placeholder="email-cua-ban@example.com" aria-label="Email đăng nhập" autocomplete="email">
+      </div>
+      <div class="lp-row">
+        <input type="password" id="loginPass" placeholder="Mật khẩu (tối thiểu 6 ký tự)" aria-label="Mật khẩu" autocomplete="current-password">
+      </div>
+      <div class="lp-row">
+        <button type="button" id="passInBtn">Đăng nhập</button>
+        <button type="button" id="passUpBtn" class="lp-ghost">Tạo tài khoản mới</button>
       </div>
       <div class="lp-status" id="loginStatus" role="status"></div>
-      <p class="lp-hint">Không cần mật khẩu: mở hộp thư, bấm vào link trong email rồi quay lại trang này là xong. Link đôi khi rơi vào mục Spam nhé.</p>
+      <p class="lp-hint">Lần đầu dùng: nhập email + mật khẩu tự đặt rồi bấm «Tạo tài khoản mới», vào thẳng luôn không cần chờ email. Các lần sau (kể cả trên điện thoại) chỉ cần «Đăng nhập» với đúng cặp đó.</p>
+      <button type="button" class="lp-link" id="magicToggle">Hoặc đăng nhập bằng link qua email (magic link) ▾</button>
+      <div id="magicBox" hidden>
+        <div class="lp-row" style="margin-top:8px">
+          <button type="button" id="sendLinkBtn">Gửi link đăng nhập qua email</button>
+        </div>
+        <p class="lp-hint">Cách này dùng ô email phía trên, thư có thể vào Spam và dính giới hạn ~2 thư/giờ của Supabase.</p>
+      </div>
     </div>
   </header>
 
@@ -1831,6 +1851,7 @@
 
   /* ---------------- Đăng nhập & đồng bộ (Supabase, Thời đại 4-5) ---------------- */
   var acctArea, acctInfo, acctEmail, loginBtn, logoutBtn, loginPanel, loginEmail, sendLinkBtn, loginStatus;
+  var loginPass, passInBtn, passUpBtn, magicToggle, magicBox;
   var lastUserId = null;
 
   function cfgAttempted(){
@@ -1941,6 +1962,11 @@
     loginEmail = document.getElementById("loginEmail");
     sendLinkBtn = document.getElementById("sendLinkBtn");
     loginStatus = document.getElementById("loginStatus");
+    loginPass = document.getElementById("loginPass");
+    passInBtn = document.getElementById("passInBtn");
+    passUpBtn = document.getElementById("passUpBtn");
+    magicToggle = document.getElementById("magicToggle");
+    magicBox = document.getElementById("magicBox");
 
     maybeShowDiagnostic();
     acctArea.hidden = false;
@@ -1959,8 +1985,14 @@
       if(!loginPanel.hidden) loginEmail.focus();
     });
     sendLinkBtn.addEventListener("click", sendMagicLink);
+    passInBtn.addEventListener("click", signInPassword);
+    passUpBtn.addEventListener("click", signUpPassword);
+    magicToggle.addEventListener("click", function(){ magicBox.hidden = !magicBox.hidden; });
     loginEmail.addEventListener("keydown", function(e){
-      if(e.key === "Enter") sendMagicLink();
+      if(e.key === "Enter") loginPass.focus();
+    });
+    loginPass.addEventListener("keydown", function(e){
+      if(e.key === "Enter") signInPassword();
     });
     logoutBtn.addEventListener("click", async function(){
       try{ await sb.auth.signOut(); }catch(e){}
@@ -1973,6 +2005,82 @@
       var s = await sb.auth.getSession();
       handleAuth(s && s.data && s.data.session ? s.data.session.user : null);
     }catch(e){}
+  }
+
+  function readCreds(){
+    var email = (loginEmail.value || "").trim();
+    var pass = loginPass.value || "";
+    loginStatus.className = "lp-status";
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+      loginStatus.textContent = "Email chưa đúng định dạng, bạn kiểm tra lại nhé.";
+      loginStatus.classList.add("err");
+      return null;
+    }
+    if(pass.length < 6){
+      loginStatus.textContent = "Mật khẩu cần tối thiểu 6 ký tự.";
+      loginStatus.classList.add("err");
+      return null;
+    }
+    return { email: email, password: pass };
+  }
+
+  async function signUpPassword(){
+    var c = readCreds();
+    if(!c) return;
+    passUpBtn.disabled = true; passInBtn.disabled = true;
+    try{
+      var res = await sb.auth.signUp(c);
+      if(res.error) throw res.error;
+      if(res.data && res.data.session){
+        loginStatus.textContent = "Tạo tài khoản thành công, đã đăng nhập luôn!";
+        loginStatus.classList.add("ok");
+      }else{
+        loginStatus.textContent = "Tài khoản đã tạo nhưng Supabase đang bật «Confirm email» nên còn chờ xác nhận. Vào dashboard → Authentication → Sign In / Up → mục Email → tắt «Confirm email», rồi quay lại bấm «Đăng nhập».";
+        loginStatus.classList.add("err");
+      }
+    }catch(e){
+      var m = (e && e.message) ? String(e.message) : "";
+      if(/already registered|already exists/i.test(m)){
+        loginStatus.textContent = "Email này đã có tài khoản (có thể do lần gửi magic link trước). Bấm «Đăng nhập» thử; nếu báo sai mật khẩu, vào dashboard → Authentication → Users, xóa user này rồi «Tạo tài khoản mới» lại.";
+      }else if(/rate ?limit/i.test(m)){
+        loginStatus.textContent = "Đụng giới hạn thao tác, đợi một lát rồi thử lại nhé.";
+      }else if(/signups? not allowed|disabled/i.test(m)){
+        loginStatus.textContent = "Supabase đang tắt đăng ký: vào Authentication → Sign In / Up, bật «Allow new users to sign up» rồi thử lại.";
+      }else if(/password/i.test(m)){
+        loginStatus.textContent = "Mật khẩu chưa đạt yêu cầu của Supabase: «" + m + "».";
+      }else{
+        loginStatus.textContent = "Không tạo được tài khoản. Supabase báo: «" + (m || "không rõ") + "». Chụp màn hình dòng này gửi Claude nhé.";
+      }
+      loginStatus.classList.add("err");
+    }finally{
+      passUpBtn.disabled = false; passInBtn.disabled = false;
+    }
+  }
+
+  async function signInPassword(){
+    var c = readCreds();
+    if(!c) return;
+    passInBtn.disabled = true; passUpBtn.disabled = true;
+    try{
+      var res = await sb.auth.signInWithPassword(c);
+      if(res.error) throw res.error;
+      loginStatus.textContent = "Đăng nhập thành công!";
+      loginStatus.classList.add("ok");
+    }catch(e){
+      var m = (e && e.message) ? String(e.message) : "";
+      if(/invalid login credentials/i.test(m)){
+        loginStatus.textContent = "Sai email hoặc mật khẩu. Nếu chưa từng tạo tài khoản bằng mật khẩu, bấm «Tạo tài khoản mới» trước nhé.";
+      }else if(/email not confirmed/i.test(m)){
+        loginStatus.textContent = "Tài khoản đang chờ xác nhận email. Vào dashboard → Authentication → Sign In / Up → mục Email → tắt «Confirm email», rồi bấm «Đăng nhập» lại.";
+      }else if(/rate ?limit/i.test(m)){
+        loginStatus.textContent = "Đụng giới hạn thao tác, đợi một lát rồi thử lại nhé.";
+      }else{
+        loginStatus.textContent = "Không đăng nhập được. Supabase báo: «" + (m || "không rõ") + "». Chụp màn hình dòng này gửi Claude nhé.";
+      }
+      loginStatus.classList.add("err");
+    }finally{
+      passInBtn.disabled = false; passUpBtn.disabled = false;
+    }
   }
 
   var linkCooldown = false;
