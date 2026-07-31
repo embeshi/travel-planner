@@ -81,6 +81,13 @@
     font-family:var(--font-body);font-size:12.5px;font-weight:600;
     cursor:pointer;text-decoration:underline;padding:2px;
   }
+  .acct-btn.off{background:#C9AEBB}
+  .acct-btn.off:hover{background:#B698A6}
+  .ver-tag{
+    font-family:var(--font-mono);font-size:10.5px;color:#C4A9B7;
+    border:1px solid var(--line);border-radius:6px;padding:1px 7px;
+    align-self:center;white-space:nowrap;
+  }
   .login-panel{
     margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);
     background:var(--paper);padding:14px 16px;max-width:470px;
@@ -105,6 +112,30 @@
   .lp-status.ok{display:block;color:var(--moss-deep)}
   .lp-status.err{display:block;color:#C25454}
   .lp-hint{margin-top:8px;font-size:12.5px;color:var(--muted)}
+  .cfg-warn{
+    margin-top:12px;border:1.5px dashed #C25454;background:#FBEFEF;color:#8C2F2F;
+    border-radius:10px;padding:10px 14px;font-size:13px;max-width:640px;
+  }
+  .diag{
+    margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--paper);padding:16px 18px;max-width:640px;
+    box-shadow:0 1px 3px rgba(28,18,24,.05);
+  }
+  .diag h3{font-size:14px;margin-bottom:8px}
+  .diag-row{
+    display:flex;gap:9px;align-items:flex-start;
+    padding:8px 0;border-bottom:1px dashed var(--line);font-size:13.5px;
+  }
+  .diag-row:last-child{border-bottom:none}
+  .diag-ic{flex:none;width:20px;text-align:center;font-weight:700}
+  .diag-row.ok .diag-ic{color:var(--moss-deep)}
+  .diag-row.err .diag-ic{color:#C25454}
+  .diag-row .d-body{flex:1}
+  .diag-row .d-val{
+    font-family:var(--font-mono);font-size:12px;color:var(--muted);
+    word-break:break-all;display:block;margin-top:2px;
+  }
+  .diag-fix{margin-top:3px;font-size:12.5px;color:#8C2F2F;display:block}
 
   /* ---------- Luggage tag section headers (signature) ---------- */
   .tag{
@@ -420,6 +451,7 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
+      <span class="ver-tag" title="Phiên bản app">v4</span>
     </div>
     <p class="lede">Lên lịch trình, theo dõi chi phí kèm quy đổi sang tiền Việt, và kiểm soát đồ skincare, makeup cần mang theo.</p>
     <div class="login-panel" id="loginPanel" hidden>
@@ -799,14 +831,18 @@
   "use strict";
 
   /* ============================================================
-     ⚡ CẤU HÌNH SUPABASE · THỜI ĐẠI 4
-     Dán 2 nguyên liệu của bạn vào GIỮA hai dấu nháy kép bên dưới.
-     Ví dụ: var SUPABASE_URL = "https://rcwbyzuvzwizsedzmnmq.supabase.co";
-     Chưa dán thì app vẫn chạy bình thường, chỉ lưu trên máy.
+     ⚡ CẤU HÌNH SUPABASE · đã điền sẵn cho project travel-planner
+     (publishable key vốn công khai, an toàn khi có giáp RLS)
      ============================================================ */
   var SUPABASE_URL = "https://rcwbyzuvzwizsedzmnmq.supabase.co";
   var SUPABASE_KEY = "sb_publishable_l7aC3PVvB8la4bZPc_CGpA_JnxC27SA";
   /* ============================================================ */
+  SUPABASE_URL = (SUPABASE_URL || "").trim()
+    .replace(/\/(rest|auth|realtime|storage|functions)\/v1\/?$/i, "")
+    .replace(/\/+$/, "");
+  SUPABASE_KEY = (SUPABASE_KEY || "").trim();
+  var CFG_PLACEHOLDER_URL = "DAN_PROJECT_URL_VAO_DAY";
+  var CFG_PLACEHOLDER_KEY = "DAN_PUBLISHABLE_KEY_VAO_DAY";
 
   /* ---------------- State ---------------- */
   var STORAGE_KEY = "ke-hoach-du-lich-v1";
@@ -1797,6 +1833,99 @@
   var acctArea, acctInfo, acctEmail, loginBtn, logoutBtn, loginPanel, loginEmail, sendLinkBtn, loginStatus;
   var lastUserId = null;
 
+  function cfgAttempted(){
+    return SUPABASE_URL !== CFG_PLACEHOLDER_URL || SUPABASE_KEY !== CFG_PLACEHOLDER_KEY;
+  }
+
+  function showDiagnostic(){
+    var host = document.querySelector("header");
+    if(!host || document.getElementById("diagBox")) return;
+    var box = document.createElement("div");
+    box.id = "diagBox";
+    box.className = "diag";
+    var h = document.createElement("h3");
+    h.textContent = "🔎 Bảng kiểm tra kết nối Supabase";
+    box.appendChild(h);
+
+    function row(ok, title, value, fix){
+      var r = document.createElement("div");
+      r.className = "diag-row " + (ok ? "ok" : "err");
+      var ic = document.createElement("span");
+      ic.className = "diag-ic";
+      ic.textContent = ok ? "✓" : "✗";
+      var body = document.createElement("span");
+      body.className = "d-body";
+      var t = document.createElement("span");
+      t.textContent = title;
+      body.appendChild(t);
+      if(value){
+        var v = document.createElement("span");
+        v.className = "d-val";
+        v.textContent = value;
+        body.appendChild(v);
+      }
+      if(!ok && fix){
+        var f = document.createElement("span");
+        f.className = "diag-fix";
+        f.textContent = "→ " + fix;
+        body.appendChild(f);
+      }
+      r.appendChild(ic);
+      r.appendChild(body);
+      box.appendChild(r);
+    }
+
+    row(true, "Trang đang chạy bản mới (Thời đại 4-5)", "đã có chức năng đăng nhập + đồng bộ");
+
+    var cdnOk = !!window.supabase;
+    row(cdnOk, "Thư viện supabase-js tải về được", null,
+      "Mạng đang chặn cdn.jsdelivr.net. Thử mạng khác, tắt trình chặn quảng cáo, rồi tải lại trang.");
+
+    var urlPh = SUPABASE_URL === CFG_PLACEHOLDER_URL;
+    var urlOk = /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(SUPABASE_URL);
+    row(urlOk, "Project URL đúng định dạng", SUPABASE_URL,
+      urlPh
+        ? "Chưa dán Project URL. Mở index.html trên GitHub (biểu tượng bút chì), tìm dòng SUPABASE_URL và dán vào giữa hai dấu nháy."
+        : "URL phải có đúng dạng https://xxxx.supabase.co, không kèm gì phía sau, không khoảng trắng, giữ nguyên hai dấu nháy.");
+
+    var keyPh = SUPABASE_KEY === CFG_PLACEHOLDER_KEY;
+    var keyOk = SUPABASE_KEY.indexOf("sb_publishable_") === 0 || SUPABASE_KEY.indexOf("eyJ") === 0;
+    row(keyOk, "Key đúng loại (publishable)",
+      keyPh ? SUPABASE_KEY : SUPABASE_KEY.slice(0, 22) + "…",
+      keyPh
+        ? "Chưa dán key. Sửa dòng SUPABASE_KEY trong index.html, dán publishable key vào giữa hai dấu nháy."
+        : "Key phải bắt đầu bằng sb_publishable_ (hoặc eyJ nếu là anon kiểu cũ). Nếu thấy sb_secret_ là chép nhầm loại nguy hiểm: quay lại Settings → API Keys lấy đúng Publishable key.");
+
+    var allOk = cdnOk && urlOk && keyOk;
+    row(allOk,
+      allOk ? "Kết luận: mọi thứ ổn!" : "Kết luận: còn lỗi",
+      null, null);
+    var last = box.lastChild.querySelector(".d-body");
+    var note = document.createElement("span");
+    note.className = "d-val";
+    note.textContent = allOk
+      ? "Nút «Đăng nhập» phải hiện ở góc trên bên phải. Xóa ?kiemtra khỏi link để dùng bình thường."
+      : "Sửa các dòng có dấu ✗ ở trên, commit lại, đợi build rồi tải lại trang này.";
+    last.appendChild(note);
+
+    host.appendChild(box);
+  }
+
+  function maybeShowDiagnostic(){
+    if(/kiemtra/i.test(window.location.search + window.location.hash)){
+      showDiagnostic();
+      return;
+    }
+    if(cfgAttempted() && !(window.supabase && cfgLooksValid())){
+      var host = document.querySelector("header");
+      if(!host) return;
+      var w = document.createElement("div");
+      w.className = "cfg-warn";
+      w.textContent = "⚠ Cấu hình Supabase chưa đúng nên nút Đăng nhập đang ẩn. Thêm ?kiemtra vào cuối link rồi tải lại trang để xem bảng chẩn đoán.";
+      host.appendChild(w);
+    }
+  }
+
   function cfgLooksValid(){
     return /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(SUPABASE_URL) &&
            (SUPABASE_KEY.indexOf("sb_publishable_") === 0 || SUPABASE_KEY.indexOf("eyJ") === 0);
@@ -1813,12 +1942,17 @@
     sendLinkBtn = document.getElementById("sendLinkBtn");
     loginStatus = document.getElementById("loginStatus");
 
-    if(!(window.supabase && cfgLooksValid())) return;
+    maybeShowDiagnostic();
+    acctArea.hidden = false;
+    if(!(window.supabase && cfgLooksValid())){
+      loginBtn.classList.add("off");
+      loginBtn.addEventListener("click", function(){ showDiagnostic(); });
+      return;
+    }
     try{
       sb = window.supabase.createClient(SUPABASE_URL.replace(/\/$/, ""), SUPABASE_KEY);
     }catch(e){ return; }
     sbReady = true;
-    acctArea.hidden = false;
 
     loginBtn.addEventListener("click", function(){
       loginPanel.hidden = !loginPanel.hidden;
@@ -1841,7 +1975,27 @@
     }catch(e){}
   }
 
+  var linkCooldown = false;
+  function startLinkCooldown(sec){
+    linkCooldown = true;
+    var left = sec;
+    sendLinkBtn.disabled = true;
+    sendLinkBtn.textContent = "Gửi lại sau " + left + "s";
+    var iv = setInterval(function(){
+      left--;
+      if(left <= 0){
+        clearInterval(iv);
+        linkCooldown = false;
+        sendLinkBtn.disabled = false;
+        sendLinkBtn.textContent = "Gửi link đăng nhập";
+      }else{
+        sendLinkBtn.textContent = "Gửi lại sau " + left + "s";
+      }
+    }, 1000);
+  }
+
   async function sendMagicLink(){
+    if(linkCooldown) return;
     var email = (loginEmail.value || "").trim();
     loginStatus.className = "lp-status";
     if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
@@ -1851,20 +2005,36 @@
     }
     sendLinkBtn.disabled = true;
     sendLinkBtn.textContent = "Đang gửi…";
+    var cooled = false;
     try{
       var res = await sb.auth.signInWithOtp({
         email: email,
         options: { emailRedirectTo: window.location.origin + window.location.pathname }
       });
       if(res.error) throw res.error;
-      loginStatus.textContent = "Đã gửi! Mở hộp thư (kể cả mục Spam), bấm vào link rồi quay lại trang này.";
+      loginStatus.textContent = "Đã gửi! Mở hộp thư (soi cả mục Spam / Quảng cáo), bấm vào link rồi quay lại trang này. Chỉ cần bấm gửi một lần thôi nhé.";
       loginStatus.classList.add("ok");
+      startLinkCooldown(60);
+      cooled = true;
     }catch(e){
-      loginStatus.textContent = "Không gửi được link. Kiểm tra lại email hoặc thử lại sau ít phút.";
+      var msg = (e && e.message) ? String(e.message) : "";
+      if(/rate ?limit/i.test(msg)){
+        loginStatus.textContent = "Đụng giới hạn gửi email: gói mặc định của Supabase chỉ gửi khoảng 2 email mỗi giờ. Đợi chừng 1 tiếng rồi bấm lại đúng một lần nhé.";
+        startLinkCooldown(60);
+        cooled = true;
+      }else if(/signups? not allowed/i.test(msg)){
+        loginStatus.textContent = "Supabase đang tắt đăng ký tài khoản mới. Vào dashboard → Authentication → Sign In / Up, bật «Allow new users to sign up» rồi thử lại.";
+      }else if(/otp[_ ]?disabled|email.*(disabled|not enabled)/i.test(msg)){
+        loginStatus.textContent = "Email provider đang tắt. Vào dashboard → Authentication → Sign In / Up, bật đăng nhập bằng Email rồi thử lại.";
+      }else{
+        loginStatus.textContent = "Không gửi được link. Supabase báo: «" + (msg || "không rõ lý do") + "». Chụp màn hình dòng này gửi Claude nhé.";
+      }
       loginStatus.classList.add("err");
     }finally{
-      sendLinkBtn.disabled = false;
-      sendLinkBtn.textContent = "Gửi link đăng nhập";
+      if(!cooled){
+        sendLinkBtn.disabled = false;
+        sendLinkBtn.textContent = "Gửi link đăng nhập";
+      }
     }
   }
 
