@@ -593,6 +593,9 @@
 
   /* Hero sống động */
   header{position:relative}
+  @media (min-width:761px){
+    header{padding-right:178px}
+  }
   .blob{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0}
   .b1{width:190px;height:190px;right:-40px;top:-60px;background:radial-gradient(circle at 35% 35%, #FADCE9, #F3B9D3 70%, transparent 71%);opacity:.55;animation:blobDrift 9s ease-in-out infinite alternate}
   .b2{width:120px;height:120px;right:150px;top:-46px;background:radial-gradient(circle at 40% 40%, #FBE9F1, #EEC3D8 70%, transparent 71%);opacity:.5;animation:blobDrift 11s ease-in-out infinite alternate-reverse}
@@ -608,7 +611,11 @@
   .mascot .s2{right:-6px;bottom:34px;animation-delay:1.2s}
   @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.8) rotate(-8deg)}50%{opacity:1;transform:scale(1.1) rotate(8deg)}}
   .title-row,.lede,.eyebrow{position:relative;z-index:2}
-  @media (max-width:760px){.mascot{width:86px;top:-6px;right:0}.b2{display:none}}
+  @media (max-width:760px){
+    .mascot{width:86px;top:-6px;right:0}
+    .b2{display:none}
+    header{padding-right:96px}
+  }
 
   /* Chiều sâu 3D nhẹ cho thẻ */
   .card,.grand-card,.day-card,.daily-sum,.daily-note{transition:transform .18s ease,box-shadow .18s ease}
@@ -803,7 +810,7 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
-      <span class="ver-tag" title="Phiên bản app">v6</span>
+      <span class="ver-tag" title="Phiên bản app">v6.1</span>
     </div>
     <p class="lede">Lên lịch trình, theo dõi chi phí kèm quy đổi sang tiền Việt, và kiểm soát đồ skincare, makeup cần mang theo.</p>
     <div class="login-panel" id="loginPanel" hidden>
