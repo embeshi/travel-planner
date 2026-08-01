@@ -249,7 +249,7 @@
   /* ---------- Itinerary table ---------- */
   .section-note{font-size:13.5px;color:var(--muted);margin:-4px 0 14px;max-width:640px}
   .table-scroll{overflow-x:auto;border-radius:var(--radius)}
-  table{border-collapse:collapse;width:100%;min-width:1060px}
+  table{border-collapse:collapse;width:100%;min-width:1180px}
   table.cash-table{min-width:780px}
   table.booking-table{min-width:920px}
   thead th{
@@ -267,6 +267,17 @@
   }
   td input:hover{background:#F9EFF4}
   td input:focus{border-color:var(--moss);background:#fff;box-shadow:0 0 0 3px var(--moss-soft)}
+  td.pay select{
+    width:100%;border:1px solid transparent;border-radius:7px;background-color:transparent;
+    font-family:var(--font-body);font-size:13.5px;color:var(--ink);
+    padding:8px 24px 8px 8px;outline:none;cursor:pointer;
+    appearance:none;-webkit-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23B08CA0' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center;
+    transition:border-color .15s,background-color .15s;
+  }
+  td.pay select:focus{border-color:var(--moss);background-color:#fff;box-shadow:0 0 0 3px var(--moss-soft)}
+  td.pay select.empty{color:var(--muted)}
   td input.cost{font-family:var(--font-mono);text-align:right}
   td input::placeholder{color:#C4A9B7}
   td.vnd{
@@ -308,97 +319,149 @@
   .grand-card.vnd-big .g-value{color:#FF8FBB}
 
   /* ---------- Packing lists (tabs) ---------- */
-  .pack-shell{padding:0;overflow:hidden;margin-top:6px}
-  .pack-tabs{display:grid;grid-template-columns:repeat(3,1fr)}
+  /* ---------- Hành lý & Sổ tay · áo mới (Món 12) ---------- */
+  .pack-shell{padding:12px;margin-top:6px}
+  .pack-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
   .pack-tabs.two{grid-template-columns:repeat(2,1fr)}
   .pack-tab{
-    appearance:none;-webkit-appearance:none;border:none;background:transparent;
+    appearance:none;-webkit-appearance:none;border:1px solid var(--line);
+    background:#FDF8FA;border-radius:14px;
     font-family:var(--font-body);text-align:left;cursor:pointer;
-    padding:14px 16px 12px;border-bottom:2.5px solid var(--line);
-    display:flex;flex-direction:column;gap:7px;transition:background .15s;
+    padding:12px 14px 11px;display:flex;flex-direction:column;gap:7px;
+    transition:transform .16s ease,box-shadow .16s ease,background .16s,border-color .16s;
   }
-  .pack-tab + .pack-tab{border-left:1px solid var(--line)}
-  .pack-tab:hover{background:#FCF6F9}
-  .pack-tab:focus-visible{outline:2px solid var(--moss);outline-offset:-2px}
-  .pt-head{display:flex;align-items:center;gap:7px;font-weight:600;font-size:14px;color:var(--ink)}
-  .pt-icon{font-size:16px;line-height:1}
-  .pt-count{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
-  .pt-bar{display:block;height:6px;border-radius:99px;background:#F3E4EC;overflow:hidden}
+  .pack-tab:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(28,18,24,.08)}
+  .pack-tab:focus-visible{outline:2.5px solid var(--moss);outline-offset:2px}
+  .pt-head{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px;color:var(--ink)}
+  .pt-icon{font-size:17px;line-height:1}
+  .pt-count{
+    font-family:var(--font-mono);font-size:11.5px;color:var(--muted);
+    background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:1px 8px;align-self:flex-start;
+  }
+  .pt-bar{display:block;height:7px;border-radius:99px;background:#F3E4EC;overflow:hidden}
   .pt-fill{display:block;height:100%;width:0%;border-radius:99px;transition:width .35s ease}
-  .pack-tab.moss .pt-fill{background:var(--moss)}
-  .pack-tab.rose .pt-fill{background:var(--rose)}
-  .pack-tab.plum .pt-fill{background:var(--plum)}
-  .pack-tab.active{border-bottom-width:3.5px;padding-bottom:11px}
-  .pack-tab.moss.active{border-bottom-color:var(--moss);background:var(--moss-soft)}
-  .pack-tab.rose.active{border-bottom-color:var(--rose);background:var(--rose-soft)}
-  .pack-tab.plum.active{border-bottom-color:var(--plum);background:var(--plum-soft)}
-  .pack-card{padding:20px 20px 22px}
+  .pack-tab.moss .pt-fill{background:linear-gradient(90deg,var(--moss),#F06BA8)}
+  .pack-tab.rose .pt-fill{background:linear-gradient(90deg,var(--rose),#4A2A3C)}
+  .pack-tab.plum .pt-fill{background:linear-gradient(90deg,var(--plum),#A8506F)}
+  .pack-tab.active{border-color:transparent;transform:translateY(-2px)}
+  .pack-tab.moss.active{background:linear-gradient(135deg,var(--moss),#B02458);box-shadow:0 8px 18px rgba(214,51,108,.35)}
+  .pack-tab.rose.active{background:linear-gradient(135deg,var(--rose),#4A2A3C);box-shadow:0 8px 18px rgba(28,18,24,.35)}
+  .pack-tab.plum.active{background:linear-gradient(135deg,var(--plum),#5C1F35);box-shadow:0 8px 18px rgba(122,41,70,.35)}
+  .pack-tab.active .pt-head{color:#fff}
+  .pack-tab.active .pt-count{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#fff}
+  .pack-tab.active .pt-bar{background:rgba(255,255,255,.3)}
+  .pack-tab.active .pt-fill{background:#fff}
+  .pack-tab.active .pt-icon{display:inline-block;animation:tagBob 2.6s ease-in-out infinite}
+
   .pack-panel{display:none}
-  .pack-panel.active{display:block}
-  ul.pack-list{list-style:none}
+  .pack-panel.active{display:block;animation:panelIn .22s ease}
+  @keyframes panelIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+  .pack-card{
+    padding:16px 14px 16px;margin-top:10px;border-radius:16px;
+    background:#FFFAFC;border:1.5px dashed #F2D9E5;
+  }
+  .pack-card.rose{background:#FAF8F9;border-color:#E0D7DC}
+  .pack-card.plum{background:#FBF6F8;border-color:#ECD5DF}
+
+  ul.pack-list{list-style:none;display:flex;flex-direction:column;gap:8px}
   .pack-item{
     display:flex;align-items:center;gap:10px;
-    padding:8px 4px;border-bottom:1px dashed var(--line);
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:7px 12px;
+    transition:transform .15s ease,box-shadow .15s ease,background .2s,opacity .2s;
   }
-  .pack-item:last-child{border-bottom:none}
+  .pack-item:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(28,18,24,.07)}
+  .pack-item.done{background:var(--moss-soft);border-color:#F2CBDD;opacity:.82}
+  .pack-card.rose .pack-item.done{background:#EFEAED;border-color:#DCD2D8}
+  .pack-card.plum .pack-item.done{background:#F6E7EE;border-color:#E8CBD8}
   .pack-item input[type=checkbox]{
     appearance:none;-webkit-appearance:none;flex:none;
-    width:20px;height:20px;border:1.5px solid #CBB2BF;border-radius:6px;background:#fff;
+    width:22px;height:22px;border:2px solid #DFC0CF;border-radius:8px;background:#fff;
     cursor:pointer;position:relative;transition:background .15s,border-color .15s;
   }
-  .pack-item input[type=checkbox]:checked{background:var(--moss);border-color:var(--moss)}
-  .pack-card.rose .pack-item input[type=checkbox]:checked{background:var(--rose);border-color:var(--rose)}
-  .pack-item input[type=checkbox]:checked::after{
-    content:"";position:absolute;left:6px;top:2.5px;width:5px;height:10px;
-    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg);
+  .pack-item input[type=checkbox]:hover{border-color:var(--moss)}
+  .pack-item input[type=checkbox]:checked{
+    background:linear-gradient(135deg,var(--moss),#B02458);border-color:transparent;
+    animation:cbPop .28s ease;
   }
-  .pack-item input[type=checkbox]:focus-visible{outline:2px solid var(--moss);outline-offset:2px}
+  .pack-card.rose .pack-item input[type=checkbox]:checked{background:linear-gradient(135deg,var(--rose),#4A2A3C)}
+  .pack-card.plum .pack-item input[type=checkbox]:checked{background:linear-gradient(135deg,var(--plum),#5C1F35)}
+  @keyframes cbPop{0%{transform:scale(.75)}55%{transform:scale(1.18)}100%{transform:scale(1)}}
+  .pack-item input[type=checkbox]:checked::after{
+    content:"";position:absolute;left:6.5px;top:3px;width:5px;height:10px;
+    border:solid #fff;border-width:0 2.2px 2.2px 0;transform:rotate(42deg);
+  }
+  .pack-item input[type=checkbox]:focus-visible{outline:2.5px solid var(--moss);outline-offset:2px}
   .pack-item .p-name{
     flex:1;border:none;background:transparent;outline:none;
-    font-family:var(--font-body);font-size:14.5px;color:var(--ink);padding:4px 2px;
-    border-bottom:1px solid transparent;
+    font-family:var(--font-body);font-size:14.5px;font-weight:500;color:var(--ink);padding:4px 2px;
+    border-bottom:1.5px solid transparent;
   }
   .pack-item .p-name:focus{border-bottom-color:var(--moss)}
-  .pack-item.done .p-name{color:#B39AA8;text-decoration:line-through}
+  .pack-item.done .p-name{color:#B39AA8;text-decoration:line-through;font-weight:400}
   .pack-item .p-note{
     flex:none;width:34%;border:none;background:transparent;outline:none;
     font-size:12.5px;color:var(--muted);font-style:italic;padding:4px 2px;
-    border-bottom:1px solid transparent;
+    border-bottom:1.5px solid transparent;
   }
   .pack-item .p-note:focus{border-bottom-color:var(--moss)}
   .pack-item .p-note::placeholder{color:#D7C2CD;font-style:italic}
-  .pack-empty{font-size:13.5px;color:var(--muted);padding:6px 2px 2px}
+
+  .pack-empty{
+    font-size:13.5px;color:var(--muted);text-align:center;
+    border:2px dashed #EED9E4;border-radius:12px;background:#fff;
+    padding:14px 12px;
+  }
+  .pack-empty::before{content:"🌸 "}
+
   .pack-add{display:flex;gap:8px;margin-top:14px}
   .pack-add input{
-    flex:1;border:1px solid var(--line);border-radius:9px;background:#fff;
-    font-family:var(--font-body);font-size:14px;padding:9px 12px;outline:none;
+    flex:1;border:1px solid var(--line);border-radius:12px;background:#fff;
+    font-family:var(--font-body);font-size:14px;padding:10px 13px;outline:none;
     transition:border-color .15s,box-shadow .15s;
   }
   .pack-add input:focus{border-color:var(--moss);box-shadow:0 0 0 3px var(--moss-soft)}
   .pack-add button{
-    border:none;background:var(--moss);color:#fff;font-family:var(--font-body);
-    font-size:14px;font-weight:600;padding:9px 16px;border-radius:9px;cursor:pointer;
-    transition:background .15s;white-space:nowrap;
+    border:none;border-radius:12px;padding:10px 17px;
+    font-family:var(--font-body);font-size:14px;font-weight:700;color:#fff;cursor:pointer;
+    background:linear-gradient(135deg,var(--moss),#B02458);
+    box-shadow:0 5px 12px rgba(214,51,108,.3);white-space:nowrap;
+    transition:transform .15s ease,box-shadow .15s ease;
   }
-  .pack-add button:hover{background:var(--moss-deep)}
+  .pack-add button:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(214,51,108,.35)}
+  .pack-add button:active{transform:translateY(1px);box-shadow:0 2px 6px rgba(28,18,24,.25)}
   .pack-card.rose .pack-add input:focus{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-soft)}
-  .pack-card.rose .pack-add button{background:var(--rose)}
-  .pack-card.rose .pack-add button:hover{background:#3A2B34}
-  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
-  .chips .chip{
-    border:1px solid var(--line);background:#FDF8FA;color:var(--muted);
-    font-family:var(--font-body);font-size:12.5px;padding:5px 11px;border-radius:99px;
-    cursor:pointer;transition:all .15s;
-  }
-  .chips .chip:hover{border-color:var(--moss);color:var(--moss);background:var(--moss-soft)}
-  .pack-card.rose .chips .chip:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-soft)}
-  .tag.plum{background:var(--plum)}
-  .pack-card.plum .pack-item input[type=checkbox]:checked{background:var(--plum);border-color:var(--plum)}
+  .pack-card.rose .pack-add button{background:linear-gradient(135deg,var(--rose),#4A2A3C);box-shadow:0 5px 12px rgba(28,18,24,.3)}
   .pack-card.plum .pack-add input:focus{border-color:var(--plum);box-shadow:0 0 0 3px var(--plum-soft)}
-  .pack-card.plum .pack-add button{background:var(--plum)}
-  .pack-card.plum .pack-add button:hover{background:#5E1F36}
+  .pack-card.plum .pack-add button{background:linear-gradient(135deg,var(--plum),#5C1F35);box-shadow:0 5px 12px rgba(122,41,70,.3)}
+
+  .chips-label{
+    margin-top:15px;font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;color:#C9AEBB;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+  .chips .chip{
+    border:1.5px dashed #E4C7D6;background:#fff;color:var(--muted);
+    font-family:var(--font-body);font-size:12.5px;font-weight:500;
+    padding:5px 12px;border-radius:99px;cursor:pointer;transition:all .15s;
+  }
+  .chips .chip::before{content:"+ ";color:var(--moss);font-weight:700}
+  .chips .chip:hover{
+    border-style:solid;border-color:var(--moss);color:var(--moss-deep);
+    background:var(--moss-soft);transform:translateY(-1px);
+  }
+  .pack-card.rose .chips .chip::before{color:var(--rose)}
+  .pack-card.rose .chips .chip:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-soft)}
+  .pack-card.plum .chips .chip::before{color:var(--plum)}
   .pack-card.plum .chips .chip:hover{border-color:var(--plum);color:var(--plum);background:var(--plum-soft)}
-  .chips-label{font-size:11.5px;color:#C4A9B7;letter-spacing:.05em;text-transform:uppercase;margin-top:16px;font-weight:600}
+
+  .tag.plum{background:var(--plum)}
+
+  @media (prefers-reduced-motion:reduce){
+    .pack-panel.active,.pack-item input[type=checkbox]:checked,.pack-tab.active .pt-icon{animation:none !important}
+    .pack-tab:hover,.pack-tab.active,.pack-item:hover,.chips .chip:hover,.pack-add button:hover,.pack-add button:active{transform:none}
+  }
 
   /* ---------- Grand trip total ---------- */
   .total-card{padding:4px 20px}
@@ -440,6 +503,240 @@
   @media (prefers-reduced-motion:reduce){
     *{transition:none !important;animation:none !important}
   }
+  /* ---------- Chi phí theo ngày ---------- */
+  .daily-box{display:flex;flex-direction:column;gap:12px}
+  .daily-empty{color:var(--muted);font-size:14px;padding:4px 2px}
+  .daily-sum{
+    display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;
+    font-size:13px;color:var(--muted);
+    background:#FBF4F7;border:1px solid var(--line);border-radius:12px;
+    padding:10px 14px;
+  }
+  .daily-sum .ds-amt{font-family:var(--font-mono);font-size:12.5px;color:var(--ink);font-weight:600;white-space:nowrap}
+  .daily-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:10px}
+  .day-card{
+    position:relative;border:1px solid var(--line);border-radius:14px;
+    background:#fff;padding:12px 14px 11px;
+    box-shadow:0 1px 3px rgba(28,18,24,.05);
+  }
+  .day-card.max{
+    border-color:var(--moss);
+    background:linear-gradient(160deg,#FFF3F8,#FBE3EF);
+    box-shadow:0 2px 8px rgba(214,51,108,.16);
+  }
+  .day-card.nodate{border-style:dashed;background:transparent}
+  .dc-date{display:flex;align-items:baseline;gap:7px}
+  .dc-wd{
+    font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.06em;
+    color:#fff;background:var(--ink);border-radius:6px;padding:1px 6px;
+  }
+  .day-card.max .dc-wd{background:var(--moss-deep)}
+  .dc-d{font-weight:700;font-size:15.5px}
+  .day-card.nodate .dc-d{color:var(--muted);font-weight:600;font-size:13.5px}
+  .dc-fire{margin-left:auto;font-size:15px}
+  .dc-amt{margin-top:7px;font-size:17px;font-weight:700}
+  .day-card.max .dc-amt{color:var(--moss-deep)}
+  .dc-vnd{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:2px}
+  .dc-meta{margin-top:7px;font-size:11.5px;color:var(--muted)}
+  .daily-note{
+    font-size:13px;color:#5A4450;
+    background:#FBF4F7;border:1px solid var(--line);border-radius:12px;
+    padding:10px 14px;
+  }
+  .daily-note b{color:var(--moss-deep)}
+  /* ---------- Món 11 · Áo mới hiện đại ---------- */
+  html{scroll-behavior:smooth}
+  section[id]{scroll-margin-top:86px}
+  body{
+    background:
+      radial-gradient(720px 420px at 8% -6%, #FDE9F2 0%, transparent 62%),
+      radial-gradient(640px 400px at 100% 4%, #F6E0EC 0%, transparent 58%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+
+  /* Thanh điều hướng ghim */
+  .jump{
+    position:sticky;top:10px;z-index:60;
+    display:flex;gap:8px;overflow-x:auto;
+    padding:8px 10px;margin:14px 0 4px;
+    background:rgba(255,255,255,.72);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border:1px solid var(--line);border-radius:999px;
+    box-shadow:0 6px 18px rgba(28,18,24,.08);
+    scrollbar-width:none;
+  }
+  .jump::-webkit-scrollbar{display:none}
+  .jchip{
+    flex:none;white-space:nowrap;text-decoration:none;
+    font-size:13px;font-weight:600;color:var(--ink);
+    padding:7px 13px;border-radius:999px;border:1px solid transparent;
+    transition:background .15s,transform .15s,color .15s,border-color .15s;
+  }
+  .jchip:hover{background:var(--moss-soft);transform:translateY(-1px)}
+  .jchip.on{background:linear-gradient(135deg,var(--moss),#B02458);color:#fff;box-shadow:0 4px 12px rgba(214,51,108,.35)}
+
+  /* Banner phân khu */
+  .zone{
+    display:flex;align-items:center;gap:13px;
+    margin:44px 0 6px;padding:13px 18px;
+    border-radius:18px;color:#fff;
+    box-shadow:0 8px 22px rgba(28,18,24,.16);
+    transform:rotate(-.4deg);
+  }
+  .z-money{background:linear-gradient(120deg,#D6336C,#8F1E4E)}
+  .z-pack{background:linear-gradient(120deg,#1C1218,#4A2A3C)}
+  .z-notes{background:linear-gradient(120deg,#7A2946,#B03A3A)}
+  .z-ic{font-size:30px;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))}
+  .z-t b{display:block;font-size:16.5px;letter-spacing:.04em;text-transform:uppercase}
+  .z-t span{font-size:12.5px;opacity:.85}
+
+  /* Hero sống động */
+  header{position:relative}
+  .blob{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0}
+  .b1{width:190px;height:190px;right:-40px;top:-60px;background:radial-gradient(circle at 35% 35%, #FADCE9, #F3B9D3 70%, transparent 71%);opacity:.55;animation:blobDrift 9s ease-in-out infinite alternate}
+  .b2{width:120px;height:120px;right:150px;top:-46px;background:radial-gradient(circle at 40% 40%, #FBE9F1, #EEC3D8 70%, transparent 71%);opacity:.5;animation:blobDrift 11s ease-in-out infinite alternate-reverse}
+  @keyframes blobDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(-14px,10px) scale(1.06)}}
+  .mascot{position:absolute;right:6px;top:-14px;width:132px;z-index:1;pointer-events:none}
+  .chibi{width:100%;height:auto;filter:drop-shadow(0 10px 14px rgba(122,41,70,.22))}
+  .ch-float{animation:chFloat 3.4s ease-in-out infinite;transform-origin:75px 90px}
+  @keyframes chFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .ch-shadow{animation:chShadow 3.4s ease-in-out infinite}
+  @keyframes chShadow{0%,100%{opacity:.55;transform:scaleX(1)}50%{opacity:.35;transform:scaleX(.82)}}
+  .mascot .spark{position:absolute;font-size:15px;animation:twinkle 2.6s ease-in-out infinite}
+  .mascot .s1{left:-12px;top:16px}
+  .mascot .s2{right:-6px;bottom:34px;animation-delay:1.2s}
+  @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.8) rotate(-8deg)}50%{opacity:1;transform:scale(1.1) rotate(8deg)}}
+  .title-row,.lede,.eyebrow{position:relative;z-index:2}
+  @media (max-width:760px){.mascot{width:86px;top:-6px;right:0}.b2{display:none}}
+
+  /* Chiều sâu 3D nhẹ cho thẻ */
+  .card,.grand-card,.day-card,.daily-sum,.daily-note{transition:transform .18s ease,box-shadow .18s ease}
+  .card:hover,.grand-card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(28,18,24,.10)}
+  .day-card:hover{transform:translateY(-3px) rotate3d(1,-1,0,4deg);box-shadow:0 10px 22px rgba(214,51,108,.16)}
+  .day-card.max .dc-fire{display:inline-block;animation:firePulse 1.6s ease-in-out infinite}
+  @keyframes firePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+
+  /* Tem mục kiểu sticker */
+  .tag{
+    box-shadow:3px 4px 0 rgba(28,18,24,.14);
+    transform:rotate(-.6deg);
+    transition:transform .18s ease;
+  }
+  .tag:hover{transform:rotate(0deg) scale(1.015)}
+  .tag-icon{display:inline-block;animation:tagBob 3.2s ease-in-out infinite}
+  @keyframes tagBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .blob,.ch-float,.ch-shadow,.mascot .spark,.tag-icon,.day-card.max .dc-fire{animation:none !important}
+    .card:hover,.grand-card:hover,.day-card:hover,.jchip:hover,.tag:hover{transform:none}
+  }
+  /* ---------- Món 13 · Điện thoại: mọi thứ nằm gọn trong khung ---------- */
+  @media (max-width:700px){
+    html,body{overflow-x:clip}
+    body{padding-left:12px;padding-right:12px}
+
+    /* Bảng biến hình thành thẻ dọc */
+    .card.table-scroll{background:transparent;border:none;box-shadow:none;padding:0;overflow:visible}
+    .table-scroll table{min-width:0 !important;width:100%;border-collapse:separate;border-spacing:0}
+    .table-scroll thead{display:none}
+    .table-scroll table,.table-scroll tbody,.table-scroll tfoot,
+    .table-scroll tr,.table-scroll td{display:block}
+    .table-scroll tbody tr{
+      position:relative;background:#fff;border:1px solid var(--line);
+      border-radius:14px;padding:9px 12px 7px;margin-bottom:12px;
+      box-shadow:0 2px 8px rgba(28,18,24,.05);
+    }
+    .table-scroll tbody td{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      border-bottom:1px dashed var(--line);padding:6px 0;
+    }
+    .table-scroll tbody td::before{
+      content:attr(data-label);
+      flex:none;width:33%;max-width:118px;
+      font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+      color:#C9AEBB;text-align:left;
+    }
+    .table-scroll tbody td.num,
+    .table-scroll tbody td.vnd{text-align:left;white-space:normal;padding-right:0}
+    .table-scroll tbody td:not([data-label]){border-bottom:none;padding:2px 0 0}
+    .table-scroll tbody td:not([data-label])::before{content:none}
+    .table-scroll tbody td input,
+    .table-scroll tbody td select{flex:1;width:auto;min-width:0;padding:7px 6px}
+    .table-scroll tbody td.vnd{
+      font-family:var(--font-mono);font-size:13px;
+    }
+    .table-scroll tbody td .del-btn{margin-left:auto}
+    .table-scroll tbody tr td:has(.del-btn){
+      position:absolute;top:5px;right:7px;border:none;padding:0;width:auto;
+    }
+    .table-scroll tbody tr:has(.del-btn){padding-right:38px}
+
+    /* Dải tổng cuối mỗi bảng */
+    .table-scroll tfoot tr{
+      background:linear-gradient(135deg,#FDEFF6,#F8DDEA);
+      border:1px solid #F2CBDD;border-radius:14px;
+      padding:10px 14px 8px;margin-top:2px;
+      box-shadow:0 2px 8px rgba(214,51,108,.08);
+    }
+    .booking-table tfoot tr{
+      background:linear-gradient(135deg,#F2F0F2,#E9E4E8);
+      border-color:#DBD3D9;box-shadow:0 2px 8px rgba(28,18,24,.06);
+    }
+    .table-scroll tfoot td{
+      display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+      padding:7px 0;background:none;border-top:none;white-space:normal;
+      border-bottom:1px dashed rgba(28,18,24,.12);
+      font-size:14px;font-weight:700;text-align:left;
+    }
+    .table-scroll tfoot td[data-label]{font-family:var(--font-mono)}
+    .table-scroll tfoot td.vnd-total{padding-right:0}
+    .table-scroll tfoot td:last-of-type{border-bottom:none}
+    .table-scroll tfoot td::before{
+      content:attr(data-label);
+      font-family:var(--font-body);text-align:left;
+      font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+      color:#8A5E75;
+    }
+    .table-scroll tfoot td:not([data-label]):not(:empty){
+      display:block;padding:0 0 7px;margin-bottom:3px;
+      font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--moss-deep);font-family:var(--font-body);
+      border-bottom:1px dashed rgba(28,18,24,.18);
+    }
+    .booking-table tfoot td:not([data-label]):not(:empty){color:#3A2B34}
+    .table-scroll tfoot td:not([data-label]):not(:empty)::before{content:none}
+    .table-scroll tfoot td:not([data-label]):empty{display:none}
+
+    /* Khách sạn, thẻ tổng, banner khu */
+    .hotel-fields{flex-direction:column;gap:10px}
+    .hotel-addr,.hotel-dates,.hotel-stay{min-width:0;flex:none;width:100%}
+    .grand{gap:10px}
+    .grand-card{flex:1 1 100%}
+    .zone{margin:32px 0 4px;padding:11px 14px;border-radius:15px;gap:11px}
+    .z-ic{font-size:24px}
+    .z-t b{font-size:14.5px}
+    .z-t span{font-size:11.5px}
+
+    /* Hai khu tab: vuốt ngang thẻ tab, món xuống dòng ghi chú */
+    .pack-tabs,.pack-tabs.two{
+      display:flex;overflow-x:auto;gap:8px;padding-bottom:3px;
+      scrollbar-width:none;
+    }
+    .pack-tabs::-webkit-scrollbar{display:none}
+    .pack-tab{flex:0 0 auto;min-width:46%}
+    .pack-item{flex-wrap:wrap;row-gap:2px}
+    .pack-item .p-note{width:100%;padding-left:32px}
+
+    /* Lưới ngày + panel đăng nhập */
+    .daily-grid{grid-template-columns:repeat(2,1fr)}
+    .login-panel{max-width:none}
+  }
+  @media (max-width:390px){
+    .pack-tab{min-width:56%}
+    .daily-sum .ds-amt{font-size:11.5px}
+  }
 </style>
 </head>
 <body>
@@ -447,6 +744,54 @@
 
   <!-- ============ HEADER ============ -->
   <header>
+    <span class="blob b1" aria-hidden="true"></span>
+    <span class="blob b2" aria-hidden="true"></span>
+    <div class="mascot" aria-hidden="true">
+      <span class="spark s1">✨</span>
+      <span class="spark s2">🌸</span>
+      <svg viewBox="0 0 150 175" class="chibi" role="img" aria-label="">
+        <ellipse class="ch-shadow" cx="75" cy="164" rx="34" ry="7" fill="#E7C7D6"/>
+        <g class="ch-float">
+          <!-- vali -->
+          <g transform="rotate(-6 118 130)">
+            <rect x="103" y="108" width="30" height="42" rx="7" fill="#7A2946"/>
+            <rect x="103" y="122" width="30" height="7" fill="#EC4D9B"/>
+            <rect x="112" y="100" width="12" height="10" rx="4" fill="none" stroke="#7A2946" stroke-width="4"/>
+          </g>
+          <!-- thân váy -->
+          <path d="M53 105 Q75 96 97 105 L104 146 Q75 156 46 146 Z" fill="#D6336C"/>
+          <path d="M53 105 Q75 96 97 105 L99 118 Q75 126 51 118 Z" fill="#EC6BA8"/>
+          <!-- tay -->
+          <path d="M52 112 Q40 122 44 134" fill="none" stroke="#FFE3D4" stroke-width="9" stroke-linecap="round"/>
+          <path d="M98 112 Q108 118 107 128" fill="none" stroke="#FFE3D4" stroke-width="9" stroke-linecap="round"/>
+          <!-- chân -->
+          <rect x="61" y="146" width="9" height="15" rx="4.5" fill="#FFE3D4"/>
+          <rect x="80" y="146" width="9" height="15" rx="4.5" fill="#FFE3D4"/>
+          <rect x="58.5" y="157" width="14" height="7" rx="3.5" fill="#1C1218"/>
+          <rect x="77.5" y="157" width="14" height="7" rx="3.5" fill="#1C1218"/>
+          <!-- búi tóc -->
+          <circle cx="34" cy="52" r="13" fill="#1C1218"/>
+          <circle cx="116" cy="52" r="13" fill="#1C1218"/>
+          <circle cx="34" cy="47" r="4" fill="#EC4D9B"/>
+          <circle cx="116" cy="47" r="4" fill="#EC4D9B"/>
+          <!-- đầu -->
+          <circle cx="75" cy="62" r="42" fill="#FFE3D4"/>
+          <path d="M33 60 A42 42 0 0 1 117 60 L112 62 Q99 38 75 40 Q51 38 38 62 Z" fill="#1C1218"/>
+          <path d="M62 26 Q75 18 88 26 L84 40 Q75 34 66 40 Z" fill="#1C1218"/>
+          <!-- mắt lấp lánh -->
+          <ellipse cx="59" cy="66" rx="7.5" ry="9.5" fill="#1C1218"/>
+          <ellipse cx="91" cy="66" rx="7.5" ry="9.5" fill="#1C1218"/>
+          <circle cx="61.5" cy="62.5" r="2.8" fill="#fff"/>
+          <circle cx="93.5" cy="62.5" r="2.8" fill="#fff"/>
+          <circle cx="57" cy="69" r="1.4" fill="#fff"/>
+          <circle cx="89" cy="69" r="1.4" fill="#fff"/>
+          <!-- má hồng + miệng -->
+          <circle cx="50" cy="78" r="5.5" fill="#F8A8C6" opacity=".75"/>
+          <circle cx="100" cy="78" r="5.5" fill="#F8A8C6" opacity=".75"/>
+          <path d="M69 82 Q75 88 81 82" fill="none" stroke="#1C1218" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
     <div class="eyebrow">Sổ tay du lịch</div>
     <div class="title-row">
       <input id="tripTitle" value="Chuyến đi của mình" aria-label="Tên chuyến đi" spellcheck="false">
@@ -458,7 +803,7 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
-      <span class="ver-tag" title="Phiên bản app">v5</span>
+      <span class="ver-tag" title="Phiên bản app">v6</span>
     </div>
     <p class="lede">Lên lịch trình, theo dõi chi phí kèm quy đổi sang tiền Việt, và kiểm soát đồ skincare, makeup cần mang theo.</p>
     <div class="login-panel" id="loginPanel" hidden>
@@ -485,83 +830,21 @@
     </div>
   </header>
 
-  <!-- ============ CURRENCY ============ -->
-  <div class="card fx-card">
-    <div class="fx-field">
-      <label for="fxCurrency">Loại ngoại tệ</label>
-      <select id="fxCurrency" aria-label="Chọn loại ngoại tệ">
-        <option value="USD">USD – Đô la Mỹ ($)</option>
-        <option value="GBP">GBP – Bảng Anh (£)</option>
-        <option value="EUR">EUR – Euro (€)</option>
-        <option value="JPY">JPY – Yên Nhật (¥)</option>
-        <option value="KRW">KRW – Won Hàn (₩)</option>
-        <option value="CNY">CNY – Nhân dân tệ (¥)</option>
-        <option value="THB">THB – Baht Thái (฿)</option>
-        <option value="SGD">SGD – Đô Singapore (S$)</option>
-        <option value="TWD">TWD – Đài tệ (NT$)</option>
-        <option value="MYR">MYR – Ringgit Malaysia (RM)</option>
-        <option value="AUD">AUD – Đô Úc (A$)</option>
-        <option value="HKD">HKD – Đô Hồng Kông (HK$)</option>
-      </select>
-    </div>
-    <div class="fx-field">
-      <label for="fxRate">Tỷ giá quy đổi</label>
-      <input type="number" min="0" step="any" class="fx-rate" id="fxRate" placeholder="Ví dụ: 26000" inputmode="decimal" aria-label="Tỷ giá quy đổi sang VNĐ">
-    </div>
-    <div class="fx-field">
-      <label>&nbsp;</label>
-      <button type="button" class="fx-fetch" id="fxFetchBtn">⟳ Lấy tỷ giá tự động</button>
-    </div>
-    <div class="fx-eq" id="fxEq">1 USD = ? VNĐ</div>
-    <div class="fx-hint">Nhấn «Lấy tỷ giá tự động» để cập nhật theo tỷ giá thị trường (mid-market, loại tỷ giá Wise hiển thị), hoặc tự nhập tay nếu muốn.</div>
-    <div class="fx-status" id="fxStatus" role="status"></div>
-  </div>
+  <!-- ============ QUICK NAV ============ -->
+  <nav class="jump" aria-label="Đi nhanh tới mục">
+    <a class="jchip" href="#sec-book">✈️ Gói bay + KS</a>
+    <a class="jchip" href="#sec-plan">🗓 Lịch trình</a>
+    <a class="jchip" href="#sec-daily">📊 Theo ngày</a>
+    <a class="jchip" href="#sec-cash">💵 Tiền mặt</a>
+    <a class="jchip" href="#sec-total">💰 Tổng chi</a>
+    <a class="jchip" href="#sec-pack">🧳 Hành lý</a>
+    <a class="jchip" href="#sec-notes">🇹🇭 Sổ tay</a>
+  </nav>
 
-  <!-- ============ ITINERARY ============ -->
-  <section>
-    <div class="tag moss"><span class="tag-icon">🗓</span> LỊCH TRÌNH &amp; CHI PHÍ</div>
-    <div class="card table-scroll">
-      <table aria-label="Bảng lịch trình chuyến đi">
-        <thead>
-          <tr>
-            <th style="width:19%">Hoạt động</th>
-            <th style="width:13%">Ngày</th>
-            <th style="width:15%">Địa điểm</th>
-            <th style="width:19%">Ghi chú</th>
-            <th class="num" style="width:10%">Chi phí chuyến đi</th>
-            <th class="num" style="width:10%">Chi phí trước chuyến đi</th>
-            <th class="num" style="width:12%">Quy đổi VNĐ</th>
-            <th style="width:2%"></th>
-          </tr>
-        </thead>
-        <tbody id="rowsBody"></tbody>
-        <tfoot>
-          <tr>
-            <td colspan="4">Tổng cộng</td>
-            <td class="num" id="totalTrip">0</td>
-            <td class="num" id="totalPre">0</td>
-            <td class="vnd-total" id="totalVnd">—</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    <button class="add-row" id="addRowBtn" type="button">＋ Thêm hoạt động</button>
-
-    <div class="grand">
-      <div class="grand-card">
-        <div class="g-label">Tổng chi phí (ngoại tệ)</div>
-        <div class="g-value" id="grandFx">0 USD</div>
-      </div>
-      <div class="grand-card vnd-big">
-        <div class="g-label">Tổng chi phí quy đổi</div>
-        <div class="g-value" id="grandVnd">Chưa có tỷ giá</div>
-      </div>
-    </div>
-  </section>
+  <div class="zone z-money" aria-hidden="true"><span class="z-ic">💸</span><div class="z-t"><b>Kế hoạch &amp; ví tiền</b><span>vé đã chốt · tỷ giá · lịch trình · chi tiêu từng ngày · kết sổ</span></div></div>
 
   <!-- ============ BOOKINGS (PAID PACKAGE, GBP) ============ -->
-  <section>
+  <section id="sec-book">
     <div class="tag sky"><span class="tag-icon">✈️🏨</span> GÓI VÉ MÁY BAY + KHÁCH SẠN <span class="paid-chip">✓ ĐÃ THANH TOÁN</span></div>
     <p class="section-note">Vé máy bay và khách sạn được mua chung một gói nên chỉ cần ghi tổng chi phí của gói, không cần tách chi tiết. Mục này có tỷ giá riêng vì thanh toán bằng loại tiền khác với chi tiêu trong chuyến. Nếu có thêm khoản trả trước khác (bảo hiểm du lịch, đưa đón sân bay...), thêm dòng mới bên dưới.</p>
     <div class="card">
@@ -622,9 +905,9 @@
         <table class="booking-table" aria-label="Bảng gói vé máy bay và khách sạn đã thanh toán">
           <thead>
             <tr>
+              <th style="width:13%">Ngày thanh toán</th>
               <th style="width:23%">Hạng mục</th>
               <th style="width:17%">Nơi mua / nhà cung cấp</th>
-              <th style="width:13%">Ngày thanh toán</th>
               <th class="num" style="width:12%">Chi phí (<span class="bookcur">GBP</span>)</th>
               <th class="num" style="width:14%">Quy đổi VNĐ</th>
               <th style="width:18%">Ghi chú</th>
@@ -635,8 +918,8 @@
           <tfoot>
             <tr>
               <td colspan="3">Tổng cộng</td>
-              <td class="num" id="bkTotalFx">—</td>
-              <td class="vnd-total sky-vnd" id="bkTotalVnd">—</td>
+              <td class="num" id="bkTotalFx" data-label="Tổng chi phí">—</td>
+              <td class="vnd-total sky-vnd" id="bkTotalVnd" data-label="Tổng quy đổi">—</td>
               <td colspan="2"></td>
             </tr>
           </tfoot>
@@ -657,8 +940,93 @@
     </div>
   </section>
 
+  <!-- ============ CURRENCY ============ -->
+  <div class="card fx-card" id="sec-fx">
+    <div class="fx-field">
+      <label for="fxCurrency">Loại ngoại tệ</label>
+      <select id="fxCurrency" aria-label="Chọn loại ngoại tệ">
+        <option value="USD">USD – Đô la Mỹ ($)</option>
+        <option value="GBP">GBP – Bảng Anh (£)</option>
+        <option value="EUR">EUR – Euro (€)</option>
+        <option value="JPY">JPY – Yên Nhật (¥)</option>
+        <option value="KRW">KRW – Won Hàn (₩)</option>
+        <option value="CNY">CNY – Nhân dân tệ (¥)</option>
+        <option value="THB">THB – Baht Thái (฿)</option>
+        <option value="SGD">SGD – Đô Singapore (S$)</option>
+        <option value="TWD">TWD – Đài tệ (NT$)</option>
+        <option value="MYR">MYR – Ringgit Malaysia (RM)</option>
+        <option value="AUD">AUD – Đô Úc (A$)</option>
+        <option value="HKD">HKD – Đô Hồng Kông (HK$)</option>
+      </select>
+    </div>
+    <div class="fx-field">
+      <label for="fxRate">Tỷ giá quy đổi</label>
+      <input type="number" min="0" step="any" class="fx-rate" id="fxRate" placeholder="Ví dụ: 26000" inputmode="decimal" aria-label="Tỷ giá quy đổi sang VNĐ">
+    </div>
+    <div class="fx-field">
+      <label>&nbsp;</label>
+      <button type="button" class="fx-fetch" id="fxFetchBtn">⟳ Lấy tỷ giá tự động</button>
+    </div>
+    <div class="fx-eq" id="fxEq">1 USD = ? VNĐ</div>
+    <div class="fx-hint">Nhấn «Lấy tỷ giá tự động» để cập nhật theo tỷ giá thị trường (mid-market, loại tỷ giá Wise hiển thị), hoặc tự nhập tay nếu muốn.</div>
+    <div class="fx-status" id="fxStatus" role="status"></div>
+  </div>
+
+  <!-- ============ ITINERARY ============ -->
+  <section id="sec-plan">
+    <div class="tag moss"><span class="tag-icon">🗓</span> LỊCH TRÌNH &amp; CHI PHÍ</div>
+    <div class="card table-scroll">
+      <table aria-label="Bảng lịch trình chuyến đi">
+        <thead>
+          <tr>
+            <th style="width:12%">Ngày</th>
+            <th style="width:20%">Hoạt động</th>
+            <th style="width:12%">Địa điểm</th>
+            <th class="num" style="width:10%">Chi phí</th>
+            <th class="num" style="width:12%">Quy đổi VNĐ</th>
+            <th style="width:13%">Phương thức thanh toán</th>
+            <th style="width:19%">Ghi chú</th>
+            <th style="width:2%"></th>
+          </tr>
+        </thead>
+        <tbody id="rowsBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Tổng cộng</td>
+            <td class="num" id="totalTrip" data-label="Tổng chi phí">0</td>
+            <td class="vnd-total" id="totalVnd" data-label="Tổng quy đổi">—</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <button class="add-row" id="addRowBtn" type="button">＋ Thêm hoạt động</button>
+
+    <div class="grand">
+      <div class="grand-card">
+        <div class="g-label">Tổng chi phí (ngoại tệ)</div>
+        <div class="g-value" id="grandFx">0 USD</div>
+      </div>
+      <div class="grand-card vnd-big">
+        <div class="g-label">Tổng chi phí quy đổi</div>
+        <div class="g-value" id="grandVnd">Chưa có tỷ giá</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DAILY COSTS ============ -->
+  <section id="sec-daily">
+    <div class="tag moss"><span class="tag-icon">📊</span> CHI PHÍ THEO NGÀY</div>
+    <p class="section-note">Tự động gom các dòng có chi phí theo cột «Ngày» và xếp đúng thứ tự thời gian, kèm dấu 🔥 cho ngày tốn nhất. Dòng nào quên chọn ngày sẽ nằm ở nhóm «Chưa ghi ngày» cuối bảng.</p>
+    <div class="card">
+      <div id="dailyBox" class="daily-box" aria-live="polite"></div>
+    </div>
+  </section>
+
   <!-- ============ CASH PREPARATION ============ -->
-  <section>
+  <section id="sec-cash">
     <div class="tag moss"><span class="tag-icon">💵</span> TIỀN MẶT DỰ TRÙ · VNĐ → <span class="curcode">THB</span></div>
     <p class="section-note">Ghi lại các lần đổi tiền mặt trước chuyến đi: bỏ ra bao nhiêu VNĐ, nhận được bao nhiêu tiền mặt, tỷ giá thực tế sẽ tự tính. Loại ngoại tệ theo lựa chọn ở thanh tỷ giá phía trên.</p>
     <div class="card table-scroll">
@@ -677,9 +1045,9 @@
         <tfoot>
           <tr>
             <td>Tổng cộng</td>
-            <td class="num" id="cashTotalVnd">—</td>
-            <td class="num" id="cashTotalFx">—</td>
-            <td class="num" id="cashAvgRate">—</td>
+            <td class="num" id="cashTotalVnd" data-label="Tổng VNĐ đã đổi">—</td>
+            <td class="num" id="cashTotalFx" data-label="Tổng nhận được">—</td>
+            <td class="num" id="cashAvgRate" data-label="Tỷ giá trung bình">—</td>
             <td colspan="2"></td>
           </tr>
         </tfoot>
@@ -700,7 +1068,7 @@
   </section>
 
   <!-- ============ GRAND TOTAL ============ -->
-  <section>
+  <section id="sec-total">
     <div class="tag moss"><span class="tag-icon">💰</span> TỔNG CHI PHÍ CẢ CHUYẾN ĐI</div>
     <p class="section-note">Tự động cộng hai khoản chi thật: gói vé máy bay + khách sạn và chi phí lịch trình, quy hết về VNĐ theo tỷ giá bạn đã nhập. Tiền mặt dự trù là nguồn tiền để chi trả cho lịch trình nên hiển thị riêng bên dưới, không cộng vào tổng để tránh đếm một khoản hai lần.</p>
     <div class="card total-card">
@@ -732,8 +1100,10 @@
     </div>
   </section>
 
+  <div class="zone z-pack" aria-hidden="true"><span class="z-ic">🧳</span><div class="z-t"><b>Vali của mình</b><span>skincare · makeup · đồ dùng, tick tới đâu nhẹ đầu tới đó</span></div></div>
+
   <!-- ============ PACKING ============ -->
-  <section>
+  <section id="sec-pack">
     <div class="tag" style="background:var(--ink)"><span class="tag-icon">🧳</span> HÀNH LÝ CẦN MANG</div>
     <p class="section-note">Ba nhóm đồ gọn trong một khung: chạm vào từng thẻ để chuyển nhóm. Thanh nhỏ trên mỗi thẻ cho biết tiến độ đóng gói của cả ba, dù bạn đang mở nhóm nào.</p>
     <div class="card pack-shell">
@@ -787,8 +1157,10 @@
     </div>
   </section>
 
+  <div class="zone z-notes" aria-hidden="true"><span class="z-ic">🇹🇭</span><div class="z-t"><b>Sổ tay Thái Lan</b><span>mua gì · đi đâu · ăn gì cho đã cái nư</span></div></div>
+
   <!-- ============ THAILAND NOTEBOOK ============ -->
-  <section>
+  <section id="sec-notes">
     <div class="tag moss"><span class="tag-icon">🇹🇭</span> SỔ TAY THÁI LAN</div>
     <p class="section-note">Ghi lại những món nên mua mang về, những nơi muốn ghé và những món nhất định phải ăn thử. Tick khi đã mua xong hoặc đã đến nơi, dùng ô ghi chú cho mẹo nhỏ như mua ở đâu, giá bao nhiêu, đi bằng gì.</p>
     <div class="card pack-shell">
@@ -1008,7 +1380,13 @@
           state.title = typeof data.title === "string" ? data.title : state.title;
           state.currency = typeof data.currency === "string" ? data.currency : state.currency;
           state.rate = (typeof data.rate === "number" && isFinite(data.rate)) ? data.rate : null;
-          state.rows = Array.isArray(data.rows) ? data.rows : [];
+          state.rows = (Array.isArray(data.rows) ? data.rows : []).map(function(r){
+            if(r && num(r.preCost) > 0){
+              r.tripCost = String(num(r.tripCost) + num(r.preCost));
+            }
+            if(r) delete r.preCost;
+            return r;
+          });
           state.cash = Array.isArray(data.cash) ? data.cash : [];
           state.bookings = (Array.isArray(data.bookings) ? data.bookings : []).map(function(r){
             if(!r) return null;
@@ -1045,17 +1423,49 @@
   var rowsBody = document.getElementById("rowsBody");
 
   function makeRow(){
-    return { id: uid(), activity:"", date:"", location:"", notes:"", tripCost:"", preCost:"" };
+    return { id: uid(), activity:"", date:"", location:"", notes:"", tripCost:"", pay:"" };
   }
+
+  /* Chữ dài hơn ô: khi rời ô, cuộn về đầu để không hiển thị cụt kiểu «oài» */
+  document.addEventListener("blur", function(e){
+    var el = e.target;
+    if(el && el.tagName === "INPUT" && el.type === "text"){
+      el.scrollLeft = 0;
+    }
+  }, true);
 
   function bindCell(input, row, key){
     input.addEventListener("input", function(){
       row[key] = input.value;
-      if(key === "tripCost" || key === "preCost"){
+      if(key === "tripCost"){
         updateRowVnd(row.id);
         updateTotals();
       }
+      if(key === "date"){
+        renderDailyCosts();
+      }
       scheduleSave();
+    });
+    /* Enter: nhảy xuống đúng cột ở dòng dưới; dòng cuối thì tự tạo dòng mới */
+    input.addEventListener("keydown", function(e){
+      if(e.key !== "Enter") return;
+      if(e.isComposing || e.keyCode === 229) return; /* Enter chốt chữ tiếng Việt: để yên */
+      e.preventDefault();
+      var td = input.closest("td");
+      var tr = input.closest("tr");
+      if(!td || !tr) return;
+      var idx = td.cellIndex;
+      var next = tr.nextElementSibling;
+      if(!next){
+        state.rows.push(makeRow());
+        renderRows();
+        scheduleSave();
+        next = rowsBody.lastElementChild;
+      }
+      if(next && next.cells[idx]){
+        var target = next.cells[idx].querySelector("input");
+        if(target) target.focus();
+      }
     });
   }
 
@@ -1065,9 +1475,10 @@
       var tr = document.createElement("tr");
       tr.dataset.id = row.id;
 
-      function cell(cls){
+      function cell(cls, label){
         var td = document.createElement("td");
         if(cls) td.className = cls;
+        if(label) td.dataset.label = label;
         tr.appendChild(td);
         return td;
       }
@@ -1083,15 +1494,33 @@
         return inp;
       }
 
-      textInput(cell(), "activity", "Tên hoạt động");
-      textInput(cell(), "date", "", "date");
-      textInput(cell(), "location", "Địa điểm");
-      textInput(cell(), "notes", "Ghi chú");
-      textInput(cell("num"), "tripCost", "0", "number");
-      textInput(cell("num"), "preCost", "0", "number");
+      textInput(cell("", "Ngày"), "date", "", "date");
+      textInput(cell("", "Hoạt động"), "activity", "Tên hoạt động");
+      textInput(cell("", "Địa điểm"), "location", "Địa điểm");
+      textInput(cell("num", "Chi phí"), "tripCost", "0", "number");
 
-      var vndTd = cell("vnd");
+      var vndTd = cell("vnd", "Quy đổi VNĐ");
       vndTd.id = "vnd-" + row.id;
+
+      var payTd = cell("pay", "Thanh toán");
+      var paySel = document.createElement("select");
+      ["", "Momo", "Zalo", "Tiền mặt", "Thẻ ngân hàng", "Khác"].forEach(function(o){
+        var op = document.createElement("option");
+        op.value = o;
+        op.textContent = o === "" ? "—" : o;
+        paySel.appendChild(op);
+      });
+      paySel.value = row.pay || "";
+      paySel.classList.toggle("empty", !paySel.value);
+      paySel.setAttribute("aria-label", "Phương thức thanh toán");
+      paySel.addEventListener("change", function(){
+        row.pay = paySel.value;
+        paySel.classList.toggle("empty", !paySel.value);
+        scheduleSave();
+      });
+      payTd.appendChild(paySel);
+
+      textInput(cell("", "Ghi chú"), "notes", "Ghi chú");
 
       var delTd = cell();
       var del = document.createElement("button");
@@ -1114,7 +1543,7 @@
     updateTotals();
   }
 
-  function rowTotal(row){ return num(row.tripCost) + num(row.preCost); }
+  function rowTotal(row){ return num(row.tripCost); }
 
   function updateRowVnd(id){
     var row = state.rows.find(function(r){ return r.id === id; });
@@ -1138,11 +1567,10 @@
   }
 
   function updateTotals(){
-    var trip = 0, pre = 0;
-    state.rows.forEach(function(r){ trip += num(r.tripCost); pre += num(r.preCost); });
-    var total = trip + pre;
+    var trip = 0;
+    state.rows.forEach(function(r){ trip += num(r.tripCost); });
+    var total = trip;
     document.getElementById("totalTrip").textContent = fmtFx(trip);
-    document.getElementById("totalPre").textContent = fmtFx(pre);
     var totalVnd = document.getElementById("totalVnd");
     totalVnd.textContent = (state.rate && total > 0) ? fmtVND(total * state.rate) : "—";
 
@@ -1150,6 +1578,7 @@
     var grandVnd = document.getElementById("grandVnd");
     grandVnd.textContent = (state.rate) ? fmtVND(total * state.rate) : "Chưa có tỷ giá";
     updateGrandAll();
+    renderDailyCosts();
   }
 
   document.getElementById("addRowBtn").addEventListener("click", function(){
@@ -1176,9 +1605,10 @@
       var tr = document.createElement("tr");
       tr.dataset.id = row.id;
 
-      function cell(cls){
+      function cell(cls, label){
         var td = document.createElement("td");
         if(cls) td.className = cls;
+        if(label) td.dataset.label = label;
         tr.appendChild(td);
         return td;
       }
@@ -1201,14 +1631,14 @@
         return inp;
       }
 
-      cashInput(cell(), "date", "", "date");
-      cashInput(cell("num"), "vnd", "Ví dụ: 8000000", "number");
-      cashInput(cell("num"), "fx", "Ví dụ: 10000", "number");
+      cashInput(cell("", "Ngày đổi"), "date", "", "date");
+      cashInput(cell("num", "VNĐ đã đổi"), "vnd", "Ví dụ: 8000000", "number");
+      cashInput(cell("num", "Nhận được"), "fx", "Ví dụ: 10000", "number");
 
-      var rateTd = cell("vnd");
+      var rateTd = cell("vnd", "Tỷ giá thực tế");
       rateTd.id = "cashrate-" + row.id;
 
-      cashInput(cell(), "place", "Ngân hàng, tiệm vàng…");
+      cashInput(cell("", "Nơi đổi"), "place", "Ngân hàng, tiệm vàng…");
 
       var delTd = cell();
       var del = document.createElement("button");
@@ -1275,7 +1705,173 @@
   });
 
 
-  /* ---------------- Tổng chi phí cả chuyến đi ---------------- */
+  /* ---------------- Chi phí theo ngày ---------------- */
+  var dailyBox = document.getElementById("dailyBox");
+
+  function dayKeyInfo(raw){
+    var t = (raw || "").trim();
+    if(!t) return { key: "__none__", none: true, cls: 3, sortNum: 0, label: "Chưa ghi ngày" };
+    var m = t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/); /* ô chọn lịch lưu dạng năm-tháng-ngày */
+    if(m){
+      var y = +m[1], mo = +m[2], d = +m[3];
+      return { key: "d:" + y + "-" + mo + "-" + d, none: false, cls: 0,
+               sortNum: y * 10000 + mo * 100 + d, y: y, mo: mo, d: d };
+    }
+    var m2 = t.match(/^(\d{1,2})[\/\-.](\d{1,2})(?:[\/\-.](\d{2,4}))?$/); /* 29/10 hoặc 29/10/2026 */
+    if(m2){
+      var d2 = +m2[1], mo2 = +m2[2], y2 = m2[3] ? +m2[3] : 0;
+      if(y2 && y2 < 100) y2 += 2000;
+      return { key: "d:" + y2 + "-" + mo2 + "-" + d2, none: false, cls: 0,
+               sortNum: y2 * 10000 + mo2 * 100 + d2, y: y2, mo: mo2, d: d2 };
+    }
+    if(/^\d+([.,]\d+)?$/.test(t)){
+      return { key: t.toLowerCase(), none: false, cls: 1, sortNum: parseFloat(t.replace(",", ".")), label: "Ngày " + t };
+    }
+    return { key: t.toLowerCase(), none: false, cls: 2, sortNum: 0, label: t };
+  }
+
+  function pad2(n){ return (n < 10 ? "0" : "") + n; }
+
+  var WEEKDAYS = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+  function weekdayOf(y, mo, d){
+    if(!y || !mo || !d) return "";
+    var dt = new Date(y, mo - 1, d);
+    return isNaN(dt.getTime()) ? "" : WEEKDAYS[dt.getDay()];
+  }
+
+  function renderDailyCosts(){
+    if(!dailyBox) return;
+    dailyBox.textContent = "";
+
+    var groups = {};
+    var order = 0;
+    state.rows.forEach(function(r){
+      var total = rowTotal(r);
+      if(total <= 0) return; /* chỉ gom dòng có chi phí */
+      var info = dayKeyInfo(r.date);
+      var g = groups[info.key];
+      if(!g){
+        g = groups[info.key] = {
+          none: info.none, cls: info.cls, sortNum: info.sortNum,
+          y: info.y || 0, mo: info.mo || 0, d: info.d || 0,
+          label: info.label || "", firstIdx: order++, sum: 0, count: 0
+        };
+      }
+      g.sum += total;
+      g.count++;
+    });
+
+    var list = Object.keys(groups).map(function(k){ return groups[k]; });
+    if(list.length === 0){
+      var e = document.createElement("div");
+      e.className = "daily-empty";
+      e.textContent = "Chưa có dòng nào có chi phí trong bảng lịch trình. Điền cột «Ngày» và chi phí phía trên là bảng này tự hiện.";
+      dailyBox.appendChild(e);
+      return;
+    }
+
+    /* Nhãn ngày kiểu Việt Nam: dd/mm, chỉ kèm năm khi chuyến vắt qua nhiều năm */
+    var years = {};
+    list.forEach(function(g){ if(g.cls === 0 && g.y) years[g.y] = true; });
+    var multiYear = Object.keys(years).length > 1;
+    list.forEach(function(g){
+      if(g.cls === 0){
+        g.label = pad2(g.d) + "/" + pad2(g.mo) + ((multiYear && g.y) ? "/" + g.y : "");
+      }
+    });
+
+    list.sort(function(a, b){
+      if(a.cls !== b.cls) return a.cls - b.cls;   /* ngày lịch → số → chữ → chưa ghi */
+      if(a.cls === 2) return a.firstIdx - b.firstIdx;
+      return a.sortNum - b.sortNum;               /* trong nhóm ngày: đúng dòng thời gian */
+    });
+
+    var grand = 0, maxSum = 0;
+    list.forEach(function(g){ grand += g.sum; if(!g.none && g.sum > maxSum) maxSum = g.sum; });
+    if(maxSum === 0){ list.forEach(function(g){ if(g.sum > maxSum) maxSum = g.sum; }); }
+    var datedCount = list.filter(function(g){ return !g.none; }).length;
+    var maxG = null;
+    list.forEach(function(g){ if(!g.none && g.sum === maxSum && !maxG) maxG = g; });
+
+    /* Dải tóm tắt trên cùng */
+    var strip = document.createElement("div");
+    strip.className = "daily-sum";
+    var sL = document.createElement("span");
+    var hasNone = list.some(function(g){ return g.none; });
+    sL.textContent = "🗓 " + datedCount + " ngày có chi phí" + (hasNone ? " · 1 nhóm chưa ghi ngày" : "");
+    var sR = document.createElement("span");
+    sR.className = "ds-amt";
+    sR.textContent = fmtFx(grand) + " " + state.currency + (state.rate ? (" ≈ " + fmtVND(grand * state.rate)) : "");
+    strip.appendChild(sL);
+    strip.appendChild(sR);
+    dailyBox.appendChild(strip);
+
+    /* Lưới thẻ ngày */
+    var grid = document.createElement("div");
+    grid.className = "daily-grid";
+    dailyBox.appendChild(grid);
+
+    list.forEach(function(g){
+      var isMax = (datedCount >= 2) && (g === maxG) && g.sum > 0;
+
+      var card = document.createElement("div");
+      card.className = "day-card" + (isMax ? " max" : "") + (g.none ? " nodate" : "");
+
+      var head = document.createElement("div");
+      head.className = "dc-date";
+      var wd = (g.cls === 0) ? weekdayOf(g.y, g.mo, g.d) : "";
+      if(wd){
+        var w = document.createElement("span");
+        w.className = "dc-wd";
+        w.textContent = wd;
+        head.appendChild(w);
+      }
+      var dlab = document.createElement("span");
+      dlab.className = "dc-d";
+      dlab.textContent = g.label;
+      head.appendChild(dlab);
+      if(isMax){
+        var f = document.createElement("span");
+        f.className = "dc-fire";
+        f.textContent = "🔥";
+        f.title = "Ngày vung tay nhất";
+        head.appendChild(f);
+      }
+      card.appendChild(head);
+
+      var amt = document.createElement("div");
+      amt.className = "dc-amt";
+      amt.textContent = fmtFx(g.sum) + " " + state.currency;
+      card.appendChild(amt);
+
+      var vn = document.createElement("div");
+      vn.className = "dc-vnd";
+      vn.textContent = state.rate ? ("≈ " + fmtVND(g.sum * state.rate)) : "nhập tỷ giá để quy đổi";
+      card.appendChild(vn);
+
+      var meta = document.createElement("div");
+      meta.className = "dc-meta";
+      var bits = [g.count + " hoạt động"];
+      if(grand > 0) bits.push(Math.round(g.sum / grand * 100) + "%");
+      meta.textContent = bits.join(" · ");
+      card.appendChild(meta);
+
+      grid.appendChild(card);
+    });
+
+    if(datedCount >= 2 && maxG && maxSum > 0 && grand > 0){
+      var note = document.createElement("div");
+      note.className = "daily-note";
+      var b = document.createElement("b");
+      b.textContent = maxG.label;
+      note.appendChild(document.createTextNode("🔥 Vung tay nhất: "));
+      note.appendChild(b);
+      note.appendChild(document.createTextNode(" — chiếm " + Math.round(maxSum / grand * 100) + "% tổng chi lịch trình."));
+      dailyBox.appendChild(note);
+    }
+  }
+
+    /* ---------------- Tổng chi phí cả chuyến đi ---------------- */
   function updateGrandAll(){
     var tripFx = 0;
     state.rows.forEach(function(r){ tripFx += rowTotal(r); });
@@ -1475,9 +2071,10 @@
       var tr = document.createElement("tr");
       tr.dataset.id = row.id;
 
-      function cell(cls){
+      function cell(cls, label){
         var td = document.createElement("td");
         if(cls) td.className = cls;
+        if(label) td.dataset.label = label;
         tr.appendChild(td);
         return td;
       }
@@ -1500,15 +2097,15 @@
         return inp;
       }
 
-      bkInput(cell(), "name", "Ví dụ: Gói bay + khách sạn 4N3Đ");
-      bkInput(cell(), "vendor", "Ví dụ: Expedia, Traveloka…");
-      bkInput(cell(), "date", "", "date");
-      bkInput(cell("num"), "cost", "0", "number");
+      bkInput(cell("", "Ngày thanh toán"), "date", "", "date");
+      bkInput(cell("", "Hạng mục"), "name", "Ví dụ: Gói bay + khách sạn 4N3Đ");
+      bkInput(cell("", "Nơi mua"), "vendor", "Ví dụ: Expedia, Traveloka…");
+      bkInput(cell("num", "Chi phí"), "cost", "0", "number");
 
-      var vndTd = cell("vnd sky-vnd");
+      var vndTd = cell("vnd sky-vnd", "Quy đổi VNĐ");
       vndTd.id = "bkvnd-" + row.id;
 
-      bkInput(cell(), "note", "Mã đặt chỗ, gói gồm những gì…");
+      bkInput(cell("", "Ghi chú"), "note", "Mã đặt chỗ, gói gồm những gì…");
 
       var delTd = cell();
       var del = document.createElement("button");
@@ -1718,7 +2315,8 @@
     var done = items.filter(function(x){ return x.packed; }).length;
     var pct = items.length ? Math.round(done / items.length * 100) : 0;
     document.getElementById("fill-" + kind).style.width = pct + "%";
-    document.getElementById("count-" + kind).textContent = done + "/" + items.length;
+    document.getElementById("count-" + kind).textContent =
+      done + "/" + items.length + ((items.length > 0 && done === items.length) ? " 🎉" : "");
   }
 
   function addItem(kind, name){
@@ -1753,6 +2351,7 @@
     var input = document.getElementById("input-" + kind);
     input.addEventListener("keydown", function(e){
       if(e.key === "Enter"){
+        if(e.isComposing || e.keyCode === 229) return; /* Enter chốt chữ tiếng Việt: để yên */
         addItem(kind, input.value);
         input.value = "";
       }
@@ -1989,9 +2588,11 @@
     passUpBtn.addEventListener("click", signUpPassword);
     magicToggle.addEventListener("click", function(){ magicBox.hidden = !magicBox.hidden; });
     loginEmail.addEventListener("keydown", function(e){
+      if(e.isComposing || e.keyCode === 229) return;
       if(e.key === "Enter") loginPass.focus();
     });
     loginPass.addEventListener("keydown", function(e){
+      if(e.isComposing || e.keyCode === 229) return;
       if(e.key === "Enter") signInPassword();
     });
     logoutBtn.addEventListener("click", async function(){
@@ -2193,6 +2794,30 @@
       cloudOk = false;
     }
   }
+
+  /* ---------------- Chip điều hướng tự sáng theo khu đang xem ---------------- */
+  (function(){
+    var nav = document.querySelector(".jump");
+    if(!nav || !("IntersectionObserver" in window)) return;
+    var links = Array.prototype.slice.call(nav.querySelectorAll(".jchip"));
+    var map = {};
+    links.forEach(function(a){
+      var id = (a.getAttribute("href") || "").slice(1);
+      if(id) map[id] = a;
+    });
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        links.forEach(function(a){ a.classList.remove("on"); });
+        var a = map[en.target.id];
+        if(a) a.classList.add("on");
+      });
+    }, { rootMargin: "-38% 0px -55% 0px" });
+    Object.keys(map).forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) obs.observe(el);
+    });
+  })();
 
   /* ---------------- Init ---------------- */
   async function init(){
