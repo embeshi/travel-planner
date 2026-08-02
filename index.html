@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kế hoạch du lịch</title>
+<meta name="theme-color" content="#FBF4F7">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Du lịch">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -88,6 +94,14 @@
     border:1px solid var(--line);border-radius:6px;padding:1px 7px;
     align-self:center;white-space:nowrap;
   }
+  .ver-refresh{
+    border:1px solid var(--line);background:#fff;color:var(--muted);
+    width:24px;height:24px;border-radius:50%;cursor:pointer;padding:0;
+    font-size:13px;line-height:1;margin-left:2px;align-self:center;flex:none;
+    transition:color .15s,border-color .15s,transform .35s ease;
+  }
+  .ver-refresh:hover{color:var(--moss);border-color:var(--moss);transform:rotate(180deg)}
+  @media (prefers-reduced-motion:reduce){.ver-refresh:hover{transform:none}}
   .login-panel{
     margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);
     background:var(--paper);padding:14px 16px;max-width:470px;
@@ -249,7 +263,7 @@
   /* ---------- Itinerary table ---------- */
   .section-note{font-size:13.5px;color:var(--muted);margin:-4px 0 14px;max-width:640px}
   .table-scroll{overflow-x:auto;border-radius:var(--radius)}
-  table{border-collapse:collapse;width:100%;min-width:1180px}
+  table{border-collapse:collapse;width:100%;min-width:1150px}
   table.cash-table{min-width:780px}
   table.booking-table{min-width:920px}
   thead th{
@@ -290,6 +304,17 @@
     cursor:pointer;padding:7px 9px;border-radius:7px;transition:color .15s,background .15s;
   }
   .del-btn:hover{color:#C25454;background:#FBEFEF}
+  td.notes-cell{position:relative}
+  td.notes-cell input{padding-right:30px}
+  td.notes-cell .del-btn{
+    position:absolute;right:3px;top:50%;transform:translateY(-50%);
+    padding:5px 7px;font-size:16px;
+  }
+  @media (hover:hover) and (min-width:701px){
+    td.notes-cell .del-btn{opacity:0;transition:opacity .15s,color .15s,background .15s}
+    tbody tr:hover td.notes-cell .del-btn{opacity:1}
+    td.notes-cell .del-btn:focus-visible{opacity:1}
+  }
   tfoot td{
     padding:13px 12px;border-top:2px solid var(--ink);
     font-weight:600;background:var(--sand);white-space:nowrap;
@@ -352,17 +377,16 @@
   .pack-tab.active .pt-count{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:#fff}
   .pack-tab.active .pt-bar{background:rgba(255,255,255,.3)}
   .pack-tab.active .pt-fill{background:#fff}
-  .pack-tab.active .pt-icon{display:inline-block;animation:tagBob 2.6s ease-in-out infinite}
 
   .pack-panel{display:none}
   .pack-panel.active{display:block;animation:panelIn .22s ease}
   @keyframes panelIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
   .pack-card{
     padding:16px 14px 16px;margin-top:10px;border-radius:16px;
-    background:#FFFAFC;border:1.5px dashed #F2D9E5;
+    background:#FFFDFE;border:1px solid var(--line);
   }
-  .pack-card.rose{background:#FAF8F9;border-color:#E0D7DC}
-  .pack-card.plum{background:#FBF6F8;border-color:#ECD5DF}
+  .pack-card.rose{background:#FDFCFD}
+  .pack-card.plum{background:#FDFBFC}
 
   ul.pack-list{list-style:none;display:flex;flex-direction:column;gap:8px}
   .pack-item{
@@ -547,13 +571,6 @@
   /* ---------- Món 11 · Áo mới hiện đại ---------- */
   html{scroll-behavior:smooth}
   section[id]{scroll-margin-top:86px}
-  body{
-    background:
-      radial-gradient(720px 420px at 8% -6%, #FDE9F2 0%, transparent 62%),
-      radial-gradient(640px 400px at 100% 4%, #F6E0EC 0%, transparent 58%),
-      var(--bg);
-    background-attachment:fixed;
-  }
 
   /* Thanh điều hướng ghim */
   .jump{
@@ -576,68 +593,42 @@
   .jchip:hover{background:var(--moss-soft);transform:translateY(-1px)}
   .jchip.on{background:linear-gradient(135deg,var(--moss),#B02458);color:#fff;box-shadow:0 4px 12px rgba(214,51,108,.35)}
 
-  /* Banner phân khu */
-  .zone{
-    display:flex;align-items:center;gap:13px;
-    margin:44px 0 6px;padding:13px 18px;
-    border-radius:18px;color:#fff;
-    box-shadow:0 8px 22px rgba(28,18,24,.16);
-    transform:rotate(-.4deg);
+  /* Vạch chia khu tối giản */
+  .zone-div{display:flex;align-items:center;gap:12px;margin:52px 2px 0}
+  .zone-div span{
+    font-family:var(--font-mono);font-size:11px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:#B99AA9;white-space:nowrap;
   }
-  .z-money{background:linear-gradient(120deg,#D6336C,#8F1E4E)}
-  .z-pack{background:linear-gradient(120deg,#1C1218,#4A2A3C)}
-  .z-notes{background:linear-gradient(120deg,#7A2946,#B03A3A)}
-  .z-ic{font-size:30px;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))}
-  .z-t b{display:block;font-size:16.5px;letter-spacing:.04em;text-transform:uppercase}
-  .z-t span{font-size:12.5px;opacity:.85}
+  .zone-div::after{content:"";flex:1;height:1px;background:var(--line)}
 
   /* Hero sống động */
   header{position:relative}
   @media (min-width:761px){
-    header{padding-right:178px}
+    header{padding-right:156px}
   }
-  .blob{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0}
-  .b1{width:190px;height:190px;right:-40px;top:-60px;background:radial-gradient(circle at 35% 35%, #FADCE9, #F3B9D3 70%, transparent 71%);opacity:.55;animation:blobDrift 9s ease-in-out infinite alternate}
-  .b2{width:120px;height:120px;right:150px;top:-46px;background:radial-gradient(circle at 40% 40%, #FBE9F1, #EEC3D8 70%, transparent 71%);opacity:.5;animation:blobDrift 11s ease-in-out infinite alternate-reverse}
-  @keyframes blobDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(-14px,10px) scale(1.06)}}
-  .mascot{position:absolute;right:6px;top:-14px;width:132px;z-index:1;pointer-events:none}
+  .mascot{position:absolute;right:8px;top:-10px;width:116px;z-index:1;pointer-events:none}
   .chibi{width:100%;height:auto;filter:drop-shadow(0 10px 14px rgba(122,41,70,.22))}
   .ch-float{animation:chFloat 3.4s ease-in-out infinite;transform-origin:75px 90px}
   @keyframes chFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
   .ch-shadow{animation:chShadow 3.4s ease-in-out infinite}
   @keyframes chShadow{0%,100%{opacity:.55;transform:scaleX(1)}50%{opacity:.35;transform:scaleX(.82)}}
-  .mascot .spark{position:absolute;font-size:15px;animation:twinkle 2.6s ease-in-out infinite}
-  .mascot .s1{left:-12px;top:16px}
-  .mascot .s2{right:-6px;bottom:34px;animation-delay:1.2s}
-  @keyframes twinkle{0%,100%{opacity:.25;transform:scale(.8) rotate(-8deg)}50%{opacity:1;transform:scale(1.1) rotate(8deg)}}
-  .title-row,.lede,.eyebrow{position:relative;z-index:2}
+  .title-row,.eyebrow{position:relative;z-index:2}
   @media (max-width:760px){
-    .mascot{width:86px;top:-6px;right:0}
-    .b2{display:none}
-    header{padding-right:96px}
+    .mascot{width:84px;top:-4px;right:0}
+    header{padding-right:94px}
   }
 
-  /* Chiều sâu 3D nhẹ cho thẻ */
-  .card,.grand-card,.day-card,.daily-sum,.daily-note{transition:transform .18s ease,box-shadow .18s ease}
-  .card:hover,.grand-card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(28,18,24,.10)}
-  .day-card:hover{transform:translateY(-3px) rotate3d(1,-1,0,4deg);box-shadow:0 10px 22px rgba(214,51,108,.16)}
-  .day-card.max .dc-fire{display:inline-block;animation:firePulse 1.6s ease-in-out infinite}
-  @keyframes firePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+  /* Thẻ ngày: nhấc nhẹ, thế thôi */
+  .day-card{transition:transform .16s ease,box-shadow .16s ease}
+  .day-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(214,51,108,.12)}
 
-  /* Tem mục kiểu sticker */
-  .tag{
-    box-shadow:3px 4px 0 rgba(28,18,24,.14);
-    transform:rotate(-.6deg);
-    transition:transform .18s ease;
-  }
-  .tag:hover{transform:rotate(0deg) scale(1.015)}
-  .tag-icon{display:inline-block;animation:tagBob 3.2s ease-in-out infinite}
-  @keyframes tagBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+  /* Tem mục tĩnh lặng */
+  .tag{box-shadow:0 3px 10px rgba(214,51,108,.16)}
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
-    .blob,.ch-float,.ch-shadow,.mascot .spark,.tag-icon,.day-card.max .dc-fire{animation:none !important}
-    .card:hover,.grand-card:hover,.day-card:hover,.jchip:hover,.tag:hover{transform:none}
+    .ch-float,.ch-shadow{animation:none !important}
+    .day-card:hover,.jchip:hover{transform:none}
   }
   /* ---------- Món 13 · Điện thoại: mọi thứ nằm gọn trong khung ---------- */
   @media (max-width:700px){
@@ -674,11 +665,11 @@
     .table-scroll tbody td.vnd{
       font-family:var(--font-mono);font-size:13px;
     }
-    .table-scroll tbody td .del-btn{margin-left:auto}
-    .table-scroll tbody tr td:has(.del-btn){
-      position:absolute;top:5px;right:7px;border:none;padding:0;width:auto;
+    .table-scroll tbody tr{padding-right:38px}
+    .table-scroll tbody .del-btn{
+      position:absolute;top:5px;right:7px;margin:0;transform:none;opacity:1;
     }
-    .table-scroll tbody tr:has(.del-btn){padding-right:38px}
+    .table-scroll tbody td.notes-cell input{padding-right:6px}
 
     /* Dải tổng cuối mỗi bảng */
     .table-scroll tfoot tr{
@@ -721,10 +712,7 @@
     .hotel-addr,.hotel-dates,.hotel-stay{min-width:0;flex:none;width:100%}
     .grand{gap:10px}
     .grand-card{flex:1 1 100%}
-    .zone{margin:32px 0 4px;padding:11px 14px;border-radius:15px;gap:11px}
-    .z-ic{font-size:24px}
-    .z-t b{font-size:14.5px}
-    .z-t span{font-size:11.5px}
+    .zone-div{margin:38px 2px 0}
 
     /* Hai khu tab: vuốt ngang thẻ tab, món xuống dòng ghi chú */
     .pack-tabs,.pack-tabs.two{
@@ -768,6 +756,28 @@
   @media (prefers-reduced-motion:reduce){
     .bk-btn:hover,.bk-btn:active{transform:none}
   }
+  /* ---------- Nút lên đầu trang ---------- */
+  .to-top{
+    position:fixed;left:50%;bottom:18px;z-index:70;
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--ink);color:#fff;border:none;cursor:pointer;
+    font-family:var(--font-body);font-size:13.5px;font-weight:600;
+    padding:11px 18px;border-radius:999px;
+    box-shadow:0 8px 20px rgba(28,18,24,.28);
+    opacity:0;visibility:hidden;pointer-events:none;
+    transform:translate(-50%, 12px);
+    transition:opacity .22s ease,transform .22s ease,visibility .22s;
+  }
+  .to-top.show{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%, 0)}
+  .to-top:hover{background:#33202B}
+  .to-top:active{transform:translate(-50%, 2px)}
+  .to-top svg{display:block}
+  @media (max-width:700px){
+    .to-top{bottom:14px;font-size:13px;padding:10px 16px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .to-top{transition:none}
+  }
 </style>
 </head>
 <body>
@@ -775,11 +785,7 @@
 
   <!-- ============ HEADER ============ -->
   <header>
-    <span class="blob b1" aria-hidden="true"></span>
-    <span class="blob b2" aria-hidden="true"></span>
     <div class="mascot" aria-hidden="true">
-      <span class="spark s1">✨</span>
-      <span class="spark s2">🌸</span>
       <svg viewBox="0 0 150 175" class="chibi" role="img" aria-label="">
         <ellipse class="ch-shadow" cx="75" cy="164" rx="34" ry="7" fill="#E7C7D6"/>
         <g class="ch-float">
@@ -834,9 +840,9 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
-      <span class="ver-tag" title="Phiên bản app">v7</span>
+      <span class="ver-tag" title="Phiên bản app">v9</span><button type="button" class="ver-refresh" id="refreshAppBtn" title="Làm mới app · trị cache lì lợm">⟳</button>
     </div>
-    <p class="lede">Lên lịch trình, theo dõi chi phí kèm quy đổi sang tiền Việt, và kiểm soát đồ skincare, makeup cần mang theo.</p>
+    
     <div class="login-panel" id="loginPanel" hidden>
       <div class="lp-title">Đăng nhập để đồng bộ mọi thiết bị</div>
       <div class="lp-row">
@@ -873,12 +879,11 @@
     <a class="jchip" href="#sec-backup">💾 Backup</a>
   </nav>
 
-  <div class="zone z-money" aria-hidden="true"><span class="z-ic">💸</span><div class="z-t"><b>Kế hoạch &amp; ví tiền</b><span>vé đã chốt · tỷ giá · lịch trình · chi tiêu từng ngày · kết sổ</span></div></div>
+  <div class="zone-div" aria-hidden="true"><span>💸 Kế hoạch &amp; ví tiền</span></div>
 
   <!-- ============ BOOKINGS (PAID PACKAGE, GBP) ============ -->
   <section id="sec-book">
     <div class="tag sky"><span class="tag-icon">✈️🏨</span> GÓI VÉ MÁY BAY + KHÁCH SẠN <span class="paid-chip">✓ ĐÃ THANH TOÁN</span></div>
-    <p class="section-note">Vé máy bay và khách sạn được mua chung một gói nên chỉ cần ghi tổng chi phí của gói, không cần tách chi tiết. Mục này có tỷ giá riêng vì thanh toán bằng loại tiền khác với chi tiêu trong chuyến. Nếu có thêm khoản trả trước khác (bảo hiểm du lịch, đưa đón sân bay...), thêm dòng mới bên dưới.</p>
     <div class="card">
       <div class="mini-fx">
         <div class="fx-field">
@@ -1017,8 +1022,7 @@
             <th class="num" style="width:10%">Chi phí</th>
             <th class="num" style="width:12%">Quy đổi VNĐ</th>
             <th style="width:13%">Phương thức thanh toán</th>
-            <th style="width:19%">Ghi chú</th>
-            <th style="width:2%"></th>
+            <th style="width:21%">Ghi chú</th>
           </tr>
         </thead>
         <tbody id="rowsBody"></tbody>
@@ -1027,7 +1031,6 @@
             <td colspan="3">Tổng cộng</td>
             <td class="num" id="totalTrip" data-label="Tổng chi phí">0</td>
             <td class="vnd-total" id="totalVnd" data-label="Tổng quy đổi">—</td>
-            <td></td>
             <td></td>
             <td></td>
           </tr>
@@ -1051,7 +1054,6 @@
   <!-- ============ DAILY COSTS ============ -->
   <section id="sec-daily">
     <div class="tag moss"><span class="tag-icon">📊</span> CHI PHÍ THEO NGÀY</div>
-    <p class="section-note">Tự động gom các dòng có chi phí theo cột «Ngày» và xếp đúng thứ tự thời gian, kèm dấu 🔥 cho ngày tốn nhất. Dòng nào quên chọn ngày sẽ nằm ở nhóm «Chưa ghi ngày» cuối bảng.</p>
     <div class="card">
       <div id="dailyBox" class="daily-box" aria-live="polite"></div>
     </div>
@@ -1060,7 +1062,6 @@
   <!-- ============ CASH PREPARATION ============ -->
   <section id="sec-cash">
     <div class="tag moss"><span class="tag-icon">💵</span> TIỀN MẶT DỰ TRÙ · VNĐ → <span class="curcode">THB</span></div>
-    <p class="section-note">Ghi lại các lần đổi tiền mặt trước chuyến đi: bỏ ra bao nhiêu VNĐ, nhận được bao nhiêu tiền mặt, tỷ giá thực tế sẽ tự tính. Loại ngoại tệ theo lựa chọn ở thanh tỷ giá phía trên.</p>
     <div class="card table-scroll">
       <table class="cash-table" aria-label="Bảng tiền mặt dự trù">
         <thead>
@@ -1102,7 +1103,6 @@
   <!-- ============ GRAND TOTAL ============ -->
   <section id="sec-total">
     <div class="tag moss"><span class="tag-icon">💰</span> TỔNG CHI PHÍ CẢ CHUYẾN ĐI</div>
-    <p class="section-note">Tự động cộng hai khoản chi thật: gói vé máy bay + khách sạn và chi phí lịch trình, quy hết về VNĐ theo tỷ giá bạn đã nhập. Tiền mặt dự trù là nguồn tiền để chi trả cho lịch trình nên hiển thị riêng bên dưới, không cộng vào tổng để tránh đếm một khoản hai lần.</p>
     <div class="card total-card">
       <div class="total-row">
         <span class="t-name">✈️🏨 Gói vé máy bay + khách sạn (<span class="bookcur">GBP</span> → VNĐ)</span>
@@ -1132,12 +1132,11 @@
     </div>
   </section>
 
-  <div class="zone z-pack" aria-hidden="true"><span class="z-ic">🧳</span><div class="z-t"><b>Vali của mình</b><span>skincare · makeup · đồ dùng, tick tới đâu nhẹ đầu tới đó</span></div></div>
+  <div class="zone-div" aria-hidden="true"><span>🧳 Vali của mình</span></div>
 
   <!-- ============ PACKING ============ -->
   <section id="sec-pack">
     <div class="tag" style="background:var(--ink)"><span class="tag-icon">🧳</span> HÀNH LÝ CẦN MANG</div>
-    <p class="section-note">Ba nhóm đồ gọn trong một khung: chạm vào từng thẻ để chuyển nhóm. Thanh nhỏ trên mỗi thẻ cho biết tiến độ đóng gói của cả ba, dù bạn đang mở nhóm nào.</p>
     <div class="card pack-shell">
       <div class="pack-tabs" role="tablist" aria-label="Nhóm đồ hành lý">
       <button class="pack-tab moss" id="tab-skincare" data-tab="skincare" role="tab" aria-selected="false" aria-controls="panel-skincare">
@@ -1189,12 +1188,11 @@
     </div>
   </section>
 
-  <div class="zone z-notes" aria-hidden="true"><span class="z-ic">🇹🇭</span><div class="z-t"><b>Sổ tay Thái Lan</b><span>mua gì · đi đâu · ăn gì cho đã cái nư</span></div></div>
+  <div class="zone-div" aria-hidden="true"><span>🇹🇭 Sổ tay Thái Lan</span></div>
 
   <!-- ============ THAILAND NOTEBOOK ============ -->
   <section id="sec-notes">
     <div class="tag moss"><span class="tag-icon">🇹🇭</span> SỔ TAY THÁI LAN</div>
-    <p class="section-note">Ghi lại những món nên mua mang về, những nơi muốn ghé và những món nhất định phải ăn thử. Tick khi đã mua xong hoặc đã đến nơi, dùng ô ghi chú cho mẹo nhỏ như mua ở đâu, giá bao nhiêu, đi bằng gì.</p>
     <div class="card pack-shell">
       <div class="pack-tabs" role="tablist" aria-label="Sổ tay Thái Lan">
       <button class="pack-tab moss" id="tab-shopping" data-tab="shopping" role="tab" aria-selected="false" aria-controls="panel-shopping">
@@ -1249,19 +1247,23 @@
   <!-- ============ BACKUP (THỜI ĐẠI 8) ============ -->
   <section id="sec-backup">
     <div class="tag plum"><span class="tag-icon">💾</span> XUỒNG CỨU SINH · BACKUP</div>
-    <p class="section-note">Xuất toàn bộ dữ liệu chuyến đi thành một file .json cất trong máy — lưới an toàn tuyệt đối trước mọi nâng cấp lớn. Khi cần, Nhập lại từ file là mọi thứ quay về đúng khoảnh khắc đó.</p>
     <div class="card backup-card">
       <div class="bk-actions">
         <button type="button" id="btnExport" class="bk-btn">📤 Xuất backup</button>
         <button type="button" id="btnImport" class="bk-btn ghost">📥 Nhập backup</button>
         <input type="file" id="importFile" accept=".json,application/json" hidden>
       </div>
-      <p class="bk-note">File xuất ra có tên kèm ngày giờ, chỉ cần cất giữ (Drive, email tự gửi cho mình…), không cần mở. Nhập sẽ <b>đè toàn bộ dữ liệu hiện tại</b> bằng nội dung file — luôn có màn xác nhận trước khi đè.</p>
+      <p class="bk-note">Nhập sẽ <b>đè toàn bộ dữ liệu hiện tại</b> — luôn có màn xác nhận trước khi đè.</p>
       <p class="bk-status" id="backupStatus" hidden></p>
     </div>
   </section>
 
 </div>
+
+<button type="button" id="toTopBtn" class="to-top" aria-label="Lên đầu trang">
+  <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 10l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Lên đầu trang
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1567,9 +1569,9 @@
       });
       payTd.appendChild(paySel);
 
-      textInput(cell("", "Ghi chú"), "notes", "Ghi chú");
+      var notesTd = cell("notes-cell", "Ghi chú");
+      textInput(notesTd, "notes", "Ghi chú");
 
-      var delTd = cell();
       var del = document.createElement("button");
       del.type = "button";
       del.className = "del-btn";
@@ -1582,7 +1584,7 @@
         updateTotals();
         scheduleSave();
       });
-      delTd.appendChild(del);
+      notesTd.appendChild(del);
 
       rowsBody.appendChild(tr);
       updateRowVnd(row.id);
@@ -2960,6 +2962,60 @@
       };
       reader.readAsText(f);
     });
+  })();
+
+  /* ---------------- Thời đại 9 · Nhà kho di động (PWA) ---------------- */
+  (function(){
+    /* Thuê người gác kho — chỉ khi chạy trên web thật (https), bỏ qua khi mở file xem trước */
+    if("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")){
+      window.addEventListener("load", function(){
+        navigator.serviceWorker.register("sw.js").catch(function(){ /* môi trường không cho thuê gác kho: bỏ qua êm */ });
+      });
+    }
+
+    /* Nút ⟳: đuổi người gác cũ + đốt sạch kho cache + tải lại từ mạng */
+    var btn = document.getElementById("refreshAppBtn");
+    if(btn){
+      btn.addEventListener("click", async function(){
+        if(btn.disabled) return;
+        btn.disabled = true;
+        btn.textContent = "…";
+        try{
+          if(window.caches && caches.keys){
+            var keys = await caches.keys();
+            await Promise.all(keys.map(function(k){ return caches.delete(k); }));
+          }
+          if("serviceWorker" in navigator && navigator.serviceWorker.getRegistrations){
+            var regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(function(r){ return r.unregister(); }));
+          }
+        }catch(e){ /* dù gì cũng tải lại */ }
+        location.reload();
+      });
+    }
+  })();
+
+  /* ---------------- Nút lên đầu trang ---------------- */
+  (function(){
+    var btn = document.getElementById("toTopBtn");
+    if(!btn) return;
+    var NGUONG = 600;
+    var choKhung = false;
+    function capNhat(){
+      choKhung = false;
+      btn.classList.toggle("show", window.scrollY > NGUONG);
+    }
+    window.addEventListener("scroll", function(){
+      if(!choKhung){
+        choKhung = true;
+        window.requestAnimationFrame(capNhat);
+      }
+    }, { passive: true });
+    btn.addEventListener("click", function(){
+      var emDiu = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      window.scrollTo({ top: 0, behavior: emDiu ? "smooth" : "auto" });
+    });
+    capNhat();
   })();
 
   /* ---------------- Init ---------------- */
