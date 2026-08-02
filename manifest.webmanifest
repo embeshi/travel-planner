@@ -1,0 +1,25 @@
+{
+  "name": "Kế hoạch du lịch",
+  "short_name": "Du lịch",
+  "description": "Sổ tay lên kế hoạch và chi phí chuyến đi — đồng bộ mọi thiết bị, chạy được cả khi mất sóng.",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBF4F7",
+  "theme_color": "#FBF4F7",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

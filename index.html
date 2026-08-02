@@ -263,28 +263,28 @@
   /* ---------- Itinerary table ---------- */
   .section-note{font-size:13.5px;color:var(--muted);margin:-4px 0 14px;max-width:640px}
   .table-scroll{overflow-x:auto;border-radius:var(--radius)}
-  table{border-collapse:collapse;width:100%;min-width:1150px}
+  table{border-collapse:collapse;width:100%}
   table.cash-table{min-width:780px}
   table.booking-table{min-width:920px}
   thead th{
     font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;
-    text-align:left;padding:13px 12px;border-bottom:1.5px solid var(--line);
+    text-align:left;padding:11px 8px;border-bottom:1.5px solid var(--line);
     background:#FDF8FA;white-space:nowrap;
   }
   thead th.num,tbody td.num,tfoot td.num{text-align:right}
-  tbody td{border-bottom:1px solid var(--line);padding:4px 6px;vertical-align:middle}
+  tbody td{border-bottom:1px solid var(--line);padding:3px 4px;vertical-align:middle}
   tbody tr:hover{background:#FCF6F9}
   td input{
     width:100%;border:1px solid transparent;border-radius:7px;background:transparent;
-    font-family:var(--font-body);font-size:14.5px;color:var(--ink);
-    padding:8px 8px;outline:none;transition:border-color .15s,background .15s;
+    font-family:var(--font-body);font-size:14px;color:var(--ink);
+    padding:7px 6px;outline:none;transition:border-color .15s,background .15s;
   }
   td input:hover{background:#F9EFF4}
   td input:focus{border-color:var(--moss);background:#fff;box-shadow:0 0 0 3px var(--moss-soft)}
   td.pay select{
     width:100%;border:1px solid transparent;border-radius:7px;background-color:transparent;
-    font-family:var(--font-body);font-size:13.5px;color:var(--ink);
-    padding:8px 24px 8px 8px;outline:none;cursor:pointer;
+    font-family:var(--font-body);font-size:13px;color:var(--ink);
+    padding:7px 22px 7px 6px;outline:none;cursor:pointer;
     appearance:none;-webkit-appearance:none;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23B08CA0' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");
     background-repeat:no-repeat;background-position:right 8px center;
@@ -292,6 +292,7 @@
   }
   td.pay select:focus{border-color:var(--moss);background-color:#fff;box-shadow:0 0 0 3px var(--moss-soft)}
   td.pay select.empty{color:var(--muted)}
+  td input[type="date"]{font-size:13px;padding:7px 4px}
   td input.cost{font-family:var(--font-mono);text-align:right}
   td input::placeholder{color:#C4A9B7}
   td.vnd{
@@ -778,6 +779,92 @@
   @media (prefers-reduced-motion:reduce){
     .to-top{transition:none}
   }
+  /* ---------- Áo kính iOS cho 3 bảng chi phí ---------- */
+  body{
+    background:
+      radial-gradient(560px 380px at 12% -4%, rgba(233,180,255,.35) 0%, transparent 60%),
+      radial-gradient(620px 420px at 96% 10%, rgba(255,170,205,.32) 0%, transparent 62%),
+      radial-gradient(700px 520px at 50% 108%, rgba(255,205,170,.30) 0%, transparent 62%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+  .card.table-scroll{
+    background:rgba(255,255,255,.55);
+    -webkit-backdrop-filter:blur(18px) saturate(1.6);
+    backdrop-filter:blur(18px) saturate(1.6);
+    border:1px solid rgba(255,255,255,.65);
+    border-radius:20px;
+    box-shadow:
+      0 10px 34px rgba(122,41,70,.12),
+      inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  .card.table-scroll thead th{
+    background:rgba(255,255,255,.38);
+    border-bottom-color:rgba(214,51,108,.18);
+  }
+  .card.table-scroll tbody tr:hover{background:rgba(214,51,108,.05)}
+  .card.table-scroll tfoot td{
+    background:rgba(214,51,108,.07);
+    border-top:2px dashed rgba(122,41,70,.45);
+  }
+  @supports not (backdrop-filter: blur(1px)){
+    .card.table-scroll{background:rgba(255,255,255,.92)}
+  }
+  @media (max-width:700px){
+    .table-scroll tbody tr{
+      background:rgba(255,255,255,.72);
+      -webkit-backdrop-filter:blur(12px);
+      backdrop-filter:blur(12px);
+      border-color:rgba(255,255,255,.7);
+      box-shadow:0 4px 14px rgba(122,41,70,.10);
+    }
+    .table-scroll tfoot tr{
+      -webkit-backdrop-filter:blur(12px);
+      backdrop-filter:blur(12px);
+    }
+    @supports not (backdrop-filter: blur(1px)){
+      .table-scroll tbody tr{background:#fff}
+    }
+  }
+  /* ---------- Ba tấm vé: hồn riêng cho ba bảng tiền ---------- */
+  @media (min-width:701px){
+    .card.table-scroll{
+      position:relative;
+      border-radius:24px;
+      -webkit-mask:
+        radial-gradient(circle 10px at 0 calc(100% - 47px), transparent 9px, #000 10px),
+        radial-gradient(circle 10px at 100% calc(100% - 47px), transparent 9px, #000 10px);
+      -webkit-mask-composite: source-in;
+      mask:
+        radial-gradient(circle 10px at 0 calc(100% - 47px), transparent 9px, #000 10px),
+        radial-gradient(circle 10px at 100% calc(100% - 47px), transparent 9px, #000 10px);
+      mask-composite: intersect;
+    }
+    .card.table-scroll::before{
+      content:"";display:block;height:6px;
+      background:linear-gradient(90deg, var(--moss), #B26AE0 55%, #FFB27A);
+      border-radius:23px 23px 0 0;
+    }
+    .card.table-scroll::after{
+      content:"✈";position:absolute;right:22px;bottom:64px;
+      font-size:64px;line-height:1;opacity:.055;transform:rotate(-12deg);
+      pointer-events:none;
+    }
+    .card.table-scroll tbody td{border-bottom:1px dashed rgba(214,51,108,.16)}
+  }
+  @media (max-width:700px){
+    .table-scroll tfoot tr{
+      border-top:2px dashed rgba(122,41,70,.4);
+      -webkit-mask:
+        radial-gradient(circle 9px at 0 1px, transparent 8px, #000 9px),
+        radial-gradient(circle 9px at 100% 1px, transparent 8px, #000 9px);
+      -webkit-mask-composite: source-in;
+      mask:
+        radial-gradient(circle 9px at 0 1px, transparent 8px, #000 9px),
+        radial-gradient(circle 9px at 100% 1px, transparent 8px, #000 9px);
+      mask-composite: intersect;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1017,11 +1104,11 @@
         <thead>
           <tr>
             <th style="width:12%">Ngày</th>
-            <th style="width:20%">Hoạt động</th>
-            <th style="width:12%">Địa điểm</th>
-            <th class="num" style="width:10%">Chi phí</th>
-            <th class="num" style="width:12%">Quy đổi VNĐ</th>
-            <th style="width:13%">Phương thức thanh toán</th>
+            <th style="width:22%">Hoạt động</th>
+            <th style="width:13%">Địa điểm</th>
+            <th class="num" style="width:9%">Chi phí</th>
+            <th class="num" style="width:11%">Quy đổi</th>
+            <th style="width:12%">Thanh toán</th>
             <th style="width:21%">Ghi chú</th>
           </tr>
         </thead>
@@ -1483,6 +1570,34 @@
     }
   }, true);
 
+  /* ---------------- Enter dieu huong: desktop theo cot, mobile tuan tu trong the ---------------- */
+  var mobileCardMQ = window.matchMedia("(max-width: 700px)");
+  function enterHop(inputEl, taoThem){
+    var td = inputEl.closest("td");
+    var tr = inputEl.closest("tr");
+    if(!td || !tr) return;
+    if(mobileCardMQ.matches){
+      var inputs = Array.prototype.slice.call(tr.querySelectorAll("input, select"));
+      var i = inputs.indexOf(inputEl);
+      if(i >= 0 && i < inputs.length - 1){
+        inputs[i + 1].focus();
+        return;
+      }
+      var nextTr = tr.nextElementSibling || (taoThem ? taoThem() : null);
+      if(nextTr){
+        var first = nextTr.querySelector("input, select");
+        if(first) first.focus();
+      }
+      return;
+    }
+    var idx = td.cellIndex;
+    var next = tr.nextElementSibling || (taoThem ? taoThem() : null);
+    if(next && next.cells[idx]){
+      var target = next.cells[idx].querySelector("input, select");
+      if(target) target.focus();
+    }
+  }
+
   function bindCell(input, row, key){
     input.addEventListener("input", function(){
       row[key] = input.value;
@@ -1498,23 +1613,14 @@
     /* Enter: nhảy xuống đúng cột ở dòng dưới; dòng cuối thì tự tạo dòng mới */
     input.addEventListener("keydown", function(e){
       if(e.key !== "Enter") return;
-      if(e.isComposing || e.keyCode === 229) return; /* Enter chốt chữ tiếng Việt: để yên */
+      if(e.isComposing || e.keyCode === 229) return;
       e.preventDefault();
-      var td = input.closest("td");
-      var tr = input.closest("tr");
-      if(!td || !tr) return;
-      var idx = td.cellIndex;
-      var next = tr.nextElementSibling;
-      if(!next){
+      enterHop(input, function(){
         state.rows.push(makeRow());
         renderRows();
         scheduleSave();
-        next = rowsBody.lastElementChild;
-      }
-      if(next && next.cells[idx]){
-        var target = next.cells[idx].querySelector("input");
-        if(target) target.focus();
-      }
+        return rowsBody.lastElementChild;
+      });
     });
   }
 
@@ -1566,6 +1672,17 @@
         row.pay = paySel.value;
         paySel.classList.toggle("empty", !paySel.value);
         scheduleSave();
+      });
+      paySel.addEventListener("keydown", function(e){
+        if(e.key !== "Enter") return;
+        if(e.isComposing || e.keyCode === 229) return;
+        e.preventDefault();
+        enterHop(paySel, function(){
+          state.rows.push(makeRow());
+          renderRows();
+          scheduleSave();
+          return rowsBody.lastElementChild;
+        });
       });
       payTd.appendChild(paySel);
 
@@ -1675,6 +1792,17 @@
             updateCashTotals();
           }
           scheduleSave();
+        });
+        inp.addEventListener("keydown", function(e){
+          if(e.key !== "Enter") return;
+          if(e.isComposing || e.keyCode === 229) return;
+          e.preventDefault();
+          enterHop(inp, function(){
+            state.bookings.push(makeBooking());
+            renderBookings();
+            scheduleSave();
+            return bkBody.lastElementChild;
+          });
         });
         td.appendChild(inp);
         return inp;
@@ -2141,6 +2269,17 @@
             updateBookingTotals();
           }
           scheduleSave();
+        });
+        inp.addEventListener("keydown", function(e){
+          if(e.key !== "Enter") return;
+          if(e.isComposing || e.keyCode === 229) return;
+          e.preventDefault();
+          enterHop(inp, function(){
+            state.cash.push(makeCashRow());
+            renderCash();
+            scheduleSave();
+            return cashBody.lastElementChild;
+          });
         });
         td.appendChild(inp);
         return inp;
