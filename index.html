@@ -723,8 +723,16 @@
     }
     .pack-tabs::-webkit-scrollbar{display:none}
     .pack-tab{flex:0 0 auto;min-width:46%}
-    .pack-item{flex-wrap:wrap;row-gap:2px}
-    .pack-item .p-note{width:100%;padding-left:32px}
+    .pack-item{
+      flex-wrap:nowrap;gap:8px;
+      background:transparent;border:none;border-radius:0;
+      border-bottom:1px solid var(--line);
+      padding:7px 2px;box-shadow:none;
+    }
+    .pack-item:last-child{border-bottom:none}
+    .pack-item:hover{transform:none;box-shadow:none}
+    .pack-item .p-name{flex:1.15;min-width:0;font-size:14px;padding:6px 4px}
+    .pack-item .p-note{flex:1;min-width:0;width:auto;padding:6px 6px;font-size:12.5px}
 
     /* Lưới ngày + panel đăng nhập */
     .daily-grid{grid-template-columns:repeat(2,1fr)}
@@ -863,6 +871,10 @@
   @media (max-width:700px){
     .card.table-scroll tfoot td{border-top:none;background:none}
   }
+  /* ---------- v9.2 · Ô ngày gọn cho mobile ---------- */
+  @media (max-width:700px){
+    .hotel-fields .fx-field.hotel-dates input{font-size:13px;padding:9px 6px;max-width:100%}
+  }
 </style>
 </head>
 <body>
@@ -925,7 +937,7 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
-      <span class="ver-tag" title="Phiên bản app">v9.1</span><button type="button" class="ver-refresh" id="refreshAppBtn" title="Làm mới app · trị cache lì lợm">⟳</button>
+      <span class="ver-tag" title="Phiên bản app">v9.2</span><button type="button" class="ver-refresh" id="refreshAppBtn" title="Làm mới app · trị cache lì lợm">⟳</button>
     </div>
     
     <div class="login-panel" id="loginPanel" hidden>
