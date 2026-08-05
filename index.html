@@ -937,7 +937,7 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
-      <span class="ver-tag" title="Phiên bản app">v9.2</span><button type="button" class="ver-refresh" id="refreshAppBtn" title="Làm mới app · trị cache lì lợm">⟳</button>
+      <span class="ver-tag" title="Phiên bản app">v9.4</span><button type="button" class="ver-refresh" id="refreshAppBtn" title="Làm mới app · trị cache lì lợm">⟳</button>
     </div>
     
     <div class="login-panel" id="loginPanel" hidden>
@@ -1632,9 +1632,37 @@
         return rowsBody.lastElementChild;
       });
     });
+
+    if(key === "date"){
+      input.addEventListener("change", function(){
+        if(!sortRowsByDate()) return;   /* vi tri khong doi thi dung yen */
+        renderRows();
+        scheduleSave();
+        var idx = state.rows.indexOf(row);
+        var tr = rowsBody.children[idx];
+        if(tr){
+          var el = tr.cells[0] && tr.cells[0].querySelector("input");
+          if(el) el.focus();
+        }
+      });
+    }
   }
 
+  function sortByDate(list){
+    var truoc = list.map(function(r){ return r.id; }).join("|");
+    list.sort(function(a, b){
+      var da = a.date || "", db = b.date || "";
+      if(da === db) return 0;
+      if(!da) return 1;   /* chua co ngay: nam cuoi cho nhap tiep */
+      if(!db) return -1;
+      return da < db ? -1 : 1;   /* yyyy-mm-dd: so chuoi la chuan thoi gian */
+    });
+    return truoc !== list.map(function(r){ return r.id; }).join("|");
+  }
+  function sortRowsByDate(){ return sortByDate(state.rows); }
+
   function renderRows(){
+    sortRowsByDate();
     rowsBody.textContent = "";
     state.rows.forEach(function(row){
       var tr = document.createElement("tr");
@@ -1776,6 +1804,7 @@
   }
 
   function renderCash(){
+    sortByDate(state.cash);
     cashBody.textContent = "";
     state.cash.forEach(function(row){
       var tr = document.createElement("tr");
@@ -1808,12 +1837,26 @@
           if(e.isComposing || e.keyCode === 229) return;
           e.preventDefault();
           enterHop(inp, function(){
-            state.bookings.push(makeBooking());
-            renderBookings();
+            state.cash.push(makeCashRow());
+            renderCash();
             scheduleSave();
-            return bkBody.lastElementChild;
+            return cashBody.lastElementChild;
           });
         });
+
+        if(key === "date"){
+          inp.addEventListener("change", function(){
+            if(!sortByDate(state.cash)) return;
+            renderCash();
+            scheduleSave();
+            var idx = state.cash.indexOf(row);
+            var tr2 = cashBody.children[idx];
+            if(tr2){
+              var el = tr2.cells[0] && tr2.cells[0].querySelector("input");
+              if(el) el.focus();
+            }
+          });
+        }
         td.appendChild(inp);
         return inp;
       }
@@ -2253,6 +2296,7 @@
   }
 
   function renderBookings(){
+    sortByDate(state.bookings);
     bkBody.textContent = "";
     state.bookings.forEach(function(row){
       var tr = document.createElement("tr");
@@ -2285,12 +2329,26 @@
           if(e.isComposing || e.keyCode === 229) return;
           e.preventDefault();
           enterHop(inp, function(){
-            state.cash.push(makeCashRow());
-            renderCash();
+            state.bookings.push(makeBooking());
+            renderBookings();
             scheduleSave();
-            return cashBody.lastElementChild;
+            return bkBody.lastElementChild;
           });
         });
+
+        if(key === "date"){
+          inp.addEventListener("change", function(){
+            if(!sortByDate(state.bookings)) return;
+            renderBookings();
+            scheduleSave();
+            var idx = state.bookings.indexOf(row);
+            var tr2 = bkBody.children[idx];
+            if(tr2){
+              var el = tr2.cells[0] && tr2.cells[0].querySelector("input");
+              if(el) el.focus();
+            }
+          });
+        }
         td.appendChild(inp);
         return inp;
       }
