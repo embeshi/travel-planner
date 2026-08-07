@@ -875,6 +875,41 @@
   @media (max-width:700px){
     .hotel-fields .fx-field.hotel-dates input{font-size:13px;padding:9px 6px;max-width:100%}
   }
+  /* ---------- v9.5 · Đã chi theo phương thức ---------- */
+  .pm-strip{margin-top:13px}
+  .pm-title{
+    font-family:var(--font-mono);font-size:11px;font-weight:600;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  }
+  .pm-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .pm-chip{
+    border:1px solid var(--line);background:#fff;border-radius:999px;
+    padding:5px 12px;font-size:13px;color:var(--ink);
+  }
+  .pm-chip b{font-family:var(--font-mono);font-weight:600;color:var(--moss-deep, var(--moss))}
+  .pm-chip.pm-none{border-style:dashed;color:var(--muted)}
+  .pm-chip.pm-none b{color:var(--muted)}
+  /* ---------- v9.6 · Kéo thả dòng kiểu Notion ---------- */
+  tbody td.grip-cell{position:relative}
+  .drag-grip{
+    position:absolute;left:2px;top:50%;transform:translateY(-50%);
+    width:17px;height:26px;display:flex;align-items:center;justify-content:center;
+    color:#D9BECB;font-size:12px;border-radius:6px;
+    cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  }
+  .drag-grip:hover{background:#F6E7EE;color:var(--plum)}
+  .drag-grip:active{cursor:grabbing}
+  tbody tr.dragging{opacity:.65}
+  tbody tr.dragging td{background:#F8ECF2}
+  @media (min-width:701px){
+    .card.table-scroll tbody td.grip-cell{padding-left:21px}
+    .drag-grip{opacity:0;transition:opacity .15s}
+    tbody tr:hover .drag-grip,.drag-grip:focus-visible{opacity:1}
+  }
+  @media (max-width:700px){
+    .table-scroll tbody td.grip-cell{padding-left:24px}
+    .drag-grip{left:2px;opacity:.85}
+  }
 </style>
 </head>
 <body>
@@ -937,7 +972,7 @@
           <button type="button" class="acct-link" id="logoutBtn">Đăng xuất</button>
         </span>
       </span>
-      <span class="ver-tag" title="Phiên bản app">v9.4</span><button type="button" class="ver-refresh" id="refreshAppBtn" title="Làm mới app · trị cache lì lợm">⟳</button>
+      <span class="ver-tag" title="Phiên bản app">v9.6</span><button type="button" class="ver-refresh" id="refreshAppBtn" title="Làm mới app · trị cache lì lợm">⟳</button>
     </div>
     
     <div class="login-panel" id="loginPanel" hidden>
@@ -1210,10 +1245,14 @@
         <span class="t-amt" id="sumRows">—</span>
       </div>
       <div class="total-warn" id="totalWarn" role="status"></div>
+      <div class="pm-strip" id="pmStrip" hidden>
+        <div class="pm-title">💳 Đã chi theo phương thức</div>
+        <div class="pm-chips" id="pmChips"></div>
+      </div>
       <div class="fund-strip">
         <div class="fund-line">💵 Tiền mặt đã đổi: <b id="fundVnd">0 ₫</b> <span class="fund-fx" id="fundFx"></span></div>
         <div class="fund-status" id="fundStatus" role="status"></div>
-        <div class="fund-note">Khoản này là nguồn tiền bạn sẽ dùng để chi cho lịch trình, nên không cộng vào tổng (cộng vào sẽ đếm cùng một cục tiền hai lần).</div>
+        <div class="fund-note">Tiền mặt chỉ là <b>một trong các nguồn chi</b> (bên cạnh Momo, thẻ…) nên không cộng vào tổng — và phép đối chiếu bên trên chỉ so với những dòng lịch trình chọn thanh toán «Tiền mặt».</div>
       </div>
     </div>
 
@@ -1608,6 +1647,68 @@
     }
   }
 
+  /* ---------------- Keo tha dong kieu Notion (v9.6) ---------------- */
+  function attachGrip(tr){
+    var td = tr.cells[0];
+    if(!td) return;
+    td.classList.add("grip-cell");
+    var g = document.createElement("span");
+    g.className = "drag-grip";
+    g.textContent = "\u28FF";
+    g.setAttribute("aria-hidden", "true");
+    g.title = "Keo de sap xep";
+    td.appendChild(g);
+  }
+
+  function enableRowDrag(body, getList, rerender){
+    var drag = null;
+    body.addEventListener("pointerdown", function(e){
+      var grip = e.target.closest ? e.target.closest(".drag-grip") : null;
+      if(!grip) return;
+      var tr = grip.closest("tr");
+      if(!tr || tr.parentNode !== body) return;
+      e.preventDefault();
+      drag = { tr: tr, from: Array.prototype.indexOf.call(body.children, tr) };
+      tr.classList.add("dragging");
+      try{ grip.setPointerCapture(e.pointerId); }catch(err){}
+    });
+    body.addEventListener("pointermove", function(e){
+      if(!drag) return;
+      e.preventDefault();
+      var rows = Array.prototype.slice.call(body.children);
+      for(var i = 0; i < rows.length; i++){
+        var r = rows[i];
+        if(r === drag.tr) continue;
+        var box = r.getBoundingClientRect();
+        if(e.clientY < box.top + box.height / 2){
+          if(r.previousElementSibling !== drag.tr) body.insertBefore(drag.tr, r);
+          return;
+        }
+      }
+      if(body.lastElementChild !== drag.tr) body.appendChild(drag.tr);
+    });
+    function finish(commit){
+      if(!drag) return;
+      var tr = drag.tr, from = drag.from;
+      tr.classList.remove("dragging");
+      var to = Array.prototype.indexOf.call(body.children, tr);
+      drag = null;
+      if(!commit || to === from){ if(!commit) rerender(); return; }
+      var list = getList();
+      var moved = list.splice(from, 1)[0];
+      list.splice(to, 0, moved);
+      /* Hon phoi voi auto-sort: nhan ngay cua hang xom moi neu khac cum */
+      if(moved && ("date" in moved)){
+        var nb = list[to - 1] || list[to + 1];
+        if(nb && (nb.date || "") !== (moved.date || "")) moved.date = nb.date || "";
+      }
+      rerender();
+      scheduleSave();
+    }
+    body.addEventListener("pointerup", function(){ finish(true); });
+    body.addEventListener("pointercancel", function(){ finish(false); });
+  }
+
   function bindCell(input, row, key){
     input.addEventListener("input", function(){
       row[key] = input.value;
@@ -1741,6 +1842,7 @@
       });
       notesTd.appendChild(del);
 
+      attachGrip(tr);
       rowsBody.appendChild(tr);
       updateRowVnd(row.id);
     });
@@ -1885,6 +1987,7 @@
       });
       delTd.appendChild(del);
 
+      attachGrip(tr);
       cashBody.appendChild(tr);
       updateCashRate(row.id);
     });
@@ -2156,24 +2259,63 @@
       warn.style.display = "none";
     }
 
-    /* Tiền mặt = nguồn tiền, hiển thị riêng + so với chi phí lịch trình */
+    /* Tien mat = MOT nguon chi; chi doi chieu voi cac dong chon "Tien mat" o cot Thanh toan */
     document.getElementById("fundVnd").textContent = fmtVND(cashVnd);
     document.getElementById("fundFx").textContent =
       cashFx > 0 ? "(nhận " + fmtFx(cashFx) + " " + state.currency + " tiền mặt)" : "";
     var fs = document.getElementById("fundStatus");
-    if(cashFx > 0 && tripFx > 0){
-      var diff = cashFx - tripFx;
+    var PAY_CASH = "Tiền mặt";
+    var cashSpendFx = 0;
+    state.rows.forEach(function(r){
+      if(r.pay === PAY_CASH) cashSpendFx += rowTotal(r);
+    });
+    if(cashFx > 0 && cashSpendFx > 0){
+      var diff = cashFx - cashSpendFx;
       if(diff >= 0){
-        fs.textContent = "✓ Đủ trang trải chi phí lịch trình, còn dư khoảng " + fmtFx(diff) + " " + state.currency + ".";
+        fs.textContent = "✓ Đủ cho các khoản chi bằng tiền mặt trong lịch trình (" + fmtFx(cashSpendFx) + " " + state.currency + "), còn dư khoảng " + fmtFx(diff) + " " + state.currency + ".";
         fs.className = "fund-status ok";
       }else{
-        fs.textContent = "Còn thiếu khoảng " + fmtFx(-diff) + " " + state.currency + " so với chi phí lịch trình, cân nhắc đổi thêm nhé.";
+        fs.textContent = "Các khoản đánh dấu «Tiền mặt» trong lịch trình (" + fmtFx(cashSpendFx) + " " + state.currency + ") đang vượt số tiền mặt đã đổi khoảng " + fmtFx(-diff) + " " + state.currency + " — cân nhắc đổi thêm nhé.";
         fs.className = "fund-status short";
       }
+    }else if(cashFx > 0){
+      fs.textContent = "Mẹo: chọn «" + PAY_CASH + "» ở cột Thanh toán cho các khoản chi bằng tiền mặt để app đối chiếu với số đã đổi.";
+      fs.className = "fund-status";
     }else{
       fs.textContent = "";
       fs.className = "fund-status";
     }
+
+    /* Da chi theo tung phuong thuc (tu cot Thanh toan cua lich trinh) */
+    var pmStrip = document.getElementById("pmStrip");
+    var pmChips = document.getElementById("pmChips");
+    if(pmStrip && pmChips){
+      var pmSum = {};
+      state.rows.forEach(function(r){
+        var v = rowTotal(r);
+        if(!(v > 0)) return;
+        var k = r.pay || "";
+        pmSum[k] = (pmSum[k] || 0) + v;
+      });
+      var PM_ORDER = ["", "Momo", "Zalo", "Tiền mặt", "Thẻ ngân hàng", "Khác"].slice(1).concat([""]);
+      pmChips.textContent = "";
+      var any = false;
+      PM_ORDER.forEach(function(k){
+        var v = pmSum[k];
+        if(!(v > 0)) return;
+        any = true;
+        var chip = document.createElement("span");
+        chip.className = "pm-chip" + (k === "" ? " pm-none" : "");
+        chip.appendChild(document.createTextNode((k === "" ? "Chưa chọn" : k) + ": "));
+        var b = document.createElement("b");
+        b.textContent = fmtFx(v) + " " + state.currency;
+        chip.appendChild(b);
+        pmChips.appendChild(chip);
+      });
+      pmStrip.hidden = !any;
+    }
+
+    
   }
 
   /* ---------------- Currency ---------------- */
@@ -2378,6 +2520,7 @@
       });
       delTd.appendChild(del);
 
+      attachGrip(tr);
       bkBody.appendChild(tr);
       updateBookingVnd(row.id);
     });
@@ -3224,6 +3367,11 @@
     });
     capNhat();
   })();
+
+  /* ---------------- Bat keo tha cho 3 bang ---------------- */
+  enableRowDrag(rowsBody, function(){ return state.rows; }, renderRows);
+  enableRowDrag(bkBody, function(){ return state.bookings; }, renderBookings);
+  enableRowDrag(cashBody, function(){ return state.cash; }, renderCash);
 
   /* ---------------- Init ---------------- */
   async function init(){
