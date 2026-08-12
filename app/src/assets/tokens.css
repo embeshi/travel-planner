@@ -1,0 +1,80 @@
+/* ============================================================
+   Design tokens · Hướng 05 «Retro Boarding Pass»
+   Chép nguyên từ mục 07 «Đặc tả bàn giao» của docs/bang-thiet-ke-v10.html.
+   Đừng thêm màu mới ở đây mà không sửa bảng thiết kế trước.
+   ============================================================ */
+:root{
+  --kem:#F6EFE3; --giay:#FFFDF7;
+  --navy:#1F3A5F; --muc-phu:#5B6F87;
+  --nhan:#6C7F98; --vach:#D9CFBB;
+  --san-ho:#E14B4B; --san-ho-hover:#C93F3F;
+  --san-ho-press:#AE3232; --san-ho-nhat:#FBE4E1;
+  --nghe:#F2B33D; --nghe-hover:#E0A22C;
+  --nghe-nhat:#FDF1DB;
+  --duyet:#2E6F4E; --duyet-nhat:#E7F0E9;
+  --loi:#B3261E; --khoa:#F1EAE0;
+  --khoa-muc:#A99C88;
+
+  --font-nhan:'IBM Plex Mono',ui-monospace,monospace;
+  --font-noi-dung:'Be Vietnam Pro',system-ui,sans-serif;
+  --nhan-co:11px; --nhan-gian:.12em;
+  --so-lon:26px; --so-hang:15px;
+
+  --sp-1:4px; --sp-2:8px; --sp-3:12px;
+  --sp-4:16px; --sp-6:24px; --sp-8:32px;
+
+  --bo-nho:4px; --bo-the:6px;
+  --vien:2px solid var(--navy);
+  --bong-chip:2px 2px 0 var(--navy);
+  --bong-the:4px 4px 0 var(--navy);
+  --focus:3px solid var(--nghe);
+
+  --soc:repeating-linear-gradient(90deg,
+    var(--san-ho) 0 20px, var(--navy) 20px 40px,
+    var(--nghe) 40px 60px);
+  --ma-vach:repeating-linear-gradient(90deg,
+    transparent 0 3px, rgba(255,255,255,.16) 3px 4px);
+  --dien-tin:repeating-linear-gradient(
+    var(--giay) 0 21px, #F3EBDD 21px 22px);
+
+  --nhanh:120ms; --vua:200ms;
+  --diu:cubic-bezier(.2,.8,.3,1);
+
+  /* --- Bổ sung: mục 01 bảng thiết kế có nói nhưng khối bàn giao bỏ sót --- */
+  --bong-the-con:3px 3px 0 var(--navy);   /* thẻ con */
+  --chan:701px;                            /* breakpoint DUY NHẤT, chỉ để tra cứu */
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;
+    transition-duration:.01ms !important}
+}
+
+/* ---------------- Nền chung ---------------- */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--kem);
+  color:var(--navy);
+  font-family:var(--font-noi-dung);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-text-size-adjust:100%;
+}
+
+/* Nhãn mono in hoa — CHỈ dùng cho nhãn từ ba chữ trở xuống và con số.
+   Câu tiếng Việt dài không bao giờ đi qua class này (luật 01B). */
+.nhan-mono{
+  font-family:var(--font-nhan);
+  font-size:var(--nhan-co);
+  font-weight:600;
+  letter-spacing:var(--nhan-gian);
+  text-transform:uppercase;
+  color:var(--nhan);
+}
+
+/* Dải sọc ba màu — tối đa MỘT dải mỗi màn, luôn ở mép trên khung app.
+   Không dán vào thẻ con. */
+.soc-ve{height:9px;background:var(--soc)}
+
+:focus-visible{outline:var(--focus);outline-offset:2px}

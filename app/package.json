@@ -1,0 +1,20 @@
+{
+  "name": "ke-hoach-du-lich",
+  "private": true,
+  "version": "10.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "vue": "^3.5.41"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
+  }
+}
