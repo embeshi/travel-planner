@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD · Kế hoạch du lịch v10 — Bản yêu cầu sản phẩm cho Claude Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#241E14; --paper:#FFFFFF; --bg:#F3F1EC; --muted:#8A8378;
+    --line:#E4E0D6; --accent:#D6336C; --ai:#7C3AED;
+    --wf:#EDEBE4; --wf-line:#C9C4B6;
+    --font-display:'Anton',Impact,sans-serif;
+    --font-body:'Be Vietnam Pro',-apple-system,sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15.5px;line-height:1.6;padding:34px 16px 90px}
+  .wrap{max-width:1040px;margin:0 auto}
+  .hero{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:26px 26px 22px;box-shadow:0 1px 3px rgba(36,30,20,.05)}
+  .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--ink);padding:5px 12px;border-radius:6px;margin-bottom:13px}
+  h1{font-family:var(--font-display);font-weight:400;font-size:clamp(25px,4.4vw,38px);line-height:1.1;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--accent)}
+  .hero p{margin-top:10px;color:#57503F;max-width:780px}
+  .hero p b{color:var(--ink)}
+  .toc{margin-top:14px;display:flex;flex-wrap:wrap;gap:7px}
+  .toc a{font-family:var(--font-mono);font-size:11px;font-weight:600;color:#57503F;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 11px;background:#FBFAF6}
+  .toc a:hover{border-color:var(--ink);color:var(--ink)}
+  h2.sec{font-family:var(--font-display);font-weight:400;font-size:clamp(19px,3.2vw,27px);text-transform:uppercase;margin:42px 2px 12px;display:flex;align-items:center;gap:10px;scroll-margin-top:18px}
+  h2.sec .no{font-family:var(--font-mono);font-size:12px;color:#fff;background:var(--ink);border-radius:6px;padding:3px 8px}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px 22px;box-shadow:0 1px 3px rgba(36,30,20,.05)}
+  .panel + .panel{margin-top:14px}
+  .panel p{color:#57503F;font-size:14.5px}
+  .panel p + p{margin-top:8px}
+  .panel b{color:var(--ink)}
+  .panel h3{font-size:16px;margin:14px 0 6px}
+  .panel h3:first-child{margin-top:0}
+  .panel ul,.panel ol{margin:6px 0 0 20px;font-size:14px;color:#57503F;display:flex;flex-direction:column;gap:5px}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+  .cell{border:1px solid var(--line);border-radius:13px;padding:12px 14px;background:#FDFCF9}
+  .cell h4{font-size:14px;margin-bottom:4px}
+  .cell p{font-size:13px;color:#6E6656}
+  .cell .k{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+  table{border-collapse:collapse;width:100%;margin-top:10px}
+  th{font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:9px 11px;background:#F5F3EC;color:#6E6656}
+  td{padding:9px 11px;border-bottom:1px solid #EFECE3;font-size:13.5px;vertical-align:top}
+  td.n{font-weight:600;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  .tw{overflow-x:auto}
+  .tw table{min-width:560px}
+  code{font-family:var(--font-mono);font-size:.87em;background:#F1EEE5;padding:1px 6px;border-radius:5px}
+  .ai-mark{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;font-weight:600;color:#fff;background:var(--ai);border-radius:5px;padding:2px 7px;vertical-align:2px}
+  .feas{font-family:var(--font-mono);font-size:10px;font-weight:600;border-radius:5px;padding:2px 7px;white-space:nowrap}
+  .f-off{background:#E3F2E6;color:#1E6B33}
+  .f-api{background:#EDE4FB;color:#5B21B6}
+  .f-mix{background:#FBEBCF;color:#8A5A00}
+  .st{font-family:var(--font-mono);font-size:10px;font-weight:600;border-radius:5px;padding:2px 7px;white-space:nowrap}
+  .s-keep{background:#E3F2E6;color:#1E6B33}
+  .s-new{background:#FBDCE8;color:#9C1F52}
+  .s-fut{background:#EAEAE5;color:#6E6656}
+  .do{border-left:3px solid #1E6B33;background:#F2F9F3;border-radius:0 12px 12px 0;padding:10px 14px;margin-top:10px;font-size:14px;color:#2B4A33}
+  .dont{border-left:3px solid #B3261E;background:#FBF1F0;border-radius:0 12px 12px 0;padding:10px 14px;margin-top:10px;font-size:14px;color:#5C2B27}
+  .do b,.dont b{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+  .flow{border:1px solid var(--line);border-radius:13px;background:#FDFCF9;padding:12px 14px;margin-top:10px}
+  .flow h4{font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+  .flow h4 .fk{font-family:var(--font-mono);font-size:10px;color:#fff;background:var(--ink);border-radius:4px;padding:2px 6px}
+  .flow ol{margin:7px 0 0 20px;font-size:13.5px;color:#57503F;display:flex;flex-direction:column;gap:4px}
+  .flow .sys{color:#8A6E00;font-size:12.5px}
+
+  /* ===== JOURNEY / IA (từ bản phác) ===== */
+  .journey{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:12px}
+  .jstage{position:relative;border:1.5px solid var(--wf-line);background:#FBFAF6;border-radius:12px;padding:12px 13px;margin-right:26px}
+  .jstage:last-child{margin-right:0}
+  .jstage::after{content:"→";position:absolute;right:-22px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--muted)}
+  .jstage:last-child::after{content:none}
+  .jstage h4{font-size:13.5px;display:flex;align-items:center;gap:6px}
+  .jstage .jt{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+  .jstage ul{margin:6px 0 0 15px;font-size:12px;color:#6E6656;display:flex;flex-direction:column;gap:3px}
+  @media (max-width:860px){.journey{grid-template-columns:1fr 1fr;row-gap:24px}.jstage:nth-child(2)::after{content:none}}
+  @media (max-width:480px){.journey{grid-template-columns:1fr}.jstage{margin-right:0}.jstage::after{content:"↓";right:auto;left:50%;top:auto;bottom:-21px;transform:translateX(-50%)}.jstage:last-child::after{content:none}}
+  .ia{margin-top:14px;display:flex;flex-direction:column;align-items:center}
+  .ia-root{border:2px solid var(--ink);border-radius:11px;background:#fff;font-weight:700;padding:9px 22px;font-size:14px}
+  .ia-stem{width:2px;height:18px;background:var(--wf-line)}
+  .ia-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:100%}
+  .ia-tab{border:1.5px solid var(--wf-line);border-radius:12px;background:#FBFAF6;padding:11px 12px}
+  .ia-tab h4{font-size:13.5px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .ia-tab .badge{margin-left:auto;font-family:var(--font-mono);font-size:9px;background:var(--ink);color:#fff;border-radius:4px;padding:1px 6px}
+  .ia-tab ul{margin:7px 0 0 15px;font-size:12px;color:#6E6656;display:flex;flex-direction:column;gap:3px}
+  .ia-tab ul .new{color:var(--accent);font-weight:600}
+  @media (max-width:760px){.ia-tabs{grid-template-columns:1fr 1fr}}
+  @media (max-width:440px){.ia-tabs{grid-template-columns:1fr}}
+
+  /* ===== WIREFRAME KIT MOBILE ===== */
+  .wf-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:14px}
+  .wf-fig{display:flex;flex-direction:column;gap:8px;align-items:center}
+  .wf-cap{font-size:12.5px;color:#6E6656;text-align:center;max-width:280px}
+  .wf-cap b{color:var(--ink)}
+  .phone{width:100%;max-width:270px;border:2px solid var(--wf-line);border-radius:22px;background:#FDFCF9;padding:12px 11px 10px;font-size:10.5px;color:#5A554A}
+  .wfl{font-family:var(--font-mono);font-size:8.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#A29B8B}
+  .wfb{background:var(--wf);border:1px solid var(--wf-line);border-radius:8px}
+  .wf-top{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+  .wf-top .wfb{width:24px;height:24px;border-radius:8px}
+  .wf-top .t{flex:1}
+  .wf-top .t .wfb{width:70%;height:9px;margin-bottom:4px}
+  .wf-top .t .wfb.s{width:44%;height:7px;margin-bottom:0}
+  .wf-card{border:1.5px dashed var(--wf-line);border-radius:11px;padding:9px;margin-bottom:9px;background:#fff}
+  .wf-card .wfl{display:block;margin-bottom:6px}
+  .wf-line{height:8px;border-radius:4px;background:var(--wf);margin-bottom:6px}
+  .wf-line.s{width:55%}
+  .wf-line.xs{width:34%}
+  .wf-big{height:34px;border-radius:10px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11.5px}
+  .wf-chiprow{display:flex;flex-wrap:wrap;gap:5px}
+  .wf-chip{border:1px solid var(--wf-line);background:#fff;border-radius:999px;padding:3px 9px;font-size:9px;font-weight:600;color:#6E6656}
+  .wf-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .wf-chip.ai{border-color:var(--ai);color:var(--ai)}
+  .wf-kpis{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+  .wf-kpi{border:1px solid var(--wf-line);border-radius:10px;background:#fff;padding:7px 9px}
+  .wf-kpi .v{font-family:var(--font-mono);font-weight:600;font-size:12.5px;color:var(--ink);margin-top:2px}
+  .wf-item{display:flex;align-items:center;gap:7px;padding:6px 2px;border-bottom:1px dashed var(--wf-line)}
+  .wf-item:last-child{border-bottom:none}
+  .wf-item .cb{width:13px;height:13px;border:1.5px solid var(--wf-line);border-radius:4px;flex:none}
+  .wf-item .nm{flex:1}
+  .wf-item .nm .wf-line{margin-bottom:0;height:7px}
+  .wf-item .amt{font-family:var(--font-mono);font-size:10px;color:var(--ink);font-weight:600}
+  .wf-tabbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:9px;border-top:1.5px solid var(--wf-line);padding-top:8px}
+  .wf-tab{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:8px;color:#A29B8B}
+  .wf-tab .ic{width:17px;height:17px;border-radius:6px;background:var(--wf);border:1px solid var(--wf-line)}
+  .wf-tab.on{color:var(--ink);font-weight:700}
+  .wf-tab.on .ic{background:var(--ink);border-color:var(--ink)}
+  .wf-fab{position:relative;height:0}
+  .wf-fab span{position:absolute;right:4px;top:-46px;width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;box-shadow:0 4px 10px rgba(214,51,108,.35)}
+  .wf-sheet{border:2px solid var(--ink);border-radius:16px 16px 10px 10px;background:#fff;padding:10px;margin-top:6px}
+  .wf-amount{font-family:var(--font-mono);font-weight:600;font-size:22px;color:var(--ink);text-align:center;padding:8px 0 4px}
+  .wf-amount i{font-style:normal;color:#B9B2A2;font-size:12px}
+  .wf-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}
+  .wf-numpad span{border:1px solid var(--wf-line);border-radius:8px;text-align:center;padding:6px 0;font-family:var(--font-mono);font-size:11px;background:#FBFAF6}
+  .wf-aihint{display:flex;gap:6px;align-items:flex-start;border:1.2px dashed var(--ai);border-radius:10px;background:#F7F3FE;padding:7px 9px;font-size:9.5px;color:#5B21B6;margin-top:8px}
+  .wf-aihint .stt{flex:none;font-size:11px}
+  .wf-bar{display:flex;align-items:flex-end;gap:4px;height:44px;margin:4px 0 8px}
+  .wf-bar span{flex:1;background:var(--wf);border:1px solid var(--wf-line);border-radius:4px 4px 0 0}
+  .wf-bar span.hi{background:#E9C6D6;border-color:#D9A3BC}
+
+  /* ===== WIREFRAME KIT LAPTOP ===== */
+  .wf-row-lap{display:flex;flex-direction:column;gap:24px;align-items:center;margin-top:14px}
+  .wf-fig-lap{width:100%}
+  .wf-fig-lap .wf-cap{max-width:560px}
+  .lap{width:100%;max-width:660px;margin:0 auto;border:2px solid var(--wf-line);border-radius:14px;background:#FDFCF9;overflow:hidden;font-size:10.5px;color:#5A554A}
+  .lap-bar{display:flex;gap:5px;padding:7px 10px;border-bottom:1.5px solid var(--wf-line);align-items:center}
+  .lap-bar i{width:8px;height:8px;border-radius:50%;background:var(--wf-line)}
+  .lap-url{height:12px;border-radius:6px;background:var(--wf);width:200px;margin-left:8px}
+  .lap-body{display:grid;grid-template-columns:118px 1fr;min-height:222px}
+  .lap-side{border-right:1.5px solid var(--wf-line);padding:10px 9px;background:#FBFAF6;display:flex;flex-direction:column;gap:6px}
+  .lap-side .logo{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+  .lap-nav{display:flex;align-items:center;gap:6px;border-radius:8px;padding:5px 7px;font-size:9.5px;font-weight:600;color:#8A8378}
+  .lap-nav .ic{width:13px;height:13px;border-radius:5px;background:var(--wf);border:1px solid var(--wf-line);flex:none}
+  .lap-nav.on{background:var(--ink);color:#fff}
+  .lap-nav.on .ic{background:#fff;border-color:#fff}
+  .lap-main{padding:11px 12px}
+  .lap-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:9px}
+  .lap-cmd{display:flex;align-items:center;gap:7px;border:1.2px dashed var(--ai);background:#F7F3FE;border-radius:9px;padding:6px 9px;font-size:9.5px;color:#5B21B6;margin-bottom:9px}
+  .lap-cmd kbd{font-family:var(--font-mono);font-size:8.5px;border:1px solid #C9B8EE;border-radius:4px;padding:1px 5px;background:#fff;margin-left:auto}
+  .lap-th{display:grid;grid-template-columns:14px 1fr 52px 58px;gap:7px;padding:2px 2px 5px}
+  .lap .wf-item{display:grid;grid-template-columns:14px 1fr 52px 58px;align-items:center;gap:7px}
+  @media (max-width:560px){.lap-body{grid-template-columns:92px 1fr}.lap-grid{grid-template-columns:1fr !important}}
+  .outro{margin-top:22px;color:#6E6656;font-size:14px;max-width:780px}
+  /* ===== MẪU THAM CHIẾU RETRO (01B) ===== */
+  .rt-swatches{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .rt-sw{border:1.5px solid #1F3A5F;border-radius:6px;overflow:hidden;width:120px;box-shadow:3px 3px 0 #1F3A5F}
+  .rt-sw i{display:block;height:36px}
+  .rt-sw b{display:block;font-family:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;background:#FFFDF7;color:#1F3A5F}
+  .rt-demo{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;margin-top:16px}
+  .rt-note{flex:1;min-width:230px;font-size:13px;color:#6E6656}
+  .rt-pass{
+    width:326px;max-width:100%;background:#F6EFE3;border:2px solid #1F3A5F;border-radius:10px;
+    box-shadow:4px 4px 0 #1F3A5F;padding:0 12px 12px;font-family:var(--font-mono);color:#1F3A5F;
+  }
+  .rt-stripe{height:8px;margin:0 -12px 10px;border-radius:7px 7px 0 0;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)}
+  .rt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+  .rt-code{font-size:11px;font-weight:600;letter-spacing:.12em}
+  .rt-ver{font-size:9px;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:2px 6px}
+  .rt-gates{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:9px}
+  .rt-gates span{border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;font-size:8px;font-weight:600;text-transform:uppercase;padding:4px 2px}
+  .rt-gates span.on{background:#E14B4B;color:#fff}
+  .rt-kpis{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+  .rt-kpis div{border:1.5px solid #1F3A5F;border-radius:5px;background:#FFFDF7;padding:6px 8px}
+  .rt-kpis b{display:block;font-size:8px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98}
+  .rt-kpis i{font-style:normal;font-size:13px;font-weight:600}
+  .rt-rows{border:1.5px solid #1F3A5F;border-radius:5px;background:#FFFDF7;padding:2px 8px;margin-bottom:8px}
+  .rt-th,.rt-row{display:grid;grid-template-columns:14px 1fr 58px;gap:7px;align-items:center;padding:6px 0;font-size:10.5px}
+  .rt-th{font-size:8px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#E14B4B;border-bottom:1.5px dashed #1F3A5F}
+  .rt-row + .rt-row{border-top:1px solid #E4DECE}
+  .rt-row span:last-child{text-align:right;font-weight:600}
+  .rt-total{
+    display:flex;justify-content:space-between;align-items:center;
+    background:#1F3A5F;color:#F6EFE3;border-radius:5px;padding:8px 10px;font-size:11.5px;font-weight:600;letter-spacing:.06em;
+    background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.16) 3px 4px);
+  }
+  .rt-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+  .rt-stamp{
+    border:2px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:3px 8px;
+    font-size:9px;font-weight:600;letter-spacing:.1em;transform:rotate(-5deg);opacity:.9;
+  }
+  .rt-fab{
+    width:34px;height:34px;border-radius:50%;background:#E14B4B;color:#fff;border:2px solid #1F3A5F;
+    box-shadow:3px 3px 0 #1F3A5F;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">PRD · Bản yêu cầu sản phẩm · dành cho Claude Design</span>
+    <h1>Kế hoạch du lịch <em>v10</em> — sổ tay chuyến đi thời AI</h1>
+    <p>Tài liệu này <b>tự đứng vững</b>: đọc riêng nó là đủ hiểu sản phẩm để dựng bảng thiết kế hoàn chỉnh — bối cảnh, dữ liệu, toàn bộ chức năng, luồng thao tác, luật nên/không-nên (đúc từ phản hồi thật qua 9 phiên bản), wireframe hai tư thế, và lời dặn giao việc. Chủ sản phẩm: <b>thuyền trưởng Anh</b> · Nền tảng: PWA một file HTML trên GitHub Pages + Supabase · Ngôn ngữ giao diện: tiếng Việt.</p>
+    <div class="toc">
+      <a href="#s1">01 Tổng quan</a><a href="#s1b">01B Áo Retro</a><a href="#s2">02 Dữ liệu</a><a href="#s3">03 Chức năng</a><a href="#s4">04 Luồng thao tác</a><a href="#s5">05 Nên / Không nên</a><a href="#s6">06 Wireframe</a><a href="#s7">07 Giao cho Claude Design</a><a href="#s8">08 Nghiệm thu</a>
+    </div>
+  </header>
+
+  <!-- ============ 01 TỔNG QUAN ============ -->
+  <h2 class="sec" id="s1"><span class="no">01</span>Tổng quan sản phẩm</h2>
+  <div class="panel">
+    <p><b>Kế hoạch du lịch</b> là sổ tay cá nhân trọn vòng đời chuyến đi: lên kế hoạch (vé, khách sạn, lịch trình, đổi tiền, hành lý, wishlist) → sống giữa chuyến (ghi chi tiêu tức thì, tick việc, canh ví tiền mặt) → tổng kết sau chuyến (chi phí đa chiều, đối chiếu dự trù, AI kể chuyện). Người dùng chính là chủ app; tương lai gần có bạn đồng hành cùng dùng (đã quy hoạch, chưa thi công).</p>
+    <div class="cols">
+      <div class="cell"><span class="k">Ràng buộc kỹ thuật bất biến</span><h4>Một file · tĩnh · offline-first</h4><p>Toàn app là <code>index.html</code> vanilla JS (không framework, không build) + <code>sw.js</code>/<code>manifest</code>/icon. Chạy GitHub Pages, dữ liệu Supabase (jsonb một dòng/khoản), offline vẫn dùng trọn, có sóng tự đồng bộ. Breakpoint duy nhất: <b>700px</b>.</p></div>
+      <div class="cell"><span class="k">Quyết định khung &amp; áo</span><h4>Khung UX = Phương án B · Áo UI = HƯỚNG 05 (ĐÃ CHỐT)</h4><p>4 tab + phase-aware landing + FAB/⌘K (chi tiết mục 06). Áo UI <b>đã chốt: Hướng 05 · Retro Boarding Pass</b> — cả app là một tấm vé máy bay thập niên 90 (hồ sơ chi tiết mục 01B). Khung UX vẫn đổi được bằng ghi chú khi giao việc.</p></div>
+      <div class="cell"><span class="k">Triết lý AI</span><h4>AI là tầng phủ, không phải cửa bắt buộc</h4><p>Mọi tác vụ lõi phải trọn vẹn bằng tay và offline. AI tăng tốc ở 6 điểm chạm có dán nhãn khả thi (mục 03C) — mất mạng giữa chợ vẫn ghi chi ngon lành.</p></div>
+    </div>
+  </div>
+
+  <h2 class="sec" id="s1b"><span class="no">01B</span>Áo UI đã chốt — Hướng 05 «Retro Boarding Pass» 🛫</h2>
+  <div class="panel">
+    <p>Khẩu quyết: <b>«Cả app là MỘT tấm vé máy bay thập niên 90.»</b> Hạt giống là tấm vé desktop hiện tại — giờ nở thành toàn hệ.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Token</th><th>Giá trị hạt giống</th><th>Vai trò</th></tr></thead>
+      <tbody>
+        <tr><td class="n">Kem vé</td><td><code>#F6EFE3</code> · giấy sáng <code>#FFFDF7</code></td><td>Nền app · nền vùng nhập liệu/bảng (luôn sạch, không texture)</td></tr>
+        <tr><td class="n">Navy</td><td><code>#1F3A5F</code></td><td>Chữ chính · viền khối 2px · bóng khối lệch 4px · thanh tổng</td></tr>
+        <tr><td class="n">Đỏ san hô</td><td><code>#E14B4B</code></td><td>Nhấn chính: tab đang chọn, FAB ➕, nhãn cột, cảnh báo vượt ví</td></tr>
+        <tr><td class="n">Vàng nghệ</td><td><code>#F2B33D</code></td><td>Nhấn phụ: nút hành động phụ, huy hiệu, 🔥 ngày cao nhất</td></tr>
+        <tr><td class="n">Chữ</td><td>IBM Plex Mono (nhãn/tiêu đề/số, in hoa, giãn ký tự) + Be Vietnam Pro (nội dung nhập &amp; đoạn văn)</td><td>Mono-first cho chất vé; guardrail: chữ tiếng Việt dài không ép in hoa mono để giữ độ đọc</td></tr>
+        <tr><td class="n">Hình khối</td><td>Bo góc nhỏ 4–6px · viền đôi/2px · notch cắt góc vé · dải sọc ba màu (san hô–navy–nghệ) · thanh tổng vân mã vạch</td><td>Sọc/mã vạch/notch CHỈ ở khung, đầu thẻ và thanh tổng — không đè lên hàng dữ liệu</td></tr>
+        <tr><td class="n">Nghỉ hưu</td><td>Kính iOS · gradient hồng · dark mode (không hợp chất — không làm trong v10)</td><td>Chất liệu của các hướng khác, không mang sang</td></tr>
+        <tr><td class="n">Linh vật</td><td>Chibi phiên bản <b>nhân viên mặt đất đội mũ phi công</b></td><td>Dùng tiết chế: header · trạng thái rỗng · băng-rôn 🎉</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="margin-top:18px">Bảng màu &amp; mẫu thị giác tham chiếu</h3>
+    <div class="rt-swatches">
+      <div class="rt-sw"><i style="background:#F6EFE3"></i><b>Kem vé · #F6EFE3</b></div>
+      <div class="rt-sw"><i style="background:#1F3A5F"></i><b>Navy · #1F3A5F</b></div>
+      <div class="rt-sw"><i style="background:#E14B4B"></i><b>San hô · #E14B4B</b></div>
+      <div class="rt-sw"><i style="background:#F2B33D"></i><b>Nghệ · #F2B33D</b></div>
+      <div class="rt-sw"><i style="background:#2E6F4E"></i><b>Dấu duyệt · #2E6F4E</b></div>
+    </div>
+
+    <div class="rt-demo">
+      <div class="rt-pass">
+        <div class="rt-stripe"></div>
+        <div class="rt-head"><span class="rt-code">BKK · 04 AUG</span><span class="rt-ver">v10</span></div>
+        <div class="rt-gates"><span class="on">Hôm nay</span><span>Kế hoạch</span><span>Sổ tay</span><span>Tổng kết</span></div>
+        <div class="rt-kpis">
+          <div><b>Đã chi hôm nay</b><i>1.240 ฿</i></div>
+          <div><b>Ví tiền mặt còn</b><i>1.150 ฿</i></div>
+        </div>
+        <div class="rt-rows">
+          <div class="rt-th"><span>⠿</span><span>Hoạt động</span><span>Chi phí</span></div>
+          <div class="rt-row"><span>⠿</span><span>Khon Boat Noodles</span><span>120 ฿</span></div>
+          <div class="rt-row"><span>⠿</span><span>PunThai Coffee</span><span>85 ฿</span></div>
+        </div>
+        <div class="rt-total"><span>TỔNG CỘNG</span><span>16.397 ฿</span></div>
+        <div class="rt-foot"><span class="rt-stamp">ĐÃ ĐỒNG BỘ</span><span class="rt-fab">＋</span></div>
+      </div>
+      <p class="rt-note">Mẫu tham chiếu chất liệu — <b>không phải bố cục cuối</b>. Bố cục lấy theo wireframe mục 06; mẫu này chỉ để chốt cảm giác: viền khối 2px, bóng lệch không blur, sọc ba màu ở đầu vé, thanh tổng vân mã vạch, con dấu cao su xoay nhẹ, FAB tròn san hô viền navy.</p>
+    </div>
+
+    <h3 style="margin-top:18px">Ánh xạ linh kiện sang ngôn ngữ vé</h3>
+    <div class="tw"><table>
+      <thead><tr><th>Linh kiện</th><th>Hóa thân Retro</th></tr></thead>
+      <tbody>
+        <tr><td class="n">Tab bar / sidebar</td><td>Dải «cổng lên máy bay»: ô vuông viền navy, tab đang chọn nền san hô chữ kem</td></tr>
+        <tr><td class="n">Thẻ &amp; panel</td><td>Cuống vé: viền 2px, bo 4–6px, bóng khối lệch 3–4px, notch cắt góc ở đầu thẻ</td></tr>
+        <tr><td class="n">Thanh Tổng cộng</td><td>Dải navy vân mã vạch, số kem mono — desktop thêm lỗ bấm hai bên</td></tr>
+        <tr><td class="n">Chip danh mục / kênh</td><td>Vé con: viền cứng, chữ mono in hoa cỡ nhỏ, chọn = nền san hô</td></tr>
+        <tr><td class="n">FAB ➕ / ⌘K</td><td>FAB tròn san hô viền navy + bóng khối · ⌘K là ô «TELEX» kẻ khung mono</td></tr>
+        <tr><td class="n">Trạng thái hệ thống</td><td>Con dấu cao su xoay 4–8°: ĐÃ ĐỒNG BỘ (xanh duyệt) · NGOẠI TUYẾN (nghệ) · HOÀN TẤT 🎉 (san hô)</td></tr>
+        <tr><td class="n">Khối ✦ AI</td><td>Panel «điện tín»: nền kem kẻ ngang mờ, chữ mono, nhãn ✦ AI viền đứt</td></tr>
+        <tr><td class="n">Biểu đồ theo ngày</td><td>Cột kiểu bảng giờ bay: khối navy viền cứng, ngày cao nhất tô nghệ + 🔥</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="margin-top:18px">Ba luật tiết chế (để cá tính không lấn công năng)</h3>
+    <ul>
+      <li><b>Một sọc, một dấu:</b> mỗi màn tối đa MỘT dải sọc ba màu và MỘT con dấu — không rải khắp nơi.</li>
+      <li><b>Vùng dữ liệu luôn sạch:</b> sọc/mã vạch/nét đứt chỉ ở khung, đầu thẻ, thanh tổng. Hàng nhập liệu và ô số nền sáng trơn.</li>
+      <li><b>In hoa có hạn mức:</b> mono in hoa chỉ cho nhãn ≤3 từ và con số; câu tiếng Việt dài dùng Be Vietnam Pro chữ thường (dấu tiếng Việt in hoa mono rất khó đọc).</li>
+    </ul>
+  </div>
+
+  <!-- ============ 02 DỮ LIỆU ============ -->
+  <h2 class="sec" id="s2"><span class="no">02</span>Chân dung dữ liệu (đang chạy thật)</h2>
+  <div class="panel">
+    <p>Thiết kế phải ôm đúng dữ liệu này — không thêm trường bắt buộc mới nếu không có trong danh sách «Mới» ở mục 03B.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Khối</th><th>Trường</th><th>Ghi chú cho thiết kế</th></tr></thead>
+      <tbody>
+        <tr><td class="n">Chuyến (state)</td><td><code>title · currency (THB/GBP/…) · _updatedAt</code></td><td>Tên chuyến sửa ngay trên tiêu đề; tiền tệ chi phối mọi ô số.</td></tr>
+        <tr><td class="n">Lịch trình <code>rows[]</code></td><td><code>id · date · activity · location · tripCost · pay · notes</code></td><td><code>pay</code> ∈ {Momo, Zalo, Tiền mặt, Thẻ ngân hàng, Khác, (trống)}. Quy đổi VNĐ là cột dẫn xuất. <b>Mới v10:</b> thêm <code>cat</code> (danh mục, xem 03B).</td></tr>
+        <tr><td class="n">Gói bay <code>bookings[]</code></td><td><code>id · date · name · vendor · cost · note</code></td><td>Kèm tiền tệ gói (GBP…) + tỷ giá → VNĐ; khối khách sạn riêng: tên, địa chỉ, check-in/out, số đêm tự tính.</td></tr>
+        <tr><td class="n">Tiền mặt <code>cash[]</code></td><td><code>id · date · vnd · fx · place</code></td><td>Tỷ giá thực tế = dẫn xuất; tổng <code>fx</code> = ví tiền mặt.</td></tr>
+        <tr><td class="n">Sổ tay &amp; hành lý</td><td>6 danh sách checklist: Skincare · Makeup · Đồ dùng · Mua mang về · Đi đâu · Ăn gì</td><td>Mỗi món: tick, tên, ghi chú, xóa; kèm chip gợi ý và thanh tiến độ.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ 03 CHỨC NĂNG ============ -->
+  <h2 class="sec" id="s3"><span class="no">03</span>Kho chức năng — ba lớp</h2>
+  <div class="panel">
+    <h3>03A · <span class="st s-keep">GIỮ NGUYÊN</span> — cơ bắp đã chạy thật (v1 → v9.6), thiết kế phải bảo toàn</h3>
+    <ul>
+      <li><b>Đồng bộ &amp; an toàn:</b> đăng nhập email/mật khẩu Supabase · offline-first, có sóng tự đồng bộ, trạng thái «Đã lưu trên máy / Đã đồng bộ tài khoản» · backup xuất/nhập JSON kèm màn xác nhận có ngày giờ · PWA cài màn hình chính, mở được khi mất sóng hoàn toàn · nút ⟳ trị cache · tem phiên bản luôn hiển thị.</li>
+      <li><b>Ba bảng tiền:</b> Lịch trình &amp; chi phí · Gói bay + khách sạn (đa tiền tệ, tỷ giá tự động) · Tiền mặt dự trù. Tổng chi phí cả chuyến quy về VNĐ; chip «Đã chi theo phương thức»; đối chiếu ví tiền mặt <i>chỉ với các dòng chọn Tiền mặt</i> (3 trạng thái: đủ / vượt / mẹo gắn nhãn).</li>
+      <li><b>Nhập liệu cao cấp:</b> Enter hai chế độ (desktop nhảy theo cột · mobile tuần tự trong thẻ, đi qua cả menu Thanh toán) · giáp bộ gõ tiếng Việt (isComposing) phủ 7 điểm · tự xếp nhóm theo ngày cả 3 bảng (xếp ổn định, dòng trống chìm đáy, con trỏ bay theo) · kéo thả ⠿ kiểu Notion (kéo sang cụm ngày khác = nhận ngày cụm đó) · × xóa nép trong ô, hiện khi rê.</li>
+      <li><b>Xem theo ngày:</b> lưới thẻ ngày với thứ, tổng ngày, dấu 🔥 ngày cao nhất.</li>
+      <li><b>Trợ giúp di chuyển:</b> thanh pill điều hướng ghim + chip tự sáng theo khu · nút «Lên đầu trang» viên thuốc đen.</li>
+    </ul>
+
+    <h3>03B · <span class="st s-new">MỚI TRONG V10</span> — trái tim của bản thiết kế này</h3>
+    <ul>
+      <li><b>Kiến trúc 4 tab + phase-aware:</b> 🏠 Hôm nay · 🗓 Kế hoạch · 🧳 Sổ tay · 📊 Tổng kết; app tự mở đúng tab theo giai đoạn (suy từ ngày check-in/out): trước chuyến → Kế hoạch, trong → Hôm nay, sau → Tổng kết + băng-rôn «Chuyến đi hoàn tất 🎉».</li>
+      <li><b>Màn «Hôm nay»:</b> hai KPI (Đã chi hôm nay · Ví tiền mặt còn) + lịch trình của riêng hôm nay + tick nhanh sổ tay.</li>
+      <li><b>Ghi chi 3 chạm:</b> mobile = FAB ➕ mở bottom-sheet: số tiền (bàn phím số) → chip danh mục → chip nguồn tiền → Lưu; ngày giờ + quy đổi tự điền. Desktop = khối ghi nhanh mở sẵn + thanh lệnh <b>⌘K</b> mọi nơi.</li>
+      <li><b>Danh mục chi tiêu <code>cat</code>:</b> 🍜 Ăn uống · 🚕 Di chuyển · 🎟 Vé &amp; tham quan · 🛍 Mua sắm · 🏨 Lưu trú · 📦 Khác. Không bắt buộc; dòng cũ không có danh mục hiển thị «Chưa phân loại».</li>
+      <li><b>Màn «Tổng kết» hợp nhất:</b> KPI tổng + so dự trù + TB/ngày · biểu đồ chi theo ngày · cơ cấu theo danh mục · theo kênh thanh toán · khối ✦ AI kể chuyện · xuất/backup.</li>
+      <li><b>Tầng AI (6 điểm chạm, dán nhãn khả thi):</b> nhập bằng câu tự nhiên <span class="feas f-mix">LAI</span> · tự gắn danh mục <span class="feas f-mix">LAI</span> · cảnh báo nhịp chi <span class="feas f-off">OFFLINE</span> · wishlist → khung lịch trình <span class="feas f-api">CẦU NỐI</span> · kể chuyện tổng kết <span class="feas f-api">CẦU NỐI</span> · hóa đơn → dòng chi <span class="feas f-api">CẦU NỐI</span>. Mọi kết quả AI đều <b>xem-trước-rồi-xác-nhận</b>, không tự ghi thẳng vào dữ liệu.</li>
+    </ul>
+
+    <h3>03C · <span class="st s-fut">TƯƠNG LAI GẦN</span> — thiết kế chừa chỗ, chưa thi công (hải trình mùa 2)</h3>
+    <ul>
+      <li>🌐 Realtime hai thiết bị · 🧳 Nhiều chuyến đi (màn chọn chuyến) · 📸 Két biên lai (ảnh đính từng dòng — chỗ đứng: nút 📎 trong dòng chi) · 👥 Chia sẻ chuyến cho bạn đồng hành. Thiết kế cần để lối vào tự nhiên cho các món này (ví dụ: đầu trang có chỗ cho «tên chuyến ▾»).</li>
+    </ul>
+  </div>
+
+  <!-- ============ 04 LUỒNG ============ -->
+  <h2 class="sec" id="s4"><span class="no">04</span>Luồng thao tác người dùng (8 luồng chuẩn)</h2>
+  <div class="panel">
+    <div class="flow"><h4><span class="fk">F1</span>Ghi một khoản chi giữa chuyến (mobile · ≤5 giây)</h4>
+      <ol><li>Chạm FAB ➕ (mọi tab đều thấy)</li><li>Gõ số tiền trên bàn phím số → chạm chip danh mục → chạm chip nguồn tiền</li><li>Chạm «Lưu» <span class="sys">→ hệ thống: ngày giờ tự điền, quy đổi VNĐ tự tính, dòng chảy vào Lịch trình đúng cụm ngày, KPI «Hôm nay» + ví tiền mặt cập nhật tức thì, toast «Đã ghi ✓» kèm Hoàn tác 5s</span></li></ol></div>
+    <div class="flow"><h4><span class="fk">F2</span>Ghi bằng câu tự nhiên <span class="ai-mark">✦</span></h4>
+      <ol><li>Mobile: chạm ô «gõ tự nhiên» trong sheet · Desktop: nhấn ⌘K</li><li>Gõ «bolt về khách sạn 120 baht tiền mặt»</li><li><span class="sys">Hệ thống tách: tên · 120 · Tiền mặt · 🚕 (đoán) → hiện bản xem trước để sửa/enter xác nhận. Offline: bộ tách nội bộ lo mẫu phổ biến; câu khó chuyển AI khi có mạng.</span></li></ol></div>
+    <div class="flow"><h4><span class="fk">F3</span>Dựng &amp; nắn lịch trình</h4>
+      <ol><li>Tab Kế hoạch → thêm dòng (nút ＋ hoặc Enter ở dòng cuối)</li><li>Chọn ngày <span class="sys">→ dòng tự bay về đúng cụm ngày, con trỏ bay theo</span></li><li>Kéo ⠿ để đổi thứ tự trong ngày; kéo sang cụm khác <span class="sys">→ dòng nhận luôn ngày cụm đó</span></li></ol></div>
+    <div class="flow"><h4><span class="fk">F4</span>Tick sổ tay &amp; hành lý</h4>
+      <ol><li>Tab Sổ tay → chọn tab con (Skincare…/Ăn gì)</li><li>Tick từng món (mobile: mỗi món một dòng nén) <span class="sys">→ thanh tiến độ chạy, món xong đổi nền + gạch tên</span></li><li>Chip gợi ý «＋» để thêm nhanh món phổ biến</li></ol></div>
+    <div class="flow"><h4><span class="fk">F5</span>Đổi tiền &amp; canh ví</h4>
+      <ol><li>Tab Kế hoạch → khu Đổi tiền: nhập VNĐ đã đổi + THB nhận được <span class="sys">→ tỷ giá thực tế tự tính</span></li><li>Trong chuyến, gắn nhãn «Tiền mặt» cho các khoản chi mặt <span class="sys">→ màn Hôm nay/Tổng kết hiện «còn dư ~X ฿» hoặc nhắc đổi thêm khi thật sự vượt</span></li></ol></div>
+    <div class="flow"><h4><span class="fk">F6</span>Review cuối chuyến <span class="ai-mark">✦</span></h4>
+      <ol><li>Qua ngày về, mở app <span class="sys">→ tự vào Tổng kết + 🎉</span></li><li>Đọc KPI, biểu đồ ngày, cơ cấu danh mục/kênh</li><li>Chạm «Tạo bản tổng kết» <span class="sys">→ AI viết trang tổng kết thành lời từ số liệu thật → xem trước → Xuất PDF/lưu</span></li></ol></div>
+    <div class="flow"><h4><span class="fk">F7</span>Backup &amp; khôi phục</h4>
+      <ol><li>Tổng kết → «Xuất backup» <span class="sys">→ file JSON tên kèm ngày giờ</span></li><li>«Nhập backup» → chọn file <span class="sys">→ màn xác nhận ghi rõ ngày giờ file → đè toàn bộ + đồng bộ</span></li></ol></div>
+    <div class="flow"><h4><span class="fk">F8</span>Cài app &amp; dùng offline</h4>
+      <ol><li>Safari/Chrome → Thêm vào MH chính <span class="sys">→ icon máy bay–địa cầu, mở full màn hình</span></li><li>Mất sóng: mở từ icon vẫn lên đủ dữ liệu <span class="sys">→ «Đã lưu trên máy»; có sóng lại → «Đã đồng bộ tài khoản»</span></li></ol></div>
+  </div>
+
+  <!-- ============ 05 NÊN / KHÔNG NÊN ============ -->
+  <h2 class="sec" id="s5"><span class="no">05</span>Những điều NÊN và KHÔNG NÊN <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0">(đúc từ phản hồi thật của chủ sản phẩm qua 9 phiên bản)</span></h2>
+  <div class="panel">
+    <div class="do"><b>NÊN</b>Mobile-first vùng ngón cái: hành động vua (➕) luôn trong tầm với; mỗi màn đúng một hành động vua.</div>
+    <div class="do"><b>NÊN</b>Clean có chủ đích: khoảng thở rộng, vạch chia mảnh, tối đa MỘT lớp trang trí đặc sắc (chất vé retro: viền khối · sọc · mã vạch) — không chồng hiệu ứng, texture không đè vùng nhập liệu.</div>
+    <div class="do"><b>NÊN</b>Bảng desktop phải vừa khung không cuộn ngang; mobile là thẻ dọc nén, mỗi món checklist đúng một dòng.</div>
+    <div class="do"><b>NÊN</b>Mọi thao tác lõi trọn vẹn offline; AI luôn có bản xem-trước và luôn có đường làm tay tương đương.</div>
+    <div class="do"><b>NÊN</b>Nhập liệu liền mạch bàn phím: Enter thông minh hai chế độ, giáp bộ gõ tiếng Việt ở mọi điểm Enter.</div>
+    <div class="do"><b>NÊN</b>Phá hủy phải có phanh: đè dữ liệu/xóa lớn luôn xác nhận kèm thông tin (ngày giờ file backup…); hành động ghi có Hoàn tác ngắn.</div>
+    <div class="do"><b>NÊN</b>Tem phiên bản hiển thị thường trực + nút ⟳; tôn trọng <code>prefers-reduced-motion</code>.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>Nét đứt/viền trang trí trong khối «Tổng cộng» ở mobile (bài học v9.1 — chủ sản phẩm đã bác ba lần 😄); desktop giữ đường xé vé là đủ.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>Chữ hướng dẫn dài dưới mỗi mục, banner to, blob/sparkle bay lượn, hiệu ứng 3D xoay thẻ — đã thanh lọc, đừng hồi sinh.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>So sánh sai phạm trù trong lời nhắc tiền bạc (ví dụ đem cả lịch trình so với riêng ví tiền mặt) — mọi con số cảnh báo phải đúng logic nguồn chi.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>Bắt người dùng qua cửa AI cho tác vụ lõi; không tự ghi dữ liệu từ AI khi chưa xác nhận; không yêu cầu tài khoản/API key trong luồng thường.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>Ô ngày để tràn/chồng chéo trên mobile; cột × chiếm chỗ riêng; bảng khóa min-width gây kéo ngang.</div>
+    <div class="do"><b>NÊN</b>Retro có kỷ luật: theo đúng ba luật tiết chế ở mục 01B (một sọc + một dấu mỗi màn · vùng dữ liệu sạch · in hoa ≤3 từ).</div>
+    <div class="do"><b>NÊN</b>Tương phản đủ chuẩn: chữ chính luôn navy trên kem (≥ 4.5:1). San hô dành cho số tiền, nhãn ngắn và điểm nhấn — không dùng cho đoạn văn.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>Đổi cấu trúc dữ liệu hoặc thêm trường bắt buộc ngoài mục 02/03B; không đụng cấu hình Supabase.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>In hoa cả câu dài tiếng Việt, hoặc ép mono cho ghi chú/đoạn văn — chất vé không được đổi bằng độ đọc.</div>
+    <div class="dont"><b>KHÔNG NÊN</b>Texture giấy/ố vàng/vệt bẩn giả cổ đè lên hàng dữ liệu và ô nhập; giả cổ chỉ ở viền và khung.</div>
+  </div>
+
+  <!-- ============ 06 WIREFRAME ============ -->
+  <h2 class="sec" id="s6"><span class="no">06</span>Wireframe đính kèm (khung xương đã duyệt hướng)</h2>
+  <div class="panel">
+    <h3>06A · Hành trình 4 giai đoạn &amp; kiến trúc 4 tab</h3>
+    <div class="journey">
+      <div class="jstage"><span class="jt">Giai đoạn 0</span><h4>🧭 Khởi tạo</h4><ul><li>Tạo chuyến, ngày đi/về</li><li>AI gợi ý khung lịch trình <span class="ai-mark">✦</span></li></ul></div>
+      <div class="jstage"><span class="jt">Trước chuyến</span><h4>📝 Lên kế hoạch</h4><ul><li>Gói bay + khách sạn</li><li>Đổi tiền, dự trù</li><li>Hành lý, wishlist</li></ul></div>
+      <div class="jstage"><span class="jt">Trong chuyến</span><h4>⚡ Sống &amp; ghi</h4><ul><li><b>Ghi chi 3 chạm</b></li><li>Tick lịch trình / sổ tay</li><li>Liếc ví tiền mặt</li></ul></div>
+      <div class="jstage"><span class="jt">Sau chuyến</span><h4>📊 Tổng kết</h4><ul><li>Chi phí đa chiều</li><li>Dự trù vs thực tế</li><li>AI kể chuyện <span class="ai-mark">✦</span></li></ul></div>
+    </div>
+    <div class="ia">
+      <div style="height:16px"></div>
+      <div class="ia-root">KẾ HOẠCH DU LỊCH</div>
+      <div class="ia-stem"></div>
+      <div class="ia-tabs">
+        <div class="ia-tab"><h4>🏠 Hôm nay <span class="badge">TRONG CHUYẾN</span></h4><ul><li class="new">Ghi chi 3 chạm (FAB ➕)</li><li>Ví tiền mặt còn lại</li><li>Lịch trình hôm nay</li><li>Tick nhanh sổ tay</li></ul></div>
+        <div class="ia-tab"><h4>🗓 Kế hoạch</h4><ul><li>Lịch trình timeline (tự xếp + kéo ⠿)</li><li>Gói bay + khách sạn</li><li>Đổi tiền &amp; tỷ giá</li></ul></div>
+        <div class="ia-tab"><h4>🧳 Sổ tay</h4><ul><li>Hành lý (3 tab)</li><li>Mua về · Đi đâu · Ăn gì</li><li class="new">AI wishlist → lịch trình <span class="ai-mark">✦</span></li></ul></div>
+        <div class="ia-tab"><h4>📊 Tổng kết</h4><ul><li>KPI + dự trù vs thực tế</li><li>Ngày · kênh · <span class="new">danh mục</span></li><li class="new">AI kể chuyện <span class="ai-mark">✦</span></li><li>Xuất / backup</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>06B · Điện thoại — ba màn then chốt</h3>
+    <div class="wf-row">
+      <figure class="wf-fig">
+        <div class="phone">
+          <div class="wf-top"><span class="wfb"></span><div class="t"><div class="wfb"></div><div class="wfb s"></div></div><span class="wfl">v10</span></div>
+          <div class="wf-card"><span class="wfl">Hôm nay · Ngày 4/6 của chuyến</span>
+            <div class="wf-kpis"><div class="wf-kpi"><span class="wfl">Đã chi hôm nay</span><div class="v">1.240 ฿</div></div><div class="wf-kpi"><span class="wfl">Ví tiền mặt còn</span><div class="v">1.150 ฿</div></div></div>
+            <span class="wfl">Lịch trình hôm nay</span>
+            <div class="wf-item"><span class="cb"></span><div class="nm"><div class="wf-line" style="width:72%"></div></div><span class="amt">120 ฿</span></div>
+            <div class="wf-item"><span class="cb"></span><div class="nm"><div class="wf-line" style="width:58%"></div></div><span class="amt">—</span></div>
+          </div>
+          <div class="wf-card"><span class="wfl">Tick nhanh sổ tay</span><div class="wf-chiprow"><span class="wf-chip">🍜 Tom Yum</span><span class="wf-chip">🛍 Chatuchak</span><span class="wf-chip">＋</span></div></div>
+          <div class="wf-fab"><span>＋</span></div>
+          <div class="wf-tabbar"><div class="wf-tab on"><span class="ic"></span>Hôm nay</div><div class="wf-tab"><span class="ic"></span>Kế hoạch</div><div class="wf-tab"><span class="ic"></span>Sổ tay</div><div class="wf-tab"><span class="ic"></span>Tổng kết</div></div>
+        </div>
+        <figcaption class="wf-cap"><b>W1 · «Hôm nay»</b> — hai chỉ số sống còn, lịch trình hôm nay, FAB ➕ trong tầm ngón cái.</figcaption>
+      </figure>
+      <figure class="wf-fig">
+        <div class="phone">
+          <div class="wf-top"><span class="wfb"></span><div class="t"><div class="wfb"></div><div class="wfb s"></div></div></div>
+          <div class="wf-sheet"><span class="wfl">Ghi chi tiêu · 3 chạm</span>
+            <div class="wf-amount">120 <i>฿</i></div>
+            <div class="wf-chiprow" style="justify-content:center;margin-top:2px"><span class="wf-chip on">🍜 Ăn uống</span><span class="wf-chip">🚕 Di chuyển</span><span class="wf-chip">🎟 Vé</span><span class="wf-chip">🛍 Mua</span></div>
+            <div class="wf-chiprow" style="justify-content:center;margin-top:5px"><span class="wf-chip on">Tiền mặt</span><span class="wf-chip">Momo</span><span class="wf-chip">Thẻ</span></div>
+            <div class="wf-numpad"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>,</span><span>0</span><span>⌫</span></div>
+            <div class="wf-big" style="margin-top:8px">Lưu · ngày giờ tự điền</div>
+            <div class="wf-aihint"><span class="stt">✦</span>Gõ tự nhiên cũng được: «bolt về khách sạn 120 baht tiền mặt» → AI tách thành dòng đủ cột.</div>
+          </div>
+        </div>
+        <figcaption class="wf-cap"><b>W2 · Ghi chi 3 chạm</b> — số tiền → danh mục → nguồn tiền; ô gõ tự nhiên là tầng AI đặt chồng.</figcaption>
+      </figure>
+      <figure class="wf-fig">
+        <div class="phone">
+          <div class="wf-top"><span class="wfb"></span><div class="t"><div class="wfb"></div><div class="wfb s"></div></div><span class="wfl">🎉</span></div>
+          <div class="wf-card"><span class="wfl">Tổng kết chuyến · 6 ngày Bangkok</span>
+            <div class="wf-kpis"><div class="wf-kpi"><span class="wfl">Tổng cả chuyến</span><div class="v">30,6 tr ₫</div></div><div class="wf-kpi"><span class="wfl">So dự trù</span><div class="v">−4%</div></div></div>
+            <span class="wfl">Chi theo ngày</span>
+            <div class="wf-bar"><span style="height:40%"></span><span style="height:65%"></span><span class="hi" style="height:100%"></span><span style="height:52%"></span><span style="height:70%"></span><span style="height:30%"></span></div>
+            <span class="wfl">Theo danh mục · theo kênh</span>
+            <div class="wf-chiprow"><span class="wf-chip">🍜 41%</span><span class="wf-chip">🚕 22%</span><span class="wf-chip">🛍 19%</span><span class="wf-chip">Momo 4,5k฿</span></div>
+          </div>
+          <div class="wf-card" style="border-color:var(--ai)"><span class="wfl" style="color:var(--ai)">✦ AI kể chuyện chuyến đi</span>
+            <div class="wf-line"></div><div class="wf-line" style="width:88%"></div><div class="wf-line s"></div>
+            <div class="wf-chiprow" style="margin-top:6px"><span class="wf-chip ai">Tạo bản tổng kết</span><span class="wf-chip">Xuất PDF</span></div>
+          </div>
+          <div class="wf-tabbar"><div class="wf-tab"><span class="ic"></span>Hôm nay</div><div class="wf-tab"><span class="ic"></span>Kế hoạch</div><div class="wf-tab"><span class="ic"></span>Sổ tay</div><div class="wf-tab on"><span class="ic"></span>Tổng kết</div></div>
+        </div>
+        <figcaption class="wf-cap"><b>W4 · «Tổng kết»</b> — một nơi kể trọn: KPI, biểu đồ, cơ cấu, và khối AI thành lời.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>06C · Laptop — cùng khung xương, tư thế rộng</h3>
+    <p>Tab đáy → sidebar trái · FAB ➕ → thanh lệnh ⌘K + khối ghi nhanh mở sẵn · một cột → đa pane. Bảng đầy đủ (kéo ⠿, Enter theo cột) là đất diễn desktop.</p>
+    <div class="wf-row-lap">
+      <figure class="wf-fig wf-fig-lap">
+        <div class="lap">
+          <div class="lap-bar"><i></i><i></i><i></i><span class="lap-url"></span></div>
+          <div class="lap-body">
+            <div class="lap-side">
+              <div class="logo"><span class="wfb" style="width:18px;height:18px"></span><div class="wf-line" style="width:52px;height:7px;margin:0"></div></div>
+              <div class="lap-nav on"><span class="ic"></span>Hôm nay</div><div class="lap-nav"><span class="ic"></span>Kế hoạch</div><div class="lap-nav"><span class="ic"></span>Sổ tay</div><div class="lap-nav"><span class="ic"></span>Tổng kết</div>
+            </div>
+            <div class="lap-main">
+              <div class="lap-cmd"><span>✦</span>Ghi nhanh hoặc hỏi bất kỳ: «bolt về khách sạn 120 baht tiền mặt»…<kbd>⌘K</kbd></div>
+              <div class="lap-grid">
+                <div>
+                  <div class="wf-card"><span class="wfl">Lịch trình hôm nay · 4/6</span>
+                    <div class="wf-item"><span class="cb"></span><div class="nm"><div class="wf-line" style="width:70%"></div></div><span class="amt">120 ฿</span></div>
+                    <div class="wf-item"><span class="cb"></span><div class="nm"><div class="wf-line" style="width:56%"></div></div><span class="amt">85 ฿</span></div>
+                  </div>
+                  <div class="wf-card"><span class="wfl">Ghi nhanh (luôn mở)</span>
+                    <div class="wf-line xs" style="height:12px"></div>
+                    <div class="wf-chiprow"><span class="wf-chip on">🍜</span><span class="wf-chip">🚕</span><span class="wf-chip on">Tiền mặt</span><span class="wf-chip">Momo</span></div>
+                    <div class="wf-big" style="height:24px;margin-top:7px;font-size:10px">Lưu (Enter)</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="wf-kpis" style="grid-template-columns:1fr"><div class="wf-kpi"><span class="wfl">Đã chi hôm nay</span><div class="v">1.240 ฿</div></div><div class="wf-kpi"><span class="wfl">Ví tiền mặt còn</span><div class="v">1.150 ฿</div></div></div>
+                  <div class="wf-card"><span class="wfl">Tick nhanh sổ tay</span><div class="wf-chiprow"><span class="wf-chip">🍜 Tom Yum</span><span class="wf-chip">🛍 Chatuchak</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="wf-cap"><b>L1 · «Hôm nay» dashboard</b> — sidebar, ⌘K thường trực, ghi nhanh mở sẵn, chỉ số cột phải.</figcaption>
+      </figure>
+      <figure class="wf-fig wf-fig-lap">
+        <div class="lap">
+          <div class="lap-bar"><i></i><i></i><i></i><span class="lap-url"></span></div>
+          <div class="lap-body">
+            <div class="lap-side">
+              <div class="logo"><span class="wfb" style="width:18px;height:18px"></span><div class="wf-line" style="width:52px;height:7px;margin:0"></div></div>
+              <div class="lap-nav"><span class="ic"></span>Hôm nay</div><div class="lap-nav on"><span class="ic"></span>Kế hoạch</div><div class="lap-nav"><span class="ic"></span>Sổ tay</div><div class="lap-nav"><span class="ic"></span>Tổng kết</div>
+            </div>
+            <div class="lap-main">
+              <div class="lap-grid" style="grid-template-columns:1.7fr 1fr">
+                <div class="wf-card" style="margin-bottom:0"><span class="wfl">Lịch trình · bảng đầy đủ (⠿ · Enter theo cột · tự xếp ngày)</span>
+                  <div class="lap-th"><span class="wfl">⠿</span><span class="wfl">Hoạt động</span><span class="wfl" style="text-align:right">Chi phí</span><span class="wfl">Thanh toán</span></div>
+                  <div class="wf-item"><span style="color:#B9B2A2">⠿</span><div class="nm"><div class="wf-line" style="width:80%"></div></div><span class="amt">120 ฿</span><span class="wf-chip" style="font-size:8px">Tiền mặt</span></div>
+                  <div class="wf-item"><span style="color:#B9B2A2">⠿</span><div class="nm"><div class="wf-line" style="width:64%"></div></div><span class="amt">85 ฿</span><span class="wf-chip" style="font-size:8px">Momo</span></div>
+                </div>
+                <div>
+                  <div class="wf-card"><span class="wfl">Gói bay + khách sạn</span><div class="wf-line"></div><div class="wf-kpi" style="margin-top:5px"><span class="wfl">Đã thanh toán</span><div class="v">17,7 tr ₫</div></div></div>
+                  <div class="wf-card"><span class="wfl">Đổi tiền &amp; tỷ giá</span><div class="wf-line xs"></div><div class="wf-chiprow"><span class="wf-chip">⟳ Tỷ giá tự động</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="wf-cap"><b>L2 · «Kế hoạch» hai pane</b> — bảng chiếm sân khấu; gói bay, đổi tiền thành thẻ vệ tinh.</figcaption>
+      </figure>
+      <figure class="wf-fig wf-fig-lap">
+        <div class="lap">
+          <div class="lap-bar"><i></i><i></i><i></i><span class="lap-url"></span></div>
+          <div class="lap-body">
+            <div class="lap-side">
+              <div class="logo"><span class="wfb" style="width:18px;height:18px"></span><div class="wf-line" style="width:52px;height:7px;margin:0"></div></div>
+              <div class="lap-nav"><span class="ic"></span>Hôm nay</div><div class="lap-nav"><span class="ic"></span>Kế hoạch</div><div class="lap-nav"><span class="ic"></span>Sổ tay</div><div class="lap-nav on"><span class="ic"></span>Tổng kết</div>
+            </div>
+            <div class="lap-main">
+              <div class="lap-grid" style="grid-template-columns:1.6fr 1fr">
+                <div>
+                  <div class="wf-kpis" style="grid-template-columns:1fr 1fr 1fr"><div class="wf-kpi"><span class="wfl">Tổng cả chuyến</span><div class="v">30,6 tr ₫</div></div><div class="wf-kpi"><span class="wfl">So dự trù</span><div class="v">−4%</div></div><div class="wf-kpi"><span class="wfl">TB / ngày</span><div class="v">5,1 tr ₫</div></div></div>
+                  <div class="wf-card" style="margin-bottom:0"><span class="wfl">Chi theo ngày</span>
+                    <div class="wf-bar"><span style="height:40%"></span><span style="height:65%"></span><span class="hi" style="height:100%"></span><span style="height:52%"></span><span style="height:70%"></span><span style="height:30%"></span></div>
+                    <span class="wfl">Danh mục · kênh</span>
+                    <div class="wf-chiprow"><span class="wf-chip">🍜 41%</span><span class="wf-chip">🚕 22%</span><span class="wf-chip">Momo 4,5k฿</span><span class="wf-chip">Tiền mặt 1,9k฿</span></div>
+                  </div>
+                </div>
+                <div class="wf-card" style="border-color:var(--ai);margin-bottom:0"><span class="wfl" style="color:var(--ai)">✦ AI kể chuyện chuyến đi</span>
+                  <div class="wf-line"></div><div class="wf-line" style="width:90%"></div><div class="wf-line s"></div>
+                  <div class="wf-chiprow" style="margin-top:7px"><span class="wf-chip ai">Tạo bản tổng kết</span><span class="wf-chip">Xuất PDF</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="wf-cap"><b>L3 · «Tổng kết» báo cáo</b> — số liệu trái, rail AI phải: đọc số và đọc chữ song song.</figcaption>
+      </figure>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Linh kiện</th><th>📱 Điện thoại (≤700px)</th><th>💻 Laptop (&gt;700px)</th></tr></thead>
+      <tbody>
+        <tr><td class="n">Điều hướng</td><td>Tab bar đáy 4 mục</td><td>Sidebar trái cố định</td></tr>
+        <tr><td class="n">Hành động vua</td><td>FAB ➕ góc phải</td><td>Thanh lệnh ⌘K + ghi nhanh mở sẵn</td></tr>
+        <tr><td class="n">Ghi chi tiêu</td><td>Bottom sheet 3 chạm</td><td>Panel inline không che nội dung</td></tr>
+        <tr><td class="n">Bố cục màn</td><td>Một cột cuộn dọc</td><td>Đa pane: chính + vệ tinh / rail AI</td></tr>
+        <tr><td class="n">Bảng dữ liệu</td><td>Thẻ dọc · Enter tuần tự</td><td>Bảng đầy đủ · Enter theo cột · kéo ⠿</td></tr>
+        <tr><td class="n">Nhập tự nhiên ✦</td><td>Ô gõ trong sheet</td><td>⌘K mọi nơi, kiêm hỏi đáp số liệu</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ 07 GIAO VIỆC ============ -->
+  <h2 class="sec" id="s7"><span class="no">07</span>Lời dặn giao cho Claude Design</h2>
+  <div class="panel">
+    <p><b>Đầu vào:</b> toàn bộ tài liệu này. <b>Đầu ra mong đợi</b> — «bảng thiết kế hoàn chỉnh»:</p>
+    <ol>
+      <li><b>Design tokens</b> theo áo đã chốt (Hướng 05 Retro Boarding Pass — hồ sơ mục 01B): bảng màu đủ trạng thái (hover/focus/lỗi/thành công) trên bộ kem–navy–san hô–nghệ, thang chữ mono-first (IBM Plex Mono nhãn/số in hoa + Be Vietnam Pro nội dung), thang khoảng cách 4·8·12·16·24, bo góc nhỏ, bóng khối lệch, ngôn ngữ sọc ba màu &amp; vân mã vạch.</li>
+      <li><b>Hi-fi từng màn × hai tư thế</b> (8 màn tối thiểu): Hôm nay · Sheet/Panel ghi chi · Kế hoạch · Sổ tay · Tổng kết · trạng thái rỗng (chuyến mới) · đăng nhập · băng-rôn hoàn tất 🎉. Mỗi màn kèm biến thể: offline, đang đồng bộ, có/không AI.</li>
+      <li><b>Linh kiện có trạng thái:</b> bảng/thẻ dòng (thường · hover · dragging ⠿ · vừa ghi mới), chip danh mục/kênh, FAB + sheet, ⌘K, KPI, biểu đồ ngày, khối ✦ AI (chờ · xem trước · lỗi mạng), toast + Hoàn tác, xác nhận nhập backup.</li>
+      <li><b>Prototype luồng F1–F3, F6</b> (chạm được) và ghi chú chuyển động (nhẹ, tôn trọng reduced-motion).</li>
+    </ol>
+    <p><b>Ràng buộc phải tôn trọng:</b> mọi mục ở 05; kỹ thuật một-file vanilla + breakpoint 700px; chibi là linh vật thương hiệu, phiên bản đội mũ phi công (dùng tiết chế: header + trạng thái rỗng + 🎉); icon giữ nguyên <b>mô-típ máy bay–địa cầu</b> nhưng cắt lại theo bảng màu mới (nền navy · địa cầu kem · cung bay san hô) vì bản gradient tím–hồng hiện tại chỏi với áo Retro — cần kèm bản icon mới trong bảng thiết kế; không kính, không dark mode trong v10; tiếng Việt là ngôn ngữ duy nhất của UI.</p>
+    <p><b>Prompt mẫu khi giao:</b> <code>Đây là PRD kèm wireframe của app «Kế hoạch du lịch». Hãy tạo bảng thiết kế hoàn chỉnh đúng mục 07: tokens + hi-fi 8 màn × mobile/laptop + linh kiện đủ trạng thái + prototype F1–F3, F6. Áo: Hướng 05 Retro Boarding Pass (hồ sơ mục 01B). Tuân thủ tuyệt đối mục 05.</code></p>
+  </div>
+
+  <!-- ============ 08 NGHIỆM THU ============ -->
+  <h2 class="sec" id="s8"><span class="no">08</span>Tiêu chí nghiệm thu bảng thiết kế</h2>
+  <div class="panel">
+    <ul>
+      <li>Ghi một khoản chi trên mockup mobile: đếm được <b>≤ 3 chạm</b> sau khi mở sheet; FAB không che nội dung đang đọc.</li>
+      <li>Mọi màn có mặt ở <b>cả hai tư thế</b> và cùng một hệ token; bảng desktop không sinh cuộn ngang ở 1280px.</li>
+      <li>Khối «Tổng cộng» mobile <b>không một nét đứt</b>; checklist mobile mỗi món một dòng.</li>
+      <li>Mọi điểm AI có trạng thái <b>xem trước → xác nhận</b> và có đường làm tay tương đương nhìn thấy được.</li>
+      <li>Đủ trạng thái offline/đồng bộ, tem phiên bản + ⟳ hiện diện; chuyển động có biến thể reduced-motion.</li>
+      <li>Không phát sinh trường dữ liệu ngoài mục 02/03B; các lối vào tương lai (chọn chuyến ▾, 📎 biên lai) có chỗ đứng nhưng ở trạng thái mờ/khóa.</li>
+      <li>Chất vé retro chỉ nằm ở <b>khung, đầu thẻ và thanh tổng</b>; vùng nhập liệu và hàng dữ liệu nền sáng sạch, số liệu mono đọc nhanh không vướng texture.</li>
+      <li>Đếm được trên mỗi màn: <b>≤1 dải sọc và ≤1 con dấu</b>; không có đoạn văn tiếng Việt nào bị in hoa toàn bộ.</li>
+      <li>Có kèm <b>bản icon cắt lại</b> theo bảng màu Retro (512/192/apple-touch) và mẫu màn hình chờ PWA đồng bộ áo.</li>
+    </ul>
+  </div>
+
+  <p class="outro">Tài liệu tổng hợp từ hành trình thật v1 → v9.6 của con tàu (mọi «không nên» đều từng là vết xước có thật 😄), hai bản phác «5 hướng UI» và «wireframe UX hai tư thế» đã duyệt. Áo UI đã chốt: <b>Hướng 05 · Retro Boarding Pass</b>; các mặc định còn lại đổi được bằng một dòng ghi chú khi giao việc. — Xưởng ⚓</p>
+
+</div>
+</body>
+</html>

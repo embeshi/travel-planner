@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#F6EFE3}
+  *{box-sizing:border-box}
+  a{color:#E14B4B;text-decoration:none}
+  a:hover{color:#1F3A5F}
+  @keyframes dash{to{background-position:14px 0}}
+</style>
+</helmet>
+<div style="font-family:'Be Vietnam Pro',system-ui,sans-serif;color:#1F3A5F;background:#F6EFE3;padding:28px 24px 96px">
+<div style="max-width:1420px;margin:0 auto;display:flex;flex-direction:column;gap:40px">
+
+  <header style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:6px 6px 0 #1F3A5F;overflow:hidden">
+    <div style="height:10px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:24px;padding:22px 26px 20px">
+      <div style="min-width:0">
+        <div style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#E14B4B">Bảng thiết kế · hướng 05 retro boarding pass</div>
+        <h1 style="margin:10px 0 0;font:600 34px/1.12 'IBM Plex Mono',monospace;letter-spacing:-.01em;color:#1F3A5F">Kế hoạch du lịch <span style="color:#E14B4B">v10</span></h1>
+        <p style="margin:10px 0 0;max-width:720px;font-size:14.5px;line-height:1.65;color:#4C6079;text-wrap:pretty">Toàn bộ hạng mục mục 07: design tokens đủ trạng thái, thư viện linh kiện, tám màn hi-fi ở hai tư thế, bộ icon PWA cắt lại, ghi chú chuyển động và đặc tả bàn giao. Cả app là một tấm vé máy bay thập niên 90 — viền khối, bóng lệch, sọc ba màu, thanh tổng vân mã vạch.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+          <a href="#tokens" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#F6EFE3;color:#1F3A5F">01 Tokens</a>
+          <a href="#parts" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#F6EFE3;color:#1F3A5F">02 Linh kiện</a>
+          <a href="#screens" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#F6EFE3;color:#1F3A5F">03 Tám màn</a>
+          <a href="#icon" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#F6EFE3;color:#1F3A5F">04 Icon</a>
+          <a href="#motion" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#F6EFE3;color:#1F3A5F">05 Chuyển động</a>
+          <a href="#accept" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#F6EFE3;color:#1F3A5F">06 Nghiệm thu</a>
+          <a href="#handoff" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#F6EFE3;color:#1F3A5F">07 Bàn giao</a>
+          <a href="Prototype F1-F3 F6 - Ke hoach du lich v10.dc.html" style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px;background:#E14B4B;color:#FFFDF7">Prototype F1–F3, F6 →</a>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+        <div style="width:112px;height:112px;border:2px dashed #B9AC97;border-radius:6px;background:#F6EFE3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:8px">
+          <div style="font:600 9px/1.3 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#8E8271">[ Ảnh chibi ]</div>
+          <div style="font-size:9.5px;line-height:1.35;color:#8E8271">Nhân viên mặt đất đội mũ phi công — thả ảnh vào ô này</div>
+        </div>
+        <div style="font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98">Bản 10.0 · 08/2026</div>
+      </div>
+    </div>
+    <div style="border-top:2px dashed #C7BCA8;padding:14px 26px;display:flex;flex-wrap:wrap;align-items:center;gap:18px;background:#F6EFE3">
+      <span style="font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98">Công tắc bảng</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12.5px;color:#4C6079">Trạng thái hệ thống</span>
+        <div style="display:flex;gap:0;border:1.5px solid #1F3A5F;border-radius:4px;overflow:hidden">
+          <button type="button" onClick="{{ setSynced }}" style="{{ tabSynced }}" style-hover="filter:brightness(.97)">Đã đồng bộ</button>
+          <button type="button" onClick="{{ setSyncing }}" style="{{ tabSyncing }}" style-hover="filter:brightness(.97)">Đang đồng bộ</button>
+          <button type="button" onClick="{{ setOffline }}" style="{{ tabOffline }}" style-hover="filter:brightness(.97)">Ngoại tuyến</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12.5px;color:#4C6079">Tầng AI</span>
+        <button type="button" onClick="{{ toggleAi }}" style="{{ aiBtn }}" style-hover="filter:brightness(.97)">{{ aiLabel }}</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12.5px;color:#4C6079">Ghi chú thiết kế</span>
+        <button type="button" onClick="{{ toggleNotes }}" style="{{ noteBtn }}" style-hover="filter:brightness(.97)">{{ noteLabel }}</button>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <span style="{{ stampStyle }}">{{ stampLabel }}</span>
+        <span style="font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#6C7F98">⟳</span>
+      </div>
+    </div>
+  </header>
+
+  <section id="tokens" style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #1F3A5F;padding-bottom:8px">
+      <span style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">— 01</span>
+      <h2 style="margin:0;font:600 22px/1.2 'IBM Plex Mono',monospace;letter-spacing:.02em">Design tokens</h2>
+      <span style="font-size:13px;color:#5B6F87">Kem · navy · san hô · nghệ — bốn màu, đủ trạng thái</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Nền &amp; mực</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace;color:#1F3A5F">#F6EFE3</span><span style="font-size:12.5px;color:#5B6F87">Kem vé · nền app</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace;color:#1F3A5F">#FFFDF7</span><span style="font-size:12.5px;color:#5B6F87">Giấy · thẻ, ô nhập, hàng dữ liệu</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#1F3A5F;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace;color:#1F3A5F">#1F3A5F</span><span style="font-size:12.5px;color:#5B6F87">Navy · chữ chính, viền, bóng khối</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#5B6F87;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace;color:#1F3A5F">#5B6F87</span><span style="font-size:12.5px;color:#5B6F87">Mực phụ · chữ mô tả (4,9:1)</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#6C7F98;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace;color:#1F3A5F">#6C7F98</span><span style="font-size:12.5px;color:#5B6F87">Nhãn mono trên giấy</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#D9CFBB;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace;color:#1F3A5F">#D9CFBB</span><span style="font-size:12.5px;color:#5B6F87">Vạch chia mảnh giữa hàng</span></div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">San hô · nhấn chính</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#E14B4B</span><span style="font-size:12.5px;color:#5B6F87">Thường · tab chọn, FAB, nhãn cột</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#C93F3F;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#C93F3F</span><span style="font-size:12.5px;color:#5B6F87">Hover</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#AE3232;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#AE3232</span><span style="font-size:12.5px;color:#5B6F87">Nhấn giữ (kèm scale .98)</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#FBE4E1;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#FBE4E1</span><span style="font-size:12.5px;color:#5B6F87">Nền nhạt · dòng vừa ghi</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#B3261E;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#B3261E</span><span style="font-size:12.5px;color:#5B6F87">Lỗi · vượt ví tiền mặt</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#F2B33D;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#F2B33D</span><span style="font-size:12.5px;color:#5B6F87">Nghệ · nút phụ, 🔥 ngày cao nhất</span></div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Trạng thái hệ thống</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#2E6F4E;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#2E6F4E</span><span style="font-size:12.5px;color:#5B6F87">Dấu duyệt · đã đồng bộ</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E7F0E9;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#E7F0E9</span><span style="font-size:12.5px;color:#5B6F87">Nền thành công</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#8A5A00;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#8A5A00</span><span style="font-size:12.5px;color:#5B6F87">Chữ cảnh báo trên nền nghệ nhạt</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#FDF1DB;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#FDF1DB</span><span style="font-size:12.5px;color:#5B6F87">Nền cảnh báo · ngoại tuyến</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #1F3A5F;border-radius:4px;background:#F1EAE0;flex:none"></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">#F1EAE0</span><span style="font-size:12.5px;color:#5B6F87">Nền khóa · lối vào tương lai</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:40px;height:32px;border:1.5px solid #B9AC97;border-radius:4px;background:#F6EFE3;flex:none;display:flex;align-items:center;justify-content:center"><span style="width:22px;height:14px;border:2px solid #F2B33D;border-radius:2px"></span></span><span style="font:500 11.5px 'IBM Plex Mono',monospace">Focus</span><span style="font-size:12.5px;color:#5B6F87">Viền nghệ 3px, cách 2px</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:14px">Thang chữ · mono trước</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div><div style="font:600 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:4px">Mono 10 / 600 / +0.12em</div><div style="font:600 10px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase">Nhãn cột · tem</div></div>
+          <div><div style="font:600 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:4px">Mono 11 / 600 / +0.12em</div><div style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase">Nhãn khối · tab</div></div>
+          <div><div style="font:600 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:4px">Mono 15 / 600 — số tiền trong hàng</div><div style="font:600 15px/1 'IBM Plex Mono',monospace">1.240 ฿</div></div>
+          <div><div style="font:600 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:4px">Mono 26 / 600 — số KPI</div><div style="font:600 26px/1 'IBM Plex Mono',monospace">30,6 tr ₫</div></div>
+          <div style="border-top:1px dashed #D9CFBB;padding-top:12px"><div style="font:600 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:4px">Be Vietnam Pro 15 / 400 — nội dung</div><div style="font-size:15px;line-height:1.6;color:#1F3A5F">Câu tiếng Việt dài luôn dùng Be Vietnam Pro chữ thường; mono in hoa chỉ dành cho nhãn từ ba chữ trở xuống và các con số.</div></div>
+          <div><div style="font:600 9.5px/1 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:4px">Be Vietnam Pro 13 / 500 — phụ đề</div><div style="font-size:13px;font-weight:500;color:#5B6F87">Khon Boat Noodles · phố Victory Monument</div></div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:14px">Khoảng cách · bo góc · bóng</div>
+        <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:16px">
+          <div style="text-align:center"><div style="width:4px;height:4px;background:#E14B4B"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">4</div></div>
+          <div style="text-align:center"><div style="width:8px;height:8px;background:#E14B4B"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">8</div></div>
+          <div style="text-align:center"><div style="width:12px;height:12px;background:#E14B4B"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">12</div></div>
+          <div style="text-align:center"><div style="width:16px;height:16px;background:#E14B4B"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">16</div></div>
+          <div style="text-align:center"><div style="width:24px;height:24px;background:#E14B4B"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">24</div></div>
+          <div style="text-align:center"><div style="width:32px;height:32px;background:#1F3A5F"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">32</div></div>
+          <div style="font-size:12px;color:#5B6F87;padding-bottom:2px">32 chỉ dùng giữa các khu lớn</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px">
+          <div style="text-align:center"><div style="width:70px;height:44px;border:2px solid #1F3A5F;border-radius:4px;background:#F6EFE3"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">r4 · chip, ô nhập</div></div>
+          <div style="text-align:center"><div style="width:70px;height:44px;border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">r6 · thẻ, sheet</div></div>
+          <div style="text-align:center"><div style="width:44px;height:44px;border:2px solid #1F3A5F;border-radius:50%;background:#E14B4B"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:6px">tròn · FAB</div></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px">
+          <div style="text-align:center"><div style="width:76px;height:40px;border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;box-shadow:2px 2px 0 #1F3A5F"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:8px">2px · chip nhấn</div></div>
+          <div style="text-align:center"><div style="width:76px;height:40px;border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:8px">3px · thẻ con</div></div>
+          <div style="text-align:center"><div style="width:76px;height:40px;border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:8px">4px · thẻ chính</div></div>
+          <div style="text-align:center"><div style="width:76px;height:40px;border:1px solid #D9CFBB;border-radius:4px;background:#FFFDF7"></div><div style="font:500 10px 'IBM Plex Mono',monospace;margin-top:8px">không bóng · hàng dữ liệu</div></div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:14px">Ngôn ngữ vé</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div>
+            <div style="height:10px;border-radius:3px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+            <div style="font-size:12.5px;color:#5B6F87;margin-top:7px">Sọc ba màu 20px — tối đa một dải mỗi màn, luôn ở mép trên khung.</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;background:#1F3A5F;color:#F6EFE3;border-radius:4px;padding:10px 12px;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.06em;background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.16) 3px 4px)"><span>TỔNG CỘNG</span><span>16.397 ฿</span></div>
+            <div style="font-size:12.5px;color:#5B6F87;margin-top:7px">Thanh tổng vân mã vạch — không nét đứt trên mobile.</div>
+          </div>
+          <div>
+            <div style="position:relative;border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;height:52px;overflow:hidden">
+              <div style="position:absolute;left:-9px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:#FFFDF7;border:2px solid #1F3A5F"></div>
+              <div style="position:absolute;right:-9px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:#FFFDF7;border:2px solid #1F3A5F"></div>
+              <div style="position:absolute;left:0;right:0;top:50%;border-top:2px dashed #C7BCA8"></div>
+            </div>
+            <div style="font-size:12.5px;color:#5B6F87;margin-top:7px">Notch cắt góc và đường xé — chỉ ở khung desktop.</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span style="border:2px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:5px 10px;font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-5deg)">Đã đồng bộ</span>
+            <span style="border:2px solid #8A5A00;color:#8A5A00;border-radius:4px;padding:5px 10px;font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(4deg)">Ngoại tuyến</span>
+            <span style="border:2px solid #E14B4B;color:#E14B4B;border-radius:4px;padding:5px 10px;font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-6deg)">Hoàn tất</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ notesOn }}" hint-placeholder-val="{{ true }}">
+      <div style="border:2px dashed #E14B4B;border-radius:6px;background:#FBE4E1;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+        <span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;border:1.5px solid #E14B4B;border-radius:4px;padding:4px 8px;flex:none">Luật 01B</span>
+        <div style="font-size:13.5px;line-height:1.6;color:#4C6079">Một sọc, một dấu mỗi màn. Sọc, mã vạch và nét đứt chỉ sống ở khung, đầu thẻ và thanh tổng — hàng dữ liệu cùng ô nhập luôn nền giấy trơn. Mono in hoa giới hạn ở nhãn ba chữ trở xuống.</div>
+      </div>
+    </sc-if>
+  </section>
+
+  <section id="parts" style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #1F3A5F;padding-bottom:8px">
+      <span style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">— 02</span>
+      <h2 style="margin:0;font:600 22px/1.2 'IBM Plex Mono',monospace;letter-spacing:.02em">Linh kiện đủ trạng thái</h2>
+      <span style="font-size:13px;color:#5B6F87">Mỗi ô là một trạng thái thật, không phải minh họa</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px">
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Nút</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Chính · thường</div><button type="button" style="width:100%;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:10px 12px;cursor:pointer" style-hover="background:#C93F3F" style-active="background:#AE3232;transform:translate(2px,2px);box-shadow:1px 1px 0 #1F3A5F">Lưu</button></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Chính · hover</div><div style="width:100%;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#C93F3F;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:10px 12px;text-align:center">Lưu</div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Chính · nhấn giữ</div><div style="width:calc(100% - 2px);font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#AE3232;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:1px 1px 0 #1F3A5F;padding:10px 12px;text-align:center;transform:translate(2px,2px)">Lưu</div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Chính · focus</div><div style="width:100%;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:10px 12px;text-align:center;outline:3px solid #F2B33D;outline-offset:2px">Lưu</div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Phụ · nghệ</div><button type="button" style="width:100%;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#F2B33D;color:#1F3A5F;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:10px 12px;cursor:pointer" style-hover="background:#E0A22C">Xuất PDF</button></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Viền · trung tính</div><button type="button" style="width:100%;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#FFFDF7;color:#1F3A5F;border:2px solid #1F3A5F;border-radius:4px;padding:10px 12px;cursor:pointer" style-hover="background:#F6EFE3">Hủy</button></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Phá hủy</div><button type="button" style="width:100%;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#FFFDF7;color:#B3261E;border:2px solid #B3261E;border-radius:4px;padding:10px 12px;cursor:pointer" style-hover="background:#FBE4E1">Đè dữ liệu</button></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Khóa</div><div style="width:100%;font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#F1EAE0;color:#A99C88;border:2px solid #C7BCA8;border-radius:4px;padding:10px 12px;text-align:center">Lưu</div></div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Ô nhập &amp; chọn</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:5px">Thường</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:10px 12px;font-size:14px;color:#1F3A5F">Khon Boat Noodles</div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:5px">Đang gõ · focus</div><div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 12px;font-size:14px;color:#1F3A5F;outline:3px solid #F2B33D;outline-offset:2px">Khon Boat Nood<span style="border-left:1.5px solid #E14B4B;margin-left:1px"></span></div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:5px">Rỗng · gợi ý</div><div style="border:1.5px dashed #B9AC97;border-radius:4px;background:#FFFDF7;padding:10px 12px;font-size:14px;color:#A99C88">Tên hoạt động…</div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:5px">Lỗi</div><div style="border:2px solid #B3261E;border-radius:4px;background:#FFFDF7;padding:9px 12px;font-size:14px;color:#1F3A5F">1.240.000.000</div><div style="font-size:12px;color:#B3261E;margin-top:5px">Số tiền vượt giới hạn hợp lý — kiểm tra lại đơn vị.</div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:5px">Vừa lưu · thành công</div><div style="border:2px solid #2E6F4E;border-radius:4px;background:#E7F0E9;padding:9px 12px;font-size:14px;color:#1F3A5F;display:flex;justify-content:space-between"><span>Khon Boat Noodles</span><span style="color:#2E6F4E;font:600 12px 'IBM Plex Mono',monospace">✓</span></div></div>
+          <div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:5px">Menu thanh toán</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:10px 12px;font-size:14px;color:#1F3A5F;display:flex;justify-content:space-between;align-items:center"><span>Tiền mặt</span><span style="color:#6C7F98">▾</span></div></div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Chip danh mục &amp; kênh</div>
+        <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:8px">Sáu danh mục · thường / chọn / hover / khóa</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:7px 10px">🍜 Ăn uống</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:7px 10px;box-shadow:2px 2px 0 #1F3A5F">🚕 Di chuyển</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;color:#1F3A5F;padding:7px 10px">🎟 Vé</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:7px 10px">🛍 Mua sắm</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:7px 10px">🏨 Lưu trú</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #C7BCA8;border-radius:4px;background:#F1EAE0;color:#A99C88;padding:7px 10px">📦 Khác</span>
+        </div>
+        <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:8px">Kênh thanh toán</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:7px 10px;box-shadow:2px 2px 0 #1F3A5F">Tiền mặt</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:7px 10px">Momo</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:7px 10px">Zalo</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:7px 10px">Thẻ</span>
+        </div>
+        <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:8px">Chưa phân loại · dòng cũ</div>
+        <span style="display:inline-block;font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px dashed #B9AC97;border-radius:4px;background:#FFFDF7;color:#8E8271;padding:7px 10px">Chưa phân loại</span>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Hàng lịch trình · bốn trạng thái</div>
+        <div style="border:1.5px solid #D9CFBB;border-radius:4px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:18px 1fr 74px 78px;gap:8px;align-items:center;padding:9px 10px;background:#F6EFE3;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B"><span>⠿</span><span>Hoạt động</span><span style="text-align:right">Chi phí</span><span>Thanh toán</span></div>
+          <div style="display:grid;grid-template-columns:18px 1fr 74px 78px;gap:8px;align-items:center;padding:10px;background:#FFFDF7;border-top:1px solid #EDE5D6"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px">Khon Boat Noodles</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">120 ฿</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 6px;text-align:center">Tiền mặt</span></div>
+          <div style="display:grid;grid-template-columns:18px 1fr 74px 78px;gap:8px;align-items:center;padding:10px;background:#F6EFE3;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">⠿</span><span style="font-size:13.5px">PunThai Coffee<span style="float:right;color:#B3261E;font-weight:600">×</span></span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">85 ฿</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 6px;text-align:center">Momo</span></div>
+          <div style="display:grid;grid-template-columns:18px 1fr 74px 78px;gap:8px;align-items:center;padding:10px;background:#FFFDF7;border-top:1px solid #EDE5D6;border-left:3px solid #E14B4B;box-shadow:3px 3px 0 rgba(31,58,95,.18);transform:rotate(-.6deg)"><span style="color:#E14B4B">⠿</span><span style="font-size:13.5px">Wat Arun</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">200 ฿</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 6px;text-align:center">Tiền mặt</span></div>
+          <div style="display:grid;grid-template-columns:18px 1fr 74px 78px;gap:8px;align-items:center;padding:10px;background:#FBE4E1;border-top:1px solid #EDE5D6"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px">Grab về khách sạn</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">95 ฿</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 6px;text-align:center">Tiền mặt</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-top:10px;font-size:12.5px;color:#5B6F87">
+          <div><b style="color:#1F3A5F">Thường</b> — nền giấy, vạch chia 1px.</div>
+          <div><b style="color:#1F3A5F">Hover</b> — nền kem, hiện tay cầm ⠿ và × xóa nép trong ô.</div>
+          <div><b style="color:#1F3A5F">Đang kéo</b> — nghiêng 0,6°, bóng mềm, gáy san hô 3px.</div>
+          <div><b style="color:#1F3A5F">Vừa ghi</b> — nền san hô nhạt, tự phai về giấy sau 1,2 giây.</div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">KPI &amp; biểu đồ ngày</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px 12px"><div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Đã chi hôm nay</div><div style="font:600 22px 'IBM Plex Mono',monospace;margin-top:4px">1.240 ฿</div></div>
+          <div style="border:2px solid #B3261E;border-radius:4px;background:#FBE4E1;padding:10px 12px"><div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#B3261E">Ví tiền mặt · vượt</div><div style="font:600 22px 'IBM Plex Mono',monospace;margin-top:4px;color:#B3261E">−310 ฿</div></div>
+        </div>
+        <div style="border:1.5px solid #D9CFBB;border-radius:4px;background:#FFFDF7;padding:12px">
+          <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:10px">Chi theo ngày</div>
+          <div style="display:flex;align-items:flex-end;gap:8px;height:96px">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:100%;height:36px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">01</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:100%;height:56px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">02</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:100%;height:84px;background:#F2B33D;border:1.5px solid #1F3A5F;display:flex;align-items:flex-start;justify-content:center;font-size:11px;padding-top:2px">🔥</div><span style="font:600 9.5px 'IBM Plex Mono',monospace;color:#1F3A5F">03</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:100%;height:44px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">04</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:100%;height:60px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">05</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:100%;height:26px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">06</span></div>
+          </div>
+        </div>
+        <div style="font-size:12.5px;color:#5B6F87;margin-top:10px">Cột kiểu bảng giờ bay: khối navy viền cứng, ngày cao nhất tô nghệ. Cảnh báo vượt ví chỉ tính trên các dòng chọn Tiền mặt.</div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Hành động vua</div>
+        <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:14px">
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;box-shadow:4px 4px 0 #1F3A5F;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700">＋</div><div style="font:500 9.5px 'IBM Plex Mono',monospace;color:#5B6F87;margin-top:8px">FAB · thường</div></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:#AE3232;color:#FFFDF7;border:2px solid #1F3A5F;box-shadow:1px 1px 0 #1F3A5F;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;transform:translate(3px,3px) scale(.98)">＋</div><div style="font:500 9.5px 'IBM Plex Mono',monospace;color:#5B6F87;margin-top:8px">Nhấn giữ</div></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;box-shadow:4px 4px 0 #1F3A5F;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;outline:3px solid #F2B33D;outline-offset:3px">＋</div><div style="font:500 9.5px 'IBM Plex Mono',monospace;color:#5B6F87;margin-top:8px">Focus bàn phím</div></div>
+        </div>
+        <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:8px">Thanh lệnh ⌘K · ô telex</div>
+        <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px;display:flex;align-items:center;gap:10px;box-shadow:3px 3px 0 #1F3A5F">
+          <span style="font:600 11px 'IBM Plex Mono',monospace;color:#E14B4B">✦</span>
+          <span style="flex:1;font-size:13.5px;color:#8E8271">bolt về khách sạn 120 baht tiền mặt</span>
+          <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:3px 6px;background:#F6EFE3">⌘K</span>
+        </div>
+        <div style="font-size:12.5px;color:#5B6F87;margin-top:8px">Gõ được cả tên hoạt động lẫn câu tự nhiên; luôn có bản xem trước trước khi ghi.</div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Khối ✦ AI · ba trạng thái</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="border:2px dashed #1F3A5F;border-radius:4px;background:#FFFDF7;padding:12px;background-image:repeating-linear-gradient(#FFFDF7 0 21px,#F3EBDD 21px 22px)">
+            <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">✦ AI · đang chờ</div>
+            <div style="display:flex;gap:6px;align-items:center"><span style="width:8px;height:8px;background:#1F3A5F"></span><span style="width:8px;height:8px;background:#C7BCA8"></span><span style="width:8px;height:8px;background:#C7BCA8"></span><span style="font-size:12.5px;color:#5B6F87;margin-left:6px">Đang đọc số liệu chuyến đi…</span></div>
+          </div>
+          <div style="border:2px dashed #1F3A5F;border-radius:4px;background:#FFFDF7;padding:12px;background-image:repeating-linear-gradient(#FFFDF7 0 21px,#F3EBDD 21px 22px)">
+            <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">✦ AI · bản xem trước</div>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px;margin-bottom:10px">
+              <span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98;text-transform:uppercase">Tên</span><span>Bolt về khách sạn</span>
+              <span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98;text-transform:uppercase">Tiền</span><span style="font:600 13px 'IBM Plex Mono',monospace">120 ฿</span>
+              <span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98;text-transform:uppercase">Kênh</span><span>Tiền mặt</span>
+              <span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98;text-transform:uppercase">Đoán</span><span>🚕 Di chuyển</span>
+            </div>
+            <div style="display:flex;gap:8px"><span style="font:600 11px 'IBM Plex Mono',monospace;background:#E14B4B;color:#FFFDF7;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 10px">Xác nhận</span><span style="font:600 11px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 10px">Sửa tay</span></div>
+          </div>
+          <div style="border:2px dashed #8A5A00;border-radius:4px;background:#FDF1DB;padding:12px">
+            <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#8A5A00;margin-bottom:6px">✦ AI · không có mạng</div>
+            <div style="font-size:13px;line-height:1.55;color:#6B4A08">Bộ tách nội bộ vẫn đọc được câu quen thuộc. Với câu khó, ghi tay bằng ba chạm rồi để AI dọn sau khi có sóng.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Phản hồi &amp; phanh an toàn</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Toast + hoàn tác 5 giây</div>
+            <div style="background:#1F3A5F;color:#F6EFE3;border-radius:4px;padding:11px 12px;display:flex;align-items:center;gap:12px;box-shadow:3px 3px 0 #12263E">
+              <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em">ĐÃ GHI ✓</span>
+              <span style="flex:1;font-size:13px">120 ฿ · 🍜 Ăn uống · Tiền mặt</span>
+              <span style="font:600 11px 'IBM Plex Mono',monospace;border:1.5px solid #F2B33D;color:#F2B33D;border-radius:4px;padding:4px 8px">Hoàn tác</span>
+            </div>
+            <div style="height:3px;background:#C7BCA8;margin-top:4px;border-radius:2px"><div style="width:62%;height:3px;background:#F2B33D;border-radius:2px"></div></div>
+          </div>
+          <div>
+            <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:6px">Xác nhận nhập backup</div>
+            <div style="border:2px solid #B3261E;border-radius:6px;background:#FFFDF7;padding:14px;box-shadow:4px 4px 0 #B3261E">
+              <div style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#B3261E;margin-bottom:8px">Đè toàn bộ dữ liệu</div>
+              <div style="font-size:13.5px;line-height:1.55;color:#4C6079;margin-bottom:10px">Tệp <b>ke-hoach-du-lich-2026-08-04-2117.json</b> ghi lúc 21:17 ngày 04/08/2026 sẽ thay thế dữ liệu đang có trên máy và trên tài khoản.</div>
+              <div style="display:flex;gap:8px"><span style="font:600 11px 'IBM Plex Mono',monospace;background:#B3261E;color:#FFFDF7;border:1.5px solid #1F3A5F;border-radius:4px;padding:8px 12px">Tôi hiểu, đè đi</span><span style="font:600 11px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:8px 12px">Hủy</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+        <div style="font:600 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98;margin-bottom:12px">Điều hướng &amp; checklist</div>
+        <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:8px">Cổng lên máy bay · mobile</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-top:2px solid #1F3A5F;padding-top:10px;margin-bottom:14px">
+          <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;text-align:center;padding:8px 2px;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.04em"><div style="font-size:14px;margin-bottom:2px">🏠</div>Hôm nay</div>
+          <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;text-align:center;padding:8px 2px;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.04em"><div style="font-size:14px;margin-bottom:2px">🗓</div>Kế hoạch</div>
+          <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;text-align:center;padding:8px 2px;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.04em"><div style="font-size:14px;margin-bottom:2px">🧳</div>Sổ tay</div>
+          <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;text-align:center;padding:8px 2px;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.04em"><div style="font-size:14px;margin-bottom:2px">📊</div>Tổng kết</div>
+        </div>
+        <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#5B6F87;margin-bottom:8px">Món checklist · một dòng</div>
+        <div style="border:1.5px solid #D9CFBB;border-radius:4px;overflow:hidden;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#FFFDF7"><span style="width:16px;height:16px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13.5px">Kem chống nắng</span><span style="color:#C7BCA8">×</span></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px;background:#E7F0E9;border-top:1px solid #EDE5D6"><span style="width:16px;height:16px;border:2px solid #2E6F4E;border-radius:3px;background:#2E6F4E;color:#FFFDF7;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;font-size:13.5px;text-decoration:line-through;color:#7E8B78">Sạc dự phòng</span><span style="color:#C7BCA8">×</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;height:10px;border:1.5px solid #1F3A5F;border-radius:3px;background:#FFFDF7;overflow:hidden"><div style="width:64%;height:100%;background:#F2B33D"></div></div>
+          <span style="font:600 11px 'IBM Plex Mono',monospace">9/14</span>
+        </div>
+      </div>
+
+    </div>
+
+    <sc-if value="{{ notesOn }}" hint-placeholder-val="{{ true }}">
+      <div style="border:2px dashed #E14B4B;border-radius:6px;background:#FBE4E1;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+        <span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;border:1.5px solid #E14B4B;border-radius:4px;padding:4px 8px;flex:none">Luật 05</span>
+        <div style="font-size:13.5px;line-height:1.6;color:#4C6079">Mọi điểm AI đều là tầng phủ: bên cạnh nút ✦ luôn có đường làm tay tương đương nhìn thấy được, và không kết quả nào ghi thẳng vào dữ liệu khi chưa xác nhận. Hành động ghi có Hoàn tác ngắn; hành động đè dữ liệu có màn xác nhận kèm ngày giờ tệp.</div>
+      </div>
+    </sc-if>
+  </section>
+
+  <section id="screens" style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #1F3A5F;padding-bottom:8px">
+      <span style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">— 03</span>
+      <h2 style="margin:0;font:600 22px/1.2 'IBM Plex Mono',monospace;letter-spacing:.02em">Tám màn × hai tư thế</h2>
+      <span style="font-size:13px;color:#5B6F87">Điện thoại 320px · laptop 1280px, cùng một hệ token</span>
+    </div>
+
+    <div data-screen-label="01 Hôm nay" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F;background:#FFFDF7">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M1 · L1</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">🏠 Hôm nay</span>
+        <span style="font-size:13px;color:#5B6F87">Landing khi đang trong chuyến — hai chỉ số sống còn và hành động vua trong tầm ngón cái.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div id="cap-m1" style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 12px 0;font:500 9px 'IBM Plex Mono',monospace;color:#6C7F98"><span>09:41</span><span>▮▮▮ ⌁</span></div>
+          <div style="padding:8px 12px 10px;display:flex;align-items:center;gap:8px;border-bottom:1.5px solid #D9CFBB">
+            <div style="flex:1;min-width:0">
+              <div style="font:600 13px 'IBM Plex Mono',monospace;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">BANGKOK 2026 ▾</div>
+              <div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98;margin-top:2px">Ngày 4/6 · 04 AUG</div>
+            </div>
+            <span style="{{ stampStyle }}">{{ stampLabel }}</span>
+          </div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:12px;flex:1">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Đã chi hôm nay</div><div style="font:600 19px 'IBM Plex Mono',monospace;margin-top:3px">1.240 ฿</div></div>
+              <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Ví tiền mặt còn</div><div style="font:600 19px 'IBM Plex Mono',monospace;margin-top:3px">1.150 ฿</div></div>
+            </div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;overflow:hidden">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB"><span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Lịch trình hôm nay</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">3 mục</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:10px"><span style="width:16px;height:16px;border:2px solid #2E6F4E;border-radius:3px;background:#2E6F4E;color:#FFFDF7;font-size:10px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;font-size:13px;color:#7E8B78;text-decoration:line-through">Khon Boat Noodles</span><span style="font:600 12px 'IBM Plex Mono',monospace;color:#5B6F87">120 ฿</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid #EDE5D6"><span style="width:16px;height:16px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Chatuchak Weekend Market</span><span style="font:600 12px 'IBM Plex Mono',monospace">—</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid #EDE5D6"><span style="width:16px;height:16px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Wat Arun lúc hoàng hôn</span><span style="font:600 12px 'IBM Plex Mono',monospace">200 ฿</span></div>
+            </div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:10px">
+              <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">Tick nhanh sổ tay</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:6px 9px;white-space:nowrap;display:inline-flex;align-items:center">🍜 Tom Yum</span>
+                <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:6px 9px;white-space:nowrap;display:inline-flex;align-items:center">🛍 Chatuchak</span>
+                <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;padding:6px 9px;display:inline-flex;align-items:center">＋</span>
+              </div>
+            </div>
+            <sc-if value="{{ offlineOn }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1.5px solid #8A5A00;border-radius:4px;background:#FDF1DB;padding:9px 10px;font-size:12px;line-height:1.5;color:#6B4A08">Đang ngoại tuyến — mọi thao tác vẫn ghi bình thường, có sóng sẽ tự đẩy lên tài khoản.</div>
+            </sc-if>
+            <div style="flex:1"></div>
+            <div style="display:flex;justify-content:flex-end;padding-right:2px"><div style="width:54px;height:54px;border-radius:50%;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;box-shadow:4px 4px 0 #1F3A5F;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:700">＋</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;border-top:2px solid #1F3A5F;background:#FFFDF7">
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🏠</div>Hôm nay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🗓</div>Kế hoạch</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🧳</div>Sổ tay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">📊</div>Tổng kết</div>
+          </div>
+        </div>
+
+        <div style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;width:1280px;flex:none;display:flex;flex-direction:column;min-height:560px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+          <div style="display:grid;grid-template-columns:186px minmax(0,1fr);flex:1">
+            <div style="border-right:2px solid #1F3A5F;background:#FFFDF7;padding:14px 12px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+                <span style="width:26px;height:26px;border:2px solid #1F3A5F;border-radius:4px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:13px">✈</span>
+                <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em">BANGKOK 2026 ▾</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.06em"><span>🏠</span>Hôm nay</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid transparent;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#4C6079"><span>🗓</span>Kế hoạch</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid transparent;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#4C6079"><span>🧳</span>Sổ tay</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid transparent;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#4C6079"><span>📊</span>Tổng kết</div>
+              <div style="flex:1"></div>
+              <div style="border-top:1.5px dashed #C7BCA8;padding-top:10px;display:flex;flex-direction:column;gap:6px">
+                <div style="font:500 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">{{ syncNote }}</div>
+                <div style="display:flex;align-items:center;gap:6px;font:500 9px 'IBM Plex Mono',monospace;color:#6C7F98"><span>v10.0</span><span style="border:1.5px solid #C7BCA8;border-radius:3px;padding:1px 5px">⟳</span></div>
+              </div>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="flex:1;border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:10px 12px;display:flex;align-items:center;gap:10px">
+                  <span style="font:600 11px 'IBM Plex Mono',monospace;color:#E14B4B">✦</span>
+                  <span style="flex:1;font-size:13px;color:#8E8271">Ghi nhanh hoặc hỏi bất kỳ điều gì về chuyến đi…</span>
+                  <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:3px 6px;background:#F6EFE3">⌘K</span>
+                </div>
+                <span style="{{ stampStyle }}">{{ stampLabel }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:14px;align-items:start">
+                <div style="display:flex;flex-direction:column;gap:14px">
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Lịch trình hôm nay · 04 AUG</span><span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98">Enter để thêm dòng</span></div>
+                    <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 86px;gap:10px;padding:8px 12px;font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;border-bottom:1px solid #EDE5D6"><span>⠿</span><span>Hoạt động</span><span style="text-align:right">Chi phí</span><span>Thanh toán</span></div>
+                    <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 86px;gap:10px;align-items:center;padding:10px 12px"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px;color:#7E8B78;text-decoration:line-through">Khon Boat Noodles</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">120 ฿</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">Tiền mặt</span></div>
+                    <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 86px;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid #EDE5D6"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px">Chatuchak Weekend Market</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">—</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px dashed #B9AC97;color:#8E8271;border-radius:4px;padding:3px 5px;text-align:center">Chưa chọn</span></div>
+                    <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 86px;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid #EDE5D6"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px">Wat Arun lúc hoàng hôn</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">200 ฿</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">Tiền mặt</span></div>
+                  </div>
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;padding:12px">
+                    <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">Ghi nhanh · luôn mở</div>
+                    <div style="display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:8px;margin-bottom:9px">
+                      <div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:9px 10px;font-size:13.5px;color:#A99C88">Tên khoản chi…</div>
+                      <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:8px 10px;font:600 14px 'IBM Plex Mono',monospace;text-align:right">95 ฿</div>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+                      <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:6px 9px;box-shadow:2px 2px 0 #1F3A5F">🚕 Di chuyển</span>
+                      <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">🍜</span>
+                      <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">🎟</span>
+                      <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:6px 9px;box-shadow:2px 2px 0 #1F3A5F">Tiền mặt</span>
+                      <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">Momo</span>
+                    </div>
+                    <div style="display:flex;gap:8px;align-items:center">
+                      <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:9px 14px">Lưu · Enter</span>
+                      <span style="font-size:12.5px;color:#5B6F87">Ngày giờ và quy đổi VNĐ tự điền.</span>
+                    </div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Đã chi hôm nay</div><div style="font:600 24px 'IBM Plex Mono',monospace;margin-top:4px">1.240 ฿</div><div style="font-size:12px;color:#5B6F87;margin-top:2px">≈ 890.000 ₫</div></div>
+                  <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Ví tiền mặt còn</div><div style="font:600 24px 'IBM Plex Mono',monospace;margin-top:4px">1.150 ฿</div><div style="font-size:12px;color:#5B6F87;margin-top:2px">Chỉ tính dòng chọn Tiền mặt</div></div>
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px 12px">
+                    <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">Tick nhanh sổ tay</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:5px 8px;white-space:nowrap;display:inline-flex;align-items:center">🍜 Tom Yum</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:5px 8px;white-space:nowrap;display:inline-flex;align-items:center">🛍 Chatuchak</span></div>
+                  </div>
+                  <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+                    <div style="border:2px dashed #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px 12px;background-image:repeating-linear-gradient(#FFFDF7 0 20px,#F3EBDD 20px 21px)">
+                      <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:6px">✦ AI · nhịp chi</div>
+                      <div style="font-size:12.5px;line-height:1.5;color:#4C6079">Ba ngày đầu bạn tiêu nhanh hơn dự trù 12%. Nếu giữ nhịp này, ví tiền mặt sẽ hết vào chiều ngày thứ năm.</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ notesOn }}" hint-placeholder-val="{{ true }}">
+        <div style="border-top:2px dashed #C7BCA8;padding:12px 18px;display:flex;flex-wrap:wrap;gap:20px;background:#FFFDF7;font-size:12.5px;color:#5B6F87">
+          <span><b style="color:#1F3A5F">Sọc:</b> một dải duy nhất ở mép trên khung.</span>
+          <span><b style="color:#1F3A5F">Dấu:</b> một con dấu trạng thái ở header.</span>
+          <span><b style="color:#1F3A5F">Ngón cái:</b> FAB cách mép đáy 12px, không đè hàng dữ liệu.</span>
+          <span><b style="color:#1F3A5F">Tương lai:</b> «tên chuyến ▾» đã có chỗ đứng cho nhiều chuyến.</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <div data-screen-label="02 Ghi chi tiêu" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M2 · L2</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">➕ Ghi chi tiêu</span>
+        <span style="font-size:13px;color:#5B6F87">Mobile là bottom sheet ba chạm; laptop là panel inline không che nội dung.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#3A4152;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column;min-height:600px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="padding:10px 12px;opacity:.45;filter:saturate(.4)">
+            <div style="display:flex;justify-content:space-between;font:600 12px 'IBM Plex Mono',monospace;color:#F6EFE3"><span>BANGKOK 2026</span><span>04 AUG</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div style="border:2px solid #F6EFE3;border-radius:4px;padding:8px"><div style="font:600 16px 'IBM Plex Mono',monospace;color:#F6EFE3">1.240 ฿</div></div><div style="border:2px solid #F6EFE3;border-radius:4px;padding:8px"><div style="font:600 16px 'IBM Plex Mono',monospace;color:#F6EFE3">1.150 ฿</div></div></div>
+          </div>
+          <div style="flex:1"></div>
+          <div style="border:2px solid #1F3A5F;border-radius:14px 14px 0 0;background:#FFFDF7;padding:12px 12px 14px;box-shadow:0 -4px 0 rgba(31,58,95,.25)">
+            <div style="width:44px;height:4px;border-radius:2px;background:#C7BCA8;margin:0 auto 10px"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Ghi chi tiêu · ba chạm</span><span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98">04 AUG · 14:32</span></div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:12px;text-align:center;margin-bottom:10px">
+              <div style="font:600 34px 'IBM Plex Mono',monospace;letter-spacing:-.02em">120<span style="font-size:18px;color:#6C7F98"> ฿</span></div>
+              <div style="font-size:12px;color:#5B6F87;margin-top:2px">≈ 86.400 ₫ · tỷ giá 720 ₫/฿</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px">
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:7px 9px;box-shadow:2px 2px 0 #1F3A5F">🍜 Ăn uống</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 9px">🚕</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 9px">🎟</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 9px">🛍</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 9px">🏨</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 9px">📦</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px">
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:7px 10px;box-shadow:2px 2px 0 #1F3A5F">Tiền mặt</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">Momo</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">Zalo</span>
+              <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">Thẻ</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px">
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">1</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">2</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">3</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">4</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">5</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">6</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">7</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">8</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">9</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">000</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">0</span>
+              <span style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:9px 0;font:600 15px 'IBM Plex Mono',monospace">⌫</span>
+            </div>
+            <div style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:12px;text-align:center">Lưu khoản chi</div>
+            <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+              <div style="border:1.5px dashed #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 10px;margin-top:10px;display:flex;gap:8px;align-items:flex-start">
+                <span style="font:600 11px 'IBM Plex Mono',monospace;color:#E14B4B">✦</span>
+                <span style="font-size:12px;line-height:1.45;color:#5B6F87">Hoặc gõ một câu: «bolt về khách sạn 120 baht tiền mặt» — vẫn xem trước rồi mới ghi.</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="width:1280px;flex:none;display:flex;flex-direction:column;gap:14px">
+          <div style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden">
+            <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+              <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;padding:14px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Panel ghi nhanh · mở sẵn, không che nội dung</span><span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98">Enter nhảy theo cột</span></div>
+                <div style="display:grid;grid-template-columns:minmax(0,1.6fr) 130px minmax(0,1fr) 120px;gap:10px;margin-bottom:12px">
+                  <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Hoạt động</div><div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 10px;font-size:13.5px;outline:3px solid #F2B33D;outline-offset:2px">Bolt về khách sạn</div></div>
+                  <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Chi phí</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:9px 10px;font:600 14px 'IBM Plex Mono',monospace;text-align:right">120 ฿</div></div>
+                  <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Quy đổi</div><div style="border:1.5px dashed #B9AC97;border-radius:4px;background:#F6EFE3;padding:9px 10px;font:600 13px 'IBM Plex Mono',monospace;color:#5B6F87;text-align:right">86.400 ₫</div></div>
+                  <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Thanh toán</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:9px 10px;font-size:13.5px;display:flex;justify-content:space-between"><span>Tiền mặt</span><span style="color:#6C7F98">▾</span></div></div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+                  <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:7px 10px;box-shadow:2px 2px 0 #1F3A5F">🚕 Di chuyển</span>
+                  <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">🍜 Ăn uống</span>
+                  <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">🎟 Vé</span>
+                  <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">🛍 Mua sắm</span>
+                  <span style="flex:1"></span>
+                  <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:9px 16px">Lưu · Enter</span>
+                </div>
+              </div>
+              <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden">
+                  <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1.5px solid #D9CFBB;background:#F6EFE3"><span style="font:600 11px 'IBM Plex Mono',monospace;color:#E14B4B">✦</span><span style="flex:1;font-size:14px">bolt về khách sạn 120 baht tiền mặt</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:3px 6px;background:#FFFDF7">⌘K</span></div>
+                  <div style="padding:14px">
+                    <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:10px">Bản xem trước — sửa được từng ô trước khi ghi</div>
+                    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px">
+                      <div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;text-transform:uppercase;color:#6C7F98">Hoạt động</div><div style="font-size:13.5px;margin-top:3px">Bolt về khách sạn</div></div>
+                      <div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;text-transform:uppercase;color:#6C7F98">Chi phí</div><div style="font:600 14px 'IBM Plex Mono',monospace;margin-top:3px">120 ฿</div></div>
+                      <div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;text-transform:uppercase;color:#6C7F98">Thanh toán</div><div style="font-size:13.5px;margin-top:3px">Tiền mặt</div></div>
+                      <div style="border:1.5px dashed #E14B4B;border-radius:4px;background:#FBE4E1;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;text-transform:uppercase;color:#E14B4B">Danh mục · đoán</div><div style="font-size:13.5px;margin-top:3px">🚕 Di chuyển</div></div>
+                    </div>
+                    <div style="display:flex;gap:8px;align-items:center">
+                      <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:9px 14px">Xác nhận ghi</span>
+                      <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 14px">Sửa tay</span>
+                      <span style="font-size:12.5px;color:#5B6F87">Không có mạng thì bộ tách nội bộ vẫn chạy, chỉ kém linh hoạt hơn với câu lạ.</span>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+              <div style="display:flex;gap:12px;align-items:center">
+                <div style="flex:1;background:#1F3A5F;color:#F6EFE3;border-radius:4px;padding:11px 14px;display:flex;align-items:center;gap:12px;box-shadow:3px 3px 0 #12263E"><span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em">ĐÃ GHI ✓</span><span style="flex:1;font-size:13px">120 ฿ · 🚕 Di chuyển · Tiền mặt</span><span style="font:600 11px 'IBM Plex Mono',monospace;border:1.5px solid #F2B33D;color:#F2B33D;border-radius:4px;padding:4px 8px">Hoàn tác</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ notesOn }}" hint-placeholder-val="{{ true }}">
+        <div style="border-top:2px dashed #C7BCA8;padding:12px 18px;display:flex;flex-wrap:wrap;gap:20px;background:#FFFDF7;font-size:12.5px;color:#5B6F87">
+          <span><b style="color:#1F3A5F">Đếm chạm:</b> số tiền → danh mục → nguồn tiền → Lưu, đúng ba chạm sau khi sheet mở.</span>
+          <span><b style="color:#1F3A5F">Nền tối:</b> chỉ là lớp phủ sheet, không phải dark mode.</span>
+          <span><b style="color:#1F3A5F">Không sọc trong sheet:</b> dải sọc duy nhất vẫn nằm trên khung.</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <div data-screen-label="03 Kế hoạch" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M3 · L3</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">🗓 Kế hoạch</span>
+        <span style="font-size:13px;color:#5B6F87">Lịch trình tự xếp theo ngày, gói bay và đổi tiền — mobile là thẻ dọc, laptop là bảng đầy đủ.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="padding:10px 12px;border-bottom:1.5px solid #D9CFBB;display:flex;align-items:center;justify-content:space-between">
+            <span style="font:600 13px 'IBM Plex Mono',monospace;letter-spacing:.04em">KẾ HOẠCH</span>
+            <span style="{{ stampStyle }}">{{ stampLabel }}</span>
+          </div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Thứ hai · 04 AUG</span><span style="font:600 11px 'IBM Plex Mono',monospace">1.240 ฿</span></div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;overflow:hidden">
+              <div style="padding:10px;display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:13.5px;font-weight:500">Khon Boat Noodles</span><span style="font:600 13px 'IBM Plex Mono',monospace">120 ฿</span></div><div style="display:flex;gap:6px;align-items:center"><span style="font:600 9px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:2px 5px">🍜</span><span style="font:600 9px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:2px 5px">Tiền mặt</span><span style="font-size:11.5px;color:#5B6F87">Victory Monument</span></div></div>
+              <div style="padding:10px;border-top:1px solid #EDE5D6;display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:13.5px;font-weight:500">PunThai Coffee</span><span style="font:600 13px 'IBM Plex Mono',monospace">85 ฿</span></div><div style="display:flex;gap:6px;align-items:center"><span style="font:600 9px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:2px 5px">🍜</span><span style="font:600 9px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:2px 5px">Momo</span></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Thứ ba · 05 AUG</span><span style="font:600 11px 'IBM Plex Mono',monospace">2.150 ฿</span></div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;overflow:hidden">
+              <div style="padding:10px;display:flex;flex-direction:column;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:13.5px;font-weight:500">Ayutthaya một ngày</span><span style="font:600 13px 'IBM Plex Mono',monospace">1.800 ฿</span></div><div style="display:flex;gap:6px"><span style="font:600 9px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:2px 5px">🎟</span><span style="font:600 9px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:2px 5px">Thẻ</span></div></div>
+              <div style="padding:10px;border-top:1px solid #EDE5D6;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13.5px;color:#A99C88">Thêm hoạt động…</span><span style="font:600 14px 'IBM Plex Mono',monospace;color:#E14B4B">＋</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;background:#1F3A5F;color:#F6EFE3;border-radius:4px;padding:12px;font:600 12.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.16) 3px 4px)"><span>TỔNG CỘNG</span><span>16.397 ฿</span></div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:10px"><div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">Gói bay &amp; khách sạn</div><div style="display:flex;justify-content:space-between;font-size:13px"><span>Vé khứ hồi · Vietjet</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">9,4 tr ₫</span></div><div style="display:flex;justify-content:space-between;font-size:13px;margin-top:6px"><span>Ibis Sathorn · 5 đêm</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">8,3 tr ₫</span></div></div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:10px"><div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">Đổi tiền</div><div style="display:flex;justify-content:space-between;font-size:13px"><span>7.200.000 ₫ → 10.000 ฿</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">720 ₫/฿</span></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;border-top:2px solid #1F3A5F;background:#FFFDF7">
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🏠</div>Hôm nay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🗓</div>Kế hoạch</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🧳</div>Sổ tay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">📊</div>Tổng kết</div>
+          </div>
+        </div>
+
+        <div id="cap-l3" style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;width:1280px;flex:none;min-height:560px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+          <div style="display:grid;grid-template-columns:186px minmax(0,1fr)">
+            <div style="border-right:2px solid #1F3A5F;background:#FFFDF7;padding:14px 12px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:26px;height:26px;border:2px solid #1F3A5F;border-radius:4px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:13px">✈</span><span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em">BANGKOK 2026 ▾</span></div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🏠</span>Hôm nay</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace"><span>🗓</span>Kế hoạch</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🧳</span>Sổ tay</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>📊</span>Tổng kết</div>
+              <div style="flex:1"></div>
+              <div style="border-top:1.5px dashed #C7BCA8;padding-top:10px;font:500 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">{{ syncNote }}</div>
+            </div>
+            <div style="padding:16px;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;align-items:start">
+              <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Lịch trình &amp; chi phí</span><span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98">Kéo ⠿ · Enter theo cột</span></div>
+                <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 84px 90px;gap:10px;padding:8px 12px;font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;border-bottom:1px solid #EDE5D6"><span>⠿</span><span>Hoạt động</span><span style="text-align:right">Chi phí</span><span>Danh mục</span><span>Thanh toán</span></div>
+                <div style="padding:7px 12px;background:#F6EFE3;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#E14B4B;border-bottom:1px solid #EDE5D6">THỨ HAI · 04 AUG · 1.240 ฿</div>
+                <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 84px 90px;gap:10px;align-items:center;padding:10px 12px"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px">Khon Boat Noodles</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">120 ฿</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">🍜 Ăn</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">Tiền mặt</span></div>
+                <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 84px 90px;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid #EDE5D6;background:#F6EFE3"><span style="color:#1F3A5F">⠿</span><span style="font-size:13.5px">PunThai Coffee<span style="float:right;color:#B3261E;font-weight:600">×</span></span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">85 ฿</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">🍜 Ăn</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">Momo</span></div>
+                <div style="padding:7px 12px;background:#F6EFE3;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#E14B4B;border-top:1px solid #EDE5D6;border-bottom:1px solid #EDE5D6">THỨ BA · 05 AUG · 2.150 ฿</div>
+                <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 84px 90px;gap:10px;align-items:center;padding:10px 12px"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px">Ayutthaya một ngày</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right">1.800 ฿</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">🎟 Vé</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:3px 5px;text-align:center">Thẻ</span></div>
+                <div style="display:grid;grid-template-columns:18px minmax(0,1fr) 78px 84px 90px;gap:10px;align-items:center;padding:10px 12px;border-top:1px solid #EDE5D6"><span style="color:#C7BCA8">⠿</span><span style="font-size:13.5px;color:#A99C88">Dòng trống — gõ để thêm</span><span style="font:600 13px 'IBM Plex Mono',monospace;text-align:right;color:#C7BCA8">—</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px dashed #B9AC97;color:#A99C88;border-radius:4px;padding:3px 5px;text-align:center">—</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px dashed #B9AC97;color:#A99C88;border-radius:4px;padding:3px 5px;text-align:center">—</span></div>
+                <div style="position:relative;display:flex;justify-content:space-between;align-items:center;background:#1F3A5F;color:#F6EFE3;padding:13px 20px;font:600 13px 'IBM Plex Mono',monospace;letter-spacing:.06em;background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.16) 3px 4px);margin-top:2px">
+                  <span style="position:absolute;left:-9px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:#FFFDF7;border:2px solid #1F3A5F"></span>
+                  <span style="position:absolute;right:-9px;top:50%;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;background:#FFFDF7;border:2px solid #1F3A5F"></span>
+                  <span>TỔNG CỘNG</span><span>16.397 ฿ · 11,8 tr ₫</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:12px">
+                  <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Gói bay &amp; khách sạn</div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0"><span>Vé khứ hồi · Vietjet</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">9,4 tr ₫</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-top:1px dashed #E4DECE"><span>Ibis Sathorn · 5 đêm</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">8,3 tr ₫</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:8px 0 0;border-top:1.5px solid #1F3A5F;margin-top:6px"><span style="font:600 10px 'IBM Plex Mono',monospace;text-transform:uppercase;color:#6C7F98">Đã thanh toán</span><span style="font:600 14px 'IBM Plex Mono',monospace">17,7 tr ₫</span></div>
+                </div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:12px">
+                  <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Đổi tiền &amp; tỷ giá</div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="border:1.5px solid #B9AC97;border-radius:4px;padding:8px"><div style="font:600 9px 'IBM Plex Mono',monospace;text-transform:uppercase;color:#6C7F98">Đã đổi</div><div style="font:600 13px 'IBM Plex Mono',monospace;margin-top:3px">7,2 tr ₫</div></div><div style="border:1.5px solid #B9AC97;border-radius:4px;padding:8px"><div style="font:600 9px 'IBM Plex Mono',monospace;text-transform:uppercase;color:#6C7F98">Nhận về</div><div style="font:600 13px 'IBM Plex Mono',monospace;margin-top:3px">10.000 ฿</div></div></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px"><span style="font-size:12.5px;color:#5B6F87">Tỷ giá thực tế</span><span style="font:600 13px 'IBM Plex Mono',monospace">720 ₫/฿</span></div>
+                </div>
+                <div style="border:1.5px dashed #C7BCA8;border-radius:6px;background:#F1EAE0;padding:11px 12px">
+                  <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#A99C88;margin-bottom:5px">🔒 Mùa sau</div>
+                  <div style="font-size:12.5px;line-height:1.5;color:#8E8271">Nhiều chuyến đi và chia sẻ cho bạn đồng hành sẽ mọc ra từ ô «tên chuyến ▾» phía trên.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ notesOn }}" hint-placeholder-val="{{ true }}">
+        <div style="border-top:2px dashed #C7BCA8;padding:12px 18px;display:flex;flex-wrap:wrap;gap:20px;background:#FFFDF7;font-size:12.5px;color:#5B6F87">
+          <span><b style="color:#1F3A5F">Mobile:</b> thanh Tổng cộng đặc, không một nét đứt.</span>
+          <span><b style="color:#1F3A5F">Laptop:</b> giữ đường xé và lỗ bấm hai bên thanh tổng.</span>
+          <span><b style="color:#1F3A5F">Bảng:</b> năm cột co giãn, không khóa min-width nên không sinh cuộn ngang ở 1280px.</span>
+        </div>
+      </sc-if>
+    </div>
+
+    <div data-screen-label="04 Sổ tay" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M4 · L4</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">🧳 Sổ tay</span>
+        <span style="font-size:13px;color:#5B6F87">Sáu danh sách, mỗi món đúng một dòng — laptop bày ba cột cùng lúc.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="padding:10px 12px;border-bottom:1.5px solid #D9CFBB;display:flex;align-items:center;justify-content:space-between"><span style="font:600 13px 'IBM Plex Mono',monospace;letter-spacing:.04em">SỔ TAY</span><span style="{{ stampStyle }}">{{ stampLabel }}</span></div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;gap:5px;overflow:hidden">
+              <span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:6px 8px;white-space:nowrap">Skincare</span>
+              <span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 8px;white-space:nowrap">Makeup</span>
+              <span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 8px;white-space:nowrap">Đồ dùng</span>
+              <span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 8px;white-space:nowrap">Mua về</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:10px;border:1.5px solid #1F3A5F;border-radius:3px;background:#FFFDF7;overflow:hidden"><div style="width:64%;height:100%;background:#F2B33D"></div></div><span style="font:600 11px 'IBM Plex Mono',monospace">9/14</span></div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:9px;padding:10px;background:#E7F0E9"><span style="width:16px;height:16px;border:2px solid #2E6F4E;border-radius:3px;background:#2E6F4E;color:#FFFDF7;font-size:10px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;font-size:13px;color:#7E8B78;text-decoration:line-through">Kem chống nắng SPF50</span><span style="color:#C7BCA8">×</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid #EDE5D6"><span style="width:16px;height:16px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Toner mini 50ml</span><span style="color:#C7BCA8">×</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid #EDE5D6"><span style="width:16px;height:16px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Mặt nạ giấy · 6 miếng</span><span style="color:#C7BCA8">×</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:10px;border-top:1px solid #EDE5D6;background:#E7F0E9"><span style="width:16px;height:16px;border:2px solid #2E6F4E;border-radius:3px;background:#2E6F4E;color:#FFFDF7;font-size:10px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;font-size:13px;color:#7E8B78;text-decoration:line-through">Dầu tẩy trang</span><span style="color:#C7BCA8">×</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px dashed #B9AC97;border-radius:4px;padding:6px 9px;color:#5B6F87">＋ Son dưỡng</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px dashed #B9AC97;border-radius:4px;padding:6px 9px;color:#5B6F87">＋ Bông tẩy trang</span></div>
+            <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+              <div style="border:2px dashed #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px;background-image:repeating-linear-gradient(#FFFDF7 0 20px,#F3EBDD 20px 21px)">
+                <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:6px">✦ AI · wishlist thành lịch</div>
+                <div style="font-size:12.5px;line-height:1.5;color:#4C6079;margin-bottom:8px">Ba món trong «Đi đâu» chưa có trong lịch trình. Xếp thử vào ngày 5 và 6 nhé?</div>
+                <div style="display:flex;gap:6px"><span style="font:600 10px 'IBM Plex Mono',monospace;background:#E14B4B;color:#FFFDF7;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">Xem bản nháp</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">Tự xếp tay</span></div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;border-top:2px solid #1F3A5F;background:#FFFDF7">
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🏠</div>Hôm nay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🗓</div>Kế hoạch</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🧳</div>Sổ tay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">📊</div>Tổng kết</div>
+          </div>
+        </div>
+
+        <div style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;width:1280px;flex:none;min-height:520px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+          <div style="display:grid;grid-template-columns:186px minmax(0,1fr)">
+            <div style="border-right:2px solid #1F3A5F;background:#FFFDF7;padding:14px 12px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:26px;height:26px;border:2px solid #1F3A5F;border-radius:4px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:13px">✈</span><span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em">BANGKOK 2026 ▾</span></div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🏠</span>Hôm nay</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🗓</span>Kế hoạch</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace"><span>🧳</span>Sổ tay</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>📊</span>Tổng kết</div>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+                <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:7px 10px;box-shadow:2px 2px 0 #1F3A5F">Hành lý</span>
+                <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">Mua mang về</span>
+                <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">Đi đâu</span>
+                <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 10px">Ăn gì</span>
+                <span style="flex:1"></span>
+                <span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98">Đã xong 9/14 món</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;overflow:hidden">
+                  <div style="padding:9px 11px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB;display:flex;justify-content:space-between"><span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Skincare</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">2/4</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;background:#E7F0E9"><span style="width:15px;height:15px;border:2px solid #2E6F4E;border-radius:3px;background:#2E6F4E;color:#FFFDF7;font-size:9px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;font-size:13px;color:#7E8B78;text-decoration:line-through">Kem chống nắng</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-top:1px solid #EDE5D6"><span style="width:15px;height:15px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Toner mini 50ml</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-top:1px solid #EDE5D6"><span style="width:15px;height:15px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Mặt nạ giấy</span></div>
+                </div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;overflow:hidden">
+                  <div style="padding:9px 11px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB;display:flex;justify-content:space-between"><span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Đồ dùng</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">4/6</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;background:#E7F0E9"><span style="width:15px;height:15px;border:2px solid #2E6F4E;border-radius:3px;background:#2E6F4E;color:#FFFDF7;font-size:9px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;font-size:13px;color:#7E8B78;text-decoration:line-through">Sạc dự phòng</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-top:1px solid #EDE5D6"><span style="width:15px;height:15px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Ổ cắm chuyển</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-top:1px solid #EDE5D6"><span style="width:15px;height:15px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Thuốc cảm</span></div>
+                </div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;overflow:hidden">
+                  <div style="padding:9px 11px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB;display:flex;justify-content:space-between"><span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Ăn gì</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">3/4</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;background:#E7F0E9"><span style="width:15px;height:15px;border:2px solid #2E6F4E;border-radius:3px;background:#2E6F4E;color:#FFFDF7;font-size:9px;display:flex;align-items:center;justify-content:center;flex:none">✓</span><span style="flex:1;font-size:13px;color:#7E8B78;text-decoration:line-through">Boat noodles</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-top:1px solid #EDE5D6"><span style="width:15px;height:15px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Mango sticky rice</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-top:1px solid #EDE5D6"><span style="width:15px;height:15px;border:2px solid #1F3A5F;border-radius:3px;flex:none"></span><span style="flex:1;font-size:13px">Tom yum Jay Fai</span></div>
+                </div>
+              </div>
+              <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+                <div style="border:2px dashed #1F3A5F;border-radius:6px;background:#FFFDF7;padding:13px;background-image:repeating-linear-gradient(#FFFDF7 0 21px,#F3EBDD 21px 22px)">
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                    <span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">✦ AI · wishlist thành lịch trình</span>
+                    <span style="flex:1;font-size:13px;color:#4C6079;min-width:220px">Mango sticky rice, Jay Fai và chợ đêm Rot Fai chưa có trong lịch. Bản nháp xếp chúng vào chiều ngày 5 và tối ngày 6.</span>
+                    <span style="font:600 10.5px 'IBM Plex Mono',monospace;background:#E14B4B;color:#FFFDF7;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px">Xem bản nháp</span>
+                    <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px">Tự xếp tay</span>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-screen-label="05 Tổng kết" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M5 · L5</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">📊 Tổng kết</span>
+        <span style="font-size:13px;color:#5B6F87">Một nơi kể trọn: chỉ số, biểu đồ ngày, cơ cấu danh mục và kênh, khối AI thành lời.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="padding:10px 12px;border-bottom:1.5px solid #D9CFBB;display:flex;align-items:center;justify-content:space-between"><span style="font:600 13px 'IBM Plex Mono',monospace;letter-spacing:.04em">TỔNG KẾT</span><span style="{{ stampStyle }}">{{ stampLabel }}</span></div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Tổng cả chuyến</div><div style="font:600 19px 'IBM Plex Mono',monospace;margin-top:3px">30,6 tr ₫</div></div>
+              <div style="border:2px solid #2E6F4E;border-radius:4px;background:#E7F0E9;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#2E6F4E">So dự trù</div><div style="font:600 19px 'IBM Plex Mono',monospace;margin-top:3px;color:#2E6F4E">−4%</div></div>
+            </div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px">
+              <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">Chi theo ngày</div>
+              <div style="display:flex;align-items:flex-end;gap:6px;height:80px">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:32px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9px 'IBM Plex Mono',monospace;color:#6C7F98">01</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:48px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9px 'IBM Plex Mono',monospace;color:#6C7F98">02</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:66px;background:#F2B33D;border:1.5px solid #1F3A5F;text-align:center;font-size:10px">🔥</div><span style="font:600 9px 'IBM Plex Mono',monospace">03</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:38px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9px 'IBM Plex Mono',monospace;color:#6C7F98">04</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:52px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9px 'IBM Plex Mono',monospace;color:#6C7F98">05</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;height:22px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9px 'IBM Plex Mono',monospace;color:#6C7F98">06</span></div>
+              </div>
+            </div>
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px">
+              <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Theo danh mục</div>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;width:96px">🍜 Ăn uống</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:41%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace;width:32px;text-align:right">41%</span></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;width:96px">🚕 Di chuyển</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:22%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace;width:32px;text-align:right">22%</span></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;width:96px">🛍 Mua sắm</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:19%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace;width:32px;text-align:right">19%</span></div>
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;width:96px">🎟 Vé</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:18%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace;width:32px;text-align:right">18%</span></div>
+              </div>
+            </div>
+            <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+              <div style="border:2px dashed #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px;background-image:repeating-linear-gradient(#FFFDF7 0 20px,#F3EBDD 20px 21px)">
+                <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:7px">✦ AI kể chuyện</div>
+                <div style="font-size:12.5px;line-height:1.55;color:#4C6079">Sáu ngày ở Bangkok tốn 30,6 triệu, ít hơn dự trù 4%. Ngày thứ ba là đỉnh chi vì chuyến Ayutthaya…</div>
+                <div style="display:flex;gap:6px;margin-top:9px"><span style="font:600 10px 'IBM Plex Mono',monospace;background:#E14B4B;color:#FFFDF7;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">Tạo bản tổng kết</span><span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">Xuất PDF</span></div>
+              </div>
+            </sc-if>
+            <div style="display:flex;justify-content:space-between;align-items:center;background:#1F3A5F;color:#F6EFE3;border-radius:4px;padding:12px;font:600 12.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.16) 3px 4px)"><span>TỔNG CỘNG</span><span>30,6 tr ₫</span></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;border-top:2px solid #1F3A5F;background:#FFFDF7">
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🏠</div>Hôm nay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🗓</div>Kế hoạch</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🧳</div>Sổ tay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">📊</div>Tổng kết</div>
+          </div>
+        </div>
+
+        <div style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;width:1280px;flex:none;min-height:560px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+          <div style="display:grid;grid-template-columns:186px minmax(0,1fr)">
+            <div style="border-right:2px solid #1F3A5F;background:#FFFDF7;padding:14px 12px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:26px;height:26px;border:2px solid #1F3A5F;border-radius:4px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:13px">✈</span><span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em">BANGKOK 2026 ▾</span></div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🏠</span>Hôm nay</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🗓</span>Kế hoạch</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🧳</span>Sổ tay</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace"><span>📊</span>Tổng kết</div>
+              <div style="flex:1"></div>
+              <div style="border-top:1.5px dashed #C7BCA8;padding-top:10px;display:flex;flex-direction:column;gap:7px">
+                <span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 8px;text-align:center">Xuất backup</span>
+                <span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 8px;text-align:center">Nhập backup</span>
+                <span style="font:500 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">{{ syncNote }}</span>
+              </div>
+            </div>
+            <div style="padding:16px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;align-items:start">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+                  <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Tổng cả chuyến</div><div style="font:600 22px 'IBM Plex Mono',monospace;margin-top:4px">30,6 tr ₫</div></div>
+                  <div style="border:2px solid #2E6F4E;border-radius:4px;background:#E7F0E9;padding:11px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#2E6F4E">So dự trù</div><div style="font:600 22px 'IBM Plex Mono',monospace;margin-top:4px;color:#2E6F4E">−4%</div></div>
+                  <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Trung bình mỗi ngày</div><div style="font:600 22px 'IBM Plex Mono',monospace;margin-top:4px">5,1 tr ₫</div></div>
+                </div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;padding:14px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Chi theo ngày</span><span style="font:600 10px 'IBM Plex Mono',monospace;color:#6C7F98">Ngày 03 cao nhất · 7,2 tr ₫</span></div>
+                  <div style="display:flex;align-items:flex-end;gap:10px;height:120px">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><span style="font:600 10px 'IBM Plex Mono',monospace;color:#5B6F87">3,9</span><div style="width:100%;height:44px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">01 · T7</span></div>
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><span style="font:600 10px 'IBM Plex Mono',monospace;color:#5B6F87">5,4</span><div style="width:100%;height:62px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">02 · CN</span></div>
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><span style="font:600 10px 'IBM Plex Mono',monospace">7,2 🔥</span><div style="width:100%;height:88px;background:#F2B33D;border:1.5px solid #1F3A5F"></div><span style="font:600 9.5px 'IBM Plex Mono',monospace">03 · T2</span></div>
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><span style="font:600 10px 'IBM Plex Mono',monospace;color:#5B6F87">4,4</span><div style="width:100%;height:50px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">04 · T3</span></div>
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><span style="font:600 10px 'IBM Plex Mono',monospace;color:#5B6F87">6,1</span><div style="width:100%;height:70px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">05 · T4</span></div>
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><span style="font:600 10px 'IBM Plex Mono',monospace;color:#5B6F87">3,6</span><div style="width:100%;height:40px;background:#1F3A5F;border:1.5px solid #1F3A5F"></div><span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">06 · T5</span></div>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:12px">
+                    <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Theo danh mục</div>
+                    <div style="display:flex;flex-direction:column;gap:7px">
+                      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;width:88px">🍜 Ăn uống</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:41%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace">41%</span></div>
+                      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;width:88px">🚕 Di chuyển</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:22%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace">22%</span></div>
+                      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;width:88px">🛍 Mua sắm</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:19%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace">19%</span></div>
+                      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;width:88px">🎟 Vé</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="display:block;width:18%;height:100%;background:#1F3A5F"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace">18%</span></div>
+                    </div>
+                  </div>
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:12px">
+                    <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Theo kênh thanh toán</div>
+                    <div style="display:flex;flex-direction:column;gap:6px">
+                      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span>Tiền mặt</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">8.850 ฿</span></div>
+                      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-top:1px dashed #E4DECE"><span>Momo</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">4.500 ฿</span></div>
+                      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-top:1px dashed #E4DECE"><span>Thẻ ngân hàng</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">3.047 ฿</span></div>
+                      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-top:1px dashed #E4DECE"><span style="color:#8E8271">Chưa phân loại</span><span style="font:600 12.5px 'IBM Plex Mono',monospace;color:#8E8271">0 ฿</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+                  <div style="border:2px dashed #1F3A5F;border-radius:6px;background:#FFFDF7;padding:14px;background-image:repeating-linear-gradient(#FFFDF7 0 21px,#F3EBDD 21px 22px)">
+                    <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">✦ AI kể chuyện chuyến đi</div>
+                    <div style="font-size:13.5px;line-height:1.65;color:#1F3A5F;text-wrap:pretty">Sáu ngày ở Bangkok tiêu hết 30,6 triệu, ít hơn dự trù 4%. Ngày thứ ba là đỉnh chi vì chuyến Ayutthaya và tấm vé tàu cuối chiều. Ăn uống chiếm 41% nhưng phần lớn nằm ở những quán bình dân dưới 200 baht — khoản đắt nhất lại là ba ly cà phê ở Icon Siam.</div>
+                    <div style="display:flex;gap:8px;margin-top:12px"><span style="font:600 10.5px 'IBM Plex Mono',monospace;background:#E14B4B;color:#FFFDF7;border:1.5px solid #1F3A5F;border-radius:4px;padding:8px 11px">Tạo bản tổng kết</span><span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:8px 11px">Viết tay</span></div>
+                    <div style="font-size:12px;color:#5B6F87;margin-top:9px">Bản nháp chỉ hiện ở đây; bấm Xuất PDF mới ghi ra tệp.</div>
+                  </div>
+                </sc-if>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:12px">
+                  <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Dự trù &amp; thực tế</div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0"><span>Dự trù</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">31,9 tr ₫</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-top:1px dashed #E4DECE"><span>Thực tế</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">30,6 tr ₫</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-top:1px dashed #E4DECE"><span style="color:#2E6F4E">Dư lại</span><span style="font:600 12.5px 'IBM Plex Mono',monospace;color:#2E6F4E">1,3 tr ₫</span></div>
+                </div>
+                <div style="display:flex;gap:8px"><span style="flex:1;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#F2B33D;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:10px;text-align:center">Xuất PDF</span><span style="flex:1;font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px;text-align:center">Backup JSON</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-screen-label="06 Trạng thái rỗng" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M6 · L6</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">🧭 Chuyến mới · trạng thái rỗng</span>
+        <span style="font-size:13px;color:#5B6F87">Cuống vé chưa in — một hành động vua duy nhất, linh vật xuất hiện đúng chỗ này.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column;min-height:560px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="padding:10px 12px;border-bottom:1.5px solid #D9CFBB;font:600 13px 'IBM Plex Mono',monospace;letter-spacing:.04em">CHUYẾN MỚI</div>
+          <div style="padding:16px 12px;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center;flex:1">
+            <div style="width:120px;height:120px;border:2px dashed #B9AC97;border-radius:6px;background:#FFFDF7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px">
+              <div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#8E8271">[ Ảnh chibi ]</div>
+              <div style="font-size:9.5px;line-height:1.35;color:#8E8271">Nhân viên mặt đất vẫy tay</div>
+            </div>
+            <div style="font-size:14.5px;line-height:1.6;color:#4C6079">Chưa có chuyến nào trên cuống vé. Đặt tên chuyến và chọn ngày đi để mở sổ tay.</div>
+            <div style="width:100%;display:flex;flex-direction:column;gap:8px">
+              <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px 12px;font-size:14px;color:#A99C88;text-align:left">Tên chuyến, ví dụ Bangkok 2026</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:10px;font:600 12px 'IBM Plex Mono',monospace;color:#A99C88">Ngày đi</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:10px;font:600 12px 'IBM Plex Mono',monospace;color:#A99C88">Ngày về</div></div>
+              <div style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:12px;text-align:center">Tạo chuyến</div>
+            </div>
+            <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+              <div style="width:100%;border:1.5px dashed #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px;text-align:left">
+                <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:5px">✦ AI · khung lịch trình</div>
+                <div style="font-size:12.5px;line-height:1.5;color:#4C6079">Cho AI dựng khung sáu ngày rồi bạn sửa lại, hoặc tự thêm từng dòng — cách nào cũng ra cùng một bảng.</div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;border-top:2px solid #1F3A5F;background:#FFFDF7">
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🏠</div>Hôm nay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🗓</div>Kế hoạch</div>
+            <div style="border:1.5px solid #C7BCA8;border-radius:4px;background:#F1EAE0;color:#A99C88;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🧳</div>Sổ tay</div>
+            <div style="border:1.5px solid #C7BCA8;border-radius:4px;background:#F1EAE0;color:#A99C88;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">📊</div>Tổng kết</div>
+          </div>
+        </div>
+
+        <div style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;width:1280px;flex:none;min-height:440px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+          <div style="display:grid;grid-template-columns:186px minmax(0,1fr)">
+            <div style="border-right:2px solid #1F3A5F;background:#FFFDF7;padding:14px 12px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:26px;height:26px;border:2px solid #1F3A5F;border-radius:4px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:13px">✈</span><span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#A99C88">CHƯA CÓ CHUYẾN</span></div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace"><span>🗓</span>Kế hoạch</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#A99C88"><span>🏠</span>Hôm nay</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#A99C88"><span>🧳</span>Sổ tay</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#A99C88"><span>📊</span>Tổng kết</div>
+            </div>
+            <div style="padding:28px 24px;display:flex;gap:24px;align-items:flex-start">
+              <div style="width:150px;height:150px;border:2px dashed #B9AC97;border-radius:6px;background:#FFFDF7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;flex:none">
+                <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#8E8271">[ Ảnh chibi ]</div>
+                <div style="font-size:10.5px;line-height:1.4;color:#8E8271">Nhân viên mặt đất đội mũ phi công, tay cầm cuống vé trắng</div>
+              </div>
+              <div style="flex:1;max-width:520px">
+                <div style="font:600 20px 'IBM Plex Mono',monospace;letter-spacing:.02em;margin-bottom:8px">Cuống vé chưa in.</div>
+                <div style="font-size:14.5px;line-height:1.65;color:#4C6079;margin-bottom:16px;text-wrap:pretty">Đặt tên chuyến và chọn ngày đi — ngày về. App sẽ tự biết bạn đang ở giai đoạn nào để mở đúng tab: trước chuyến vào Kế hoạch, giữa chuyến vào Hôm nay, sau chuyến vào Tổng kết.</div>
+                <div style="display:grid;grid-template-columns:minmax(0,1.4fr) 120px 120px auto;gap:10px;align-items:end">
+                  <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Tên chuyến</div><div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px 12px;font-size:14px;color:#A99C88;outline:3px solid #F2B33D;outline-offset:2px">Bangkok 2026</div></div>
+                  <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Ngày đi</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:10px 12px;font:600 12.5px 'IBM Plex Mono',monospace;color:#A99C88">01/08</div></div>
+                  <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Ngày về</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:10px 12px;font:600 12.5px 'IBM Plex Mono',monospace;color:#A99C88">06/08</div></div>
+                  <div style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:11px 18px">Tạo chuyến</div>
+                </div>
+                <sc-if value="{{ aiOn }}" hint-placeholder-val="{{ true }}">
+                  <div style="border:1.5px dashed #1F3A5F;border-radius:4px;background:#FFFDF7;padding:12px;margin-top:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+                    <span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">✦ AI · khung lịch trình</span>
+                    <span style="flex:1;min-width:200px;font-size:13px;color:#4C6079">Dựng sẵn khung sáu ngày để bạn sửa, hoặc bỏ qua và tự thêm từng dòng.</span>
+                    <span style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 11px">Dựng thử khung</span>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-screen-label="07 Đăng nhập" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M7 · L7</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">🔑 Đăng nhập</span>
+        <span style="font-size:13px;color:#5B6F87">Tấm vé chưa đóng dấu — vẫn dùng được ngoại tuyến trước khi đăng nhập.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column;min-height:520px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="padding:20px 16px;display:flex;flex-direction:column;gap:14px;flex:1">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:40px;height:40px;border:2px solid #1F3A5F;border-radius:6px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:20px">✈</span>
+              <div><div style="font:600 15px 'IBM Plex Mono',monospace;letter-spacing:.02em">Kế hoạch du lịch</div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Sổ tay chuyến đi · v10</div></div>
+            </div>
+            <div style="border-top:2px dashed #C7BCA8"></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Email</div><div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px;font-size:14px">anh@vidu.com</div></div>
+              <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Mật khẩu</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:11px 12px;font-size:14px;letter-spacing:.2em;color:#5B6F87">••••••••</div></div>
+              <div style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:12px;text-align:center">Lên máy bay</div>
+              <div style="font-size:12.5px;color:#5B6F87;text-align:center">Chưa có tài khoản? <span style="color:#E14B4B;font-weight:600">Tạo mới</span></div>
+            </div>
+            <div style="flex:1"></div>
+            <div style="border:1.5px solid #8A5A00;border-radius:4px;background:#FDF1DB;padding:11px;font-size:12.5px;line-height:1.55;color:#6B4A08">Không đăng nhập vẫn dùng được: dữ liệu nằm trên máy, đăng nhập sau sẽ đẩy lên tài khoản.</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98"><span>v10.0 · 08/2026</span><span style="border:1.5px solid #C7BCA8;border-radius:3px;padding:2px 6px">⟳</span></div>
+          </div>
+        </div>
+
+        <div style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;width:1280px;flex:none;min-height:400px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;min-height:392px">
+            <div style="padding:32px;display:flex;flex-direction:column;justify-content:center;gap:14px;border-right:2px dashed #C7BCA8">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="width:52px;height:52px;border:2px solid #1F3A5F;border-radius:6px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:26px">✈</span>
+                <div><div style="font:600 22px 'IBM Plex Mono',monospace;letter-spacing:.02em">Kế hoạch du lịch</div><div style="font:500 10px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6C7F98">Sổ tay chuyến đi thời AI · v10</div></div>
+              </div>
+              <div style="font-size:15px;line-height:1.7;color:#4C6079;max-width:420px;text-wrap:pretty">Vé, khách sạn, lịch trình, đổi tiền, hành lý và mọi khoản chi giữa chuyến nằm chung một cuống vé. Mất sóng vẫn ghi được, có sóng thì tự đồng bộ.</div>
+              <div style="display:flex;gap:20px;margin-top:6px">
+                <div><div style="font:600 20px 'IBM Plex Mono',monospace">4</div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Tab</div></div>
+                <div><div style="font:600 20px 'IBM Plex Mono',monospace">3</div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Chạm để ghi</div></div>
+                <div><div style="font:600 20px 'IBM Plex Mono',monospace">0</div><div style="font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Vạch sóng cần có</div></div>
+              </div>
+            </div>
+            <div style="padding:32px 26px;background:#FFFDF7;display:flex;flex-direction:column;justify-content:center;gap:12px">
+              <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#E14B4B">Đăng nhập</div>
+              <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Email</div><div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px;font-size:14px;outline:3px solid #F2B33D;outline-offset:2px">anh@vidu.com</div></div>
+              <div><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98;margin-bottom:5px">Mật khẩu</div><div style="border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:11px 12px;font-size:14px;letter-spacing:.2em;color:#5B6F87">••••••••</div></div>
+              <div style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:12px;text-align:center">Lên máy bay</div>
+              <div style="font-size:12.5px;color:#5B6F87">Chưa có tài khoản? <span style="color:#E14B4B;font-weight:600">Tạo mới</span> · <span style="color:#E14B4B;font-weight:600">Dùng không cần tài khoản</span></div>
+              <div style="border-top:1.5px dashed #C7BCA8;padding-top:10px;font:500 9.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98;display:flex;justify-content:space-between"><span>v10.0 · 08/2026</span><span>⟳ Làm mới bộ nhớ đệm</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-screen-label="08 Hoàn tất" style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;padding:14px 18px;border-bottom:2px solid #1F3A5F">
+        <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;background:#1F3A5F;color:#F6EFE3;border-radius:3px;padding:4px 8px">M8 · L8</span>
+        <span style="font:600 16px 'IBM Plex Mono',monospace;letter-spacing:.02em">🎉 Băng-rôn hoàn tất</span>
+        <span style="font-size:13px;color:#5B6F87">Qua ngày về, app tự mở Tổng kết và đóng dấu «hoàn tất» một lần duy nhất.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;padding:20px;background:#F6EFE3;align-items:flex-start;overflow-x:auto">
+
+        <div style="width:320px;border:2px solid #1F3A5F;border-radius:16px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px)"></div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:12px">
+            <div style="border:2px solid #1F3A5F;border-radius:6px;background:#E14B4B;color:#FFFDF7;padding:14px;box-shadow:3px 3px 0 #1F3A5F;text-align:center">
+              <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px">Chuyến đi hoàn tất 🎉</div>
+              <div style="font-size:14px;line-height:1.55">Sáu ngày ở Bangkok đã khép lại. Cuống vé được lưu vào kho chuyến đi.</div>
+            </div>
+            <div style="width:110px;height:110px;border:2px dashed #B9AC97;border-radius:6px;background:#FFFDF7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px;text-align:center;align-self:center">
+              <div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#8E8271">[ Ảnh chibi ]</div>
+              <div style="font-size:9.5px;line-height:1.35;color:#8E8271">Bản 🎉 tung mũ</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Tổng cả chuyến</div><div style="font:600 19px 'IBM Plex Mono',monospace;margin-top:3px">30,6 tr ₫</div></div>
+              <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:9px 10px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Ngày đáng nhớ</div><div style="font:600 19px 'IBM Plex Mono',monospace;margin-top:3px">03 🔥</div></div>
+            </div>
+            <div style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#F2B33D;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:12px;text-align:center">Xem tổng kết</div>
+            <div style="text-align:center;font-size:12.5px;color:#5B6F87">Băng-rôn tự ẩn sau lần mở đầu tiên.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;border-top:2px solid #1F3A5F;background:#FFFDF7;margin-top:auto">
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🏠</div>Hôm nay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🗓</div>Kế hoạch</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">🧳</div>Sổ tay</div>
+            <div style="border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;text-align:center;padding:7px 2px;font:600 9px 'IBM Plex Mono',monospace"><div style="font-size:13px;margin-bottom:2px">📊</div>Tổng kết</div>
+          </div>
+        </div>
+
+        <div style="border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden;width:1280px;flex:none;min-height:420px">
+          <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 26px,#1F3A5F 26px 52px,#F2B33D 52px 78px)"></div>
+          <div style="display:grid;grid-template-columns:186px minmax(0,1fr)">
+            <div style="border-right:2px solid #1F3A5F;background:#FFFDF7;padding:14px 12px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:26px;height:26px;border:2px solid #1F3A5F;border-radius:4px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:13px">✈</span><span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em">BANGKOK 2026 ▾</span></div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🏠</span>Hôm nay</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🗓</span>Kế hoạch</div>
+              <div style="display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace;color:#4C6079"><span>🧳</span>Sổ tay</div>
+              <div style="display:flex;align-items:center;gap:8px;border:1.5px solid #1F3A5F;border-radius:4px;background:#E14B4B;color:#FFFDF7;padding:8px 10px;font:600 10.5px 'IBM Plex Mono',monospace"><span>📊</span>Tổng kết</div>
+            </div>
+            <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+              <div style="border:2px solid #1F3A5F;border-radius:6px;background:#E14B4B;color:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;padding:18px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:18px">
+                <div style="width:86px;height:86px;border:2px dashed rgba(255,253,247,.7);border-radius:6px;display:flex;align-items:center;justify-content:center;text-align:center;font:600 8.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;padding:6px;flex:none">[ ẢNH CHIBI 🎉 ]</div>
+                <div style="flex:1;min-width:260px">
+                  <div style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px">Chuyến đi hoàn tất 🎉</div>
+                  <div style="font-size:15px;line-height:1.6;max-width:520px">Sáu ngày ở Bangkok đã khép lại, tổng cộng 30,6 triệu và ít hơn dự trù 4%. Cuống vé được lưu lại nguyên vẹn để đọc lại bất cứ lúc nào.</div>
+                </div>
+                <div style="display:flex;gap:8px"><span style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#FFFDF7;color:#1F3A5F;border:2px solid #1F3A5F;border-radius:4px;padding:9px 13px">Xem tổng kết</span><span style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;border:2px solid #FFFDF7;border-radius:4px;padding:9px 13px">Đóng</span></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Tổng cả chuyến</div><div style="font:600 20px 'IBM Plex Mono',monospace;margin-top:4px">30,6 tr ₫</div></div>
+                <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Số ngày</div><div style="font:600 20px 'IBM Plex Mono',monospace;margin-top:4px">6</div></div>
+                <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Khoản chi</div><div style="font:600 20px 'IBM Plex Mono',monospace;margin-top:4px">64</div></div>
+                <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:11px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Ngày đỉnh</div><div style="font:600 20px 'IBM Plex Mono',monospace;margin-top:4px">03 🔥</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:14px;border:1.5px dashed #C7BCA8;border-radius:6px;background:#FFFDF7;padding:12px 14px">
+                <span style="border:2px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:6px 10px;font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-5deg);flex:none">Đã lưu kho</span>
+                <span style="font-size:13.5px;color:#4C6079;flex:1">Băng-rôn chỉ hiện một lần. Sau đó Tổng kết trở lại bố cục thường, dữ liệu vẫn sửa được bình thường.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="icon" style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #1F3A5F;padding-bottom:8px">
+      <span style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">— 04</span>
+      <h2 style="margin:0;font:600 22px/1.2 'IBM Plex Mono',monospace;letter-spacing:.02em">Icon PWA cắt lại</h2>
+      <span style="font-size:13px;color:#5B6F87">Giữ mô-típ máy bay – địa cầu, bỏ gradient tím hồng</span>
+    </div>
+    <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:20px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+      <div style="text-align:center">
+        <svg width="140" height="140" viewBox="0 0 512 512" style="border:2px solid #1F3A5F;border-radius:16px;display:block">
+          <rect width="512" height="512" fill="#1F3A5F"></rect>
+          <circle cx="256" cy="286" r="126" fill="#F6EFE3"></circle>
+          <ellipse cx="256" cy="286" rx="52" ry="126" fill="none" stroke="#1F3A5F" stroke-width="11"></ellipse>
+          <path d="M130 286 H382" stroke="#1F3A5F" stroke-width="11"></path>
+          <path d="M147 224 H365" stroke="#1F3A5F" stroke-width="9"></path>
+          <path d="M147 348 H365" stroke="#1F3A5F" stroke-width="9"></path>
+          <path d="M74 292 C 150 108, 350 92, 442 176" fill="none" stroke="#E14B4B" stroke-width="20" stroke-linecap="round"></path>
+          <path d="M0 0 L-46 -20 L-33 0 L-46 20 Z" fill="#F2B33D" stroke="#1F3A5F" stroke-width="7" stroke-linejoin="round" transform="translate(452 184) rotate(40)"></path>
+        </svg>
+        <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#5B6F87;margin-top:10px">512 · icon chính</div>
+      </div>
+      <div style="text-align:center">
+        <svg width="82" height="82" viewBox="0 0 512 512" style="border:2px solid #1F3A5F;border-radius:12px;display:block">
+          <rect width="512" height="512" fill="#1F3A5F"></rect>
+          <circle cx="256" cy="286" r="126" fill="#F6EFE3"></circle>
+          <ellipse cx="256" cy="286" rx="52" ry="126" fill="none" stroke="#1F3A5F" stroke-width="11"></ellipse>
+          <path d="M130 286 H382" stroke="#1F3A5F" stroke-width="11"></path>
+          <path d="M147 224 H365" stroke="#1F3A5F" stroke-width="9"></path>
+          <path d="M147 348 H365" stroke="#1F3A5F" stroke-width="9"></path>
+          <path d="M74 292 C 150 108, 350 92, 442 176" fill="none" stroke="#E14B4B" stroke-width="20" stroke-linecap="round"></path>
+          <path d="M0 0 L-46 -20 L-33 0 L-46 20 Z" fill="#F2B33D" stroke="#1F3A5F" stroke-width="7" stroke-linejoin="round" transform="translate(452 184) rotate(40)"></path>
+        </svg>
+        <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#5B6F87;margin-top:10px">192 · màn hình chính</div>
+      </div>
+      <div style="text-align:center">
+        <svg width="60" height="60" viewBox="0 0 512 512" style="border:2px solid #1F3A5F;border-radius:10px;display:block">
+          <rect width="512" height="512" fill="#1F3A5F"></rect>
+          <circle cx="256" cy="286" r="126" fill="#F6EFE3"></circle>
+          <ellipse cx="256" cy="286" rx="52" ry="126" fill="none" stroke="#1F3A5F" stroke-width="11"></ellipse>
+          <path d="M130 286 H382" stroke="#1F3A5F" stroke-width="11"></path>
+          <path d="M74 292 C 150 108, 350 92, 442 176" fill="none" stroke="#E14B4B" stroke-width="20" stroke-linecap="round"></path>
+          <path d="M0 0 L-46 -20 L-33 0 L-46 20 Z" fill="#F2B33D" stroke="#1F3A5F" stroke-width="7" stroke-linejoin="round" transform="translate(452 184) rotate(40)"></path>
+        </svg>
+        <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#5B6F87;margin-top:10px">180 · apple-touch</div>
+      </div>
+      <div style="text-align:center">
+        <div style="position:relative;width:140px;height:140px">
+          <svg width="140" height="140" viewBox="0 0 512 512" style="border:2px solid #1F3A5F;border-radius:16px;display:block">
+            <rect width="512" height="512" fill="#1F3A5F"></rect>
+            <g transform="translate(256 256) scale(.78) translate(-256 -256)">
+              <circle cx="256" cy="286" r="126" fill="#F6EFE3"></circle>
+              <ellipse cx="256" cy="286" rx="52" ry="126" fill="none" stroke="#1F3A5F" stroke-width="11"></ellipse>
+              <path d="M130 286 H382" stroke="#1F3A5F" stroke-width="11"></path>
+              <path d="M74 292 C 150 108, 350 92, 442 176" fill="none" stroke="#E14B4B" stroke-width="20" stroke-linecap="round"></path>
+              <path d="M0 0 L-46 -20 L-33 0 L-46 20 Z" fill="#F2B33D" stroke="#1F3A5F" stroke-width="7" stroke-linejoin="round" transform="translate(452 184) rotate(40)"></path>
+            </g>
+            <circle cx="256" cy="256" r="205" fill="none" stroke="#F2B33D" stroke-width="4" stroke-dasharray="14 10"></circle>
+          </svg>
+        </div>
+        <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#5B6F87;margin-top:10px">Maskable · vùng an toàn 80%</div>
+      </div>
+      <div style="flex:1;min-width:260px;font-size:13.5px;line-height:1.65;color:#4C6079">
+        <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">Quy tắc cắt</div>
+        Nền navy đặc kín khung, không trong suốt, để bản apple-touch không bị iOS độn nền trắng. Địa cầu kem chiếm 50% chiều rộng, hai vĩ tuyến và một kinh tuyến vẽ bằng nét navy 9–11px để còn thấy được ở 48px. Cung bay san hô cắt ngang phía trên, mũi bay tô nghệ viền navy — đúng ba màu của áo, không gradient. Bản maskable co nội dung về 80% để hệ điều hành bo tròn không cắt mất mũi bay.
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px">
+          <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">icon-512.png</span>
+          <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">icon-192.png</span>
+          <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">apple-touch-icon.png</span>
+          <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:4px;padding:6px 9px">maskable-512.png</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="motion" style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #1F3A5F;padding-bottom:8px">
+      <span style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">— 05</span>
+      <h2 style="margin:0;font:600 22px/1.2 'IBM Plex Mono',monospace;letter-spacing:.02em">Ghi chú chuyển động</h2>
+      <span style="font-size:13px;color:#5B6F87">Nhẹ, ngắn, và luôn có bản rút gọn</span>
+    </div>
+    <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden">
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:11px 16px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98"><span>Điểm chạm</span><span>Chuyển động</span><span>Thời lượng</span><span>Khi giảm chuyển động</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079"><span style="font-weight:600;color:#1F3A5F">Mở sheet ghi chi</span><span>Trượt lên từ đáy kèm lớp phủ tối dần</span><span style="font:600 12px 'IBM Plex Mono',monospace">220ms · ease-out</span><span>Hiện thẳng, không trượt</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="font-weight:600;color:#1F3A5F">Dòng vừa ghi</span><span>Nền san hô nhạt phai dần về giấy</span><span style="font:600 12px 'IBM Plex Mono',monospace">1.200ms · linear</span><span>Giữ nền nhạt 3 giây rồi bỏ, không phai</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="font-weight:600;color:#1F3A5F">Toast + hoàn tác</span><span>Trồi lên 8px, vạch đếm ngược chạy cạn</span><span style="font:600 12px 'IBM Plex Mono',monospace">160ms · ease-out</span><span>Hiện tại chỗ, vạch đếm ngược đứng yên theo bước 1 giây</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="font-weight:600;color:#1F3A5F">Kéo thả ⠿</span><span>Dòng nghiêng 0,6° và nhấc bóng lên</span><span style="font:600 12px 'IBM Plex Mono',monospace">120ms · ease-out</span><span>Chỉ đổi viền và nền, không nghiêng</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="font-weight:600;color:#1F3A5F">Dòng bay về cụm ngày</span><span>Trượt tới vị trí mới, con trỏ đi theo</span><span style="font:600 12px 'IBM Plex Mono',monospace">200ms · ease-out</span><span>Nhảy thẳng tới vị trí mới</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="font-weight:600;color:#1F3A5F">Nút bấm</span><span>Lùi 2px, bóng khối co còn 1px</span><span style="font:600 12px 'IBM Plex Mono',monospace">90ms · ease-out</span><span>Giữ nguyên, chỉ đổi màu nền</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="font-weight:600;color:#1F3A5F">Con dấu đồng bộ</span><span>Đóng xuống: hiện dần kèm xoay từ −12° về −5°</span><span style="font:600 12px 'IBM Plex Mono',monospace">180ms · ease-out</span><span>Hiện thẳng ở −5°</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr) 118px minmax(0,1.2fr);gap:12px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="font-weight:600;color:#1F3A5F">Băng-rôn 🎉</span><span>Trượt xuống một lần, không lặp lại</span><span style="font:600 12px 'IBM Plex Mono',monospace">240ms · ease-out</span><span>Hiện thẳng</span></div>
+      <div style="padding:12px 16px;border-top:2px dashed #C7BCA8;background:#F6EFE3;font-size:13px;color:#4C6079">Không có hiệu ứng lặp vô hạn, không blob bay, không xoay thẻ 3D. Mọi chuyển động đều nằm dưới 250ms và chỉ dùng opacity hoặc transform.</div>
+    </div>
+  </section>
+
+  <section id="accept" style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #1F3A5F;padding-bottom:8px">
+      <span style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">— 06</span>
+      <h2 style="margin:0;font:600 22px/1.2 'IBM Plex Mono',monospace;letter-spacing:.02em">Đối chiếu nghiệm thu</h2>
+      <span style="font-size:13px;color:#5B6F87">Chín tiêu chí mục 08, đối chiếu từng dòng</span>
+    </div>
+    <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;overflow:hidden">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:11px 16px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB;font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98"><span>Tiêu chí</span><span>Nằm ở đâu trong bảng</span><span style="text-align:right">Trạng thái</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079"><span style="color:#1F3A5F">Ghi một khoản chi trong ba chạm, FAB không che nội dung</span><span>Màn M2 · sheet ba chạm, FAB nằm dưới hàng dữ liệu ở M1</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Mọi màn có cả hai tư thế, cùng một hệ token</span><span>Tám khối M1–M8 đều dựng song song mobile và laptop</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Bảng desktop không cuộn ngang ở 1280px</span><span>Cột dùng minmax và fr, không khóa min-width</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Thanh Tổng cộng mobile không một nét đứt</span><span>M3 · M5 dùng nền navy đặc vân mã vạch; lỗ bấm chỉ có ở laptop</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Mỗi điểm AI có xem trước rồi xác nhận, và có đường làm tay</span><span>Khối ✦ AI ở mục 02 và trong M2, M4, M5, M6 đều kèm nút làm tay</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Đủ trạng thái ngoại tuyến, đồng bộ, tem phiên bản và nút ⟳</span><span>Công tắc trên đầu bảng đổi con dấu ở mọi màn; chân sidebar mang tem và ⟳</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Không thêm trường dữ liệu ngoài mục 02 và 03B</span><span>Chỉ dùng các trường sẵn có cộng thêm <span style="font:600 12px 'IBM Plex Mono',monospace">cat</span>; lối vào tương lai để ở trạng thái khóa</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Mỗi màn tối đa một dải sọc và một con dấu</span><span>Sọc chỉ ở mép trên khung, dấu chỉ ở header — đếm được trên từng khối</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px">Đạt</span></span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 92px;gap:14px;padding:12px 16px;font-size:13.5px;color:#4C6079;border-top:1px solid #EDE5D6"><span style="color:#1F3A5F">Có bản icon cắt lại và màn hình chờ PWA</span><span>Mục 04 có đủ 512, 192, apple-touch và bản maskable — màn hình chờ chưa dựng lần này</span><span style="text-align:right"><span style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #8A5A00;color:#8A5A00;border-radius:4px;padding:4px 7px">Một phần</span></span></div>
+    </div>
+  </section>
+
+  <section id="handoff" style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:baseline;gap:12px;border-bottom:2px solid #1F3A5F;padding-bottom:8px">
+      <span style="font:600 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">— 07</span>
+      <h2 style="margin:0;font:600 22px/1.2 'IBM Plex Mono',monospace;letter-spacing:.02em">Đặc tả bàn giao</h2>
+      <span style="font-size:13px;color:#5B6F87">Dán thẳng vào phần <span style="font:600 12px 'IBM Plex Mono',monospace">:root</span> của index.html</span>
+    </div>
+    <div style="display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start">
+      <div style="background:#1F3A5F;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #12263E;padding:18px;overflow:auto">
+        <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#F2B33D;margin-bottom:12px">tokens.css · biến CSS</div>
+        <div style="font:400 12px/1.75 'IBM Plex Mono',monospace;color:#F6EFE3;white-space:pre">:root{
+  --kem:#F6EFE3;      --giay:#FFFDF7;
+  --navy:#1F3A5F;     --muc-phu:#5B6F87;
+  --nhan:#6C7F98;     --vach:#D9CFBB;
+  --san-ho:#E14B4B;   --san-ho-hover:#C93F3F;
+  --san-ho-press:#AE3232; --san-ho-nhat:#FBE4E1;
+  --nghe:#F2B33D;     --nghe-hover:#E0A22C;
+  --nghe-nhat:#FDF1DB;
+  --duyet:#2E6F4E;    --duyet-nhat:#E7F0E9;
+  --loi:#B3261E;      --khoa:#F1EAE0;
+  --khoa-muc:#A99C88;
+
+  --font-nhan:'IBM Plex Mono',ui-monospace,monospace;
+  --font-noi-dung:'Be Vietnam Pro',system-ui,sans-serif;
+  --nhan-co:11px;     --nhan-gian:.12em;
+  --so-lon:26px;      --so-hang:15px;
+
+  --sp-1:4px;  --sp-2:8px;  --sp-3:12px;
+  --sp-4:16px; --sp-6:24px; --sp-8:32px;
+
+  --bo-nho:4px;       --bo-the:6px;
+  --vien:2px solid var(--navy);
+  --bong-chip:2px 2px 0 var(--navy);
+  --bong-the:4px 4px 0 var(--navy);
+  --focus:3px solid var(--nghe);
+
+  --soc:repeating-linear-gradient(90deg,
+    var(--san-ho) 0 20px, var(--navy) 20px 40px,
+    var(--nghe) 40px 60px);
+  --ma-vach:repeating-linear-gradient(90deg,
+    transparent 0 3px, rgba(255,255,255,.16) 3px 4px);
+  --dien-tin:repeating-linear-gradient(
+    var(--giay) 0 21px, #F3EBDD 21px 22px);
+
+  --nhanh:120ms; --vua:200ms;
+  --diu:cubic-bezier(.2,.8,.3,1);
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;
+    transition-duration:.01ms !important}
+}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+          <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">Ba luật khi thi công</div>
+          <div style="display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.6;color:#4C6079">
+            <div><b style="color:#1F3A5F">Một sọc, một dấu.</b> Dải sọc chỉ dán ở mép trên khung app; con dấu chỉ đóng ở header. Đừng thêm dải thứ hai vào thẻ con.</div>
+            <div><b style="color:#1F3A5F">Vùng dữ liệu sạch.</b> Hàng bảng, ô nhập và ô số luôn nền <span style="font:600 12px 'IBM Plex Mono',monospace">--giay</span> trơn. Vân mã vạch chỉ sống trong thanh Tổng cộng.</div>
+            <div><b style="color:#1F3A5F">In hoa có hạn mức.</b> Mono in hoa cho nhãn từ ba chữ trở xuống và các con số. Câu tiếng Việt dài luôn là Be Vietnam Pro chữ thường.</div>
+          </div>
+        </div>
+        <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+          <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">Breakpoint duy nhất</div>
+          <div style="font:400 12px/1.7 'IBM Plex Mono',monospace;color:#1F3A5F;white-space:pre;background:#F6EFE3;border:1.5px solid #D9CFBB;border-radius:4px;padding:11px">@media (min-width:701px){
+  /* tab bar đáy → sidebar trái 186px
+     FAB → thanh lệnh ⌘K + ghi nhanh
+     một cột → đa pane
+     thẻ dọc → bảng năm cột */
+}</div>
+        </div>
+        <div style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:4px 4px 0 #1F3A5F;padding:16px">
+          <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">Còn thiếu để trọn bộ</div>
+          <div style="font-size:13.5px;line-height:1.6;color:#4C6079">Ảnh linh vật chibi phiên bản nhân viên mặt đất đội mũ phi công (ba tư thế: header, trạng thái rỗng, 🎉) — mọi ô đã chừa sẵn viền đứt đúng kích thước. Màn hình chờ PWA chưa dựng, sẽ làm khi có ảnh linh vật.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;syncState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;synced&quot;,&quot;syncing&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;synced&quot;,&quot;tsType&quot;:&quot;'synced'|'syncing'|'offline'&quot;,&quot;section&quot;:&quot;Công tắc bảng&quot;},&quot;showAi&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Công tắc bảng&quot;},&quot;showAnnotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Công tắc bảng&quot;}}">
+class Component extends DCLogic {
+  state = {
+    sync: this.props.syncState || 'synced',
+    ai: this.props.showAi !== false,
+    notes: this.props.showAnnotations !== false
+  };
+  seg(on) {
+    return 'font:600 10.5px/1 \'IBM Plex Mono\',monospace;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:0;cursor:pointer;'
+      + (on ? 'background:#E14B4B;color:#FFFDF7' : 'background:#FFFDF7;color:#4C6079');
+  }
+  renderVals() {
+    const s = this.state.sync;
+    const stamps = {
+      synced: ['Đã đồng bộ', '#2E6F4E'],
+      syncing: ['Đang đồng bộ', '#8A5A00'],
+      offline: ['Ngoại tuyến', '#8A5A00']
+    };
+    const [label, color] = stamps[s] || stamps.synced;
+    return {
+      notesOn: this.state.notes,
+      syncNote: s === 'offline' ? 'Đã lưu trên máy' : (s === 'syncing' ? 'Đang đồng bộ…' : 'Đã đồng bộ tài khoản'),
+      offlineOn: s === 'offline',
+      aiOn: this.state.ai,
+      syncKey: s,
+      stampLabel: label,
+      stampStyle: 'border:2px solid ' + color + ';color:' + color + ';border-radius:4px;padding:5px 10px;font:600 10px \'IBM Plex Mono\',monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-5deg);display:inline-block',
+      tabSynced: this.seg(s === 'synced'),
+      tabSyncing: this.seg(s === 'syncing'),
+      tabOffline: this.seg(s === 'offline'),
+      setSynced: () => this.setState({ sync: 'synced' }),
+      setSyncing: () => this.setState({ sync: 'syncing' }),
+      setOffline: () => this.setState({ sync: 'offline' }),
+      toggleAi: () => this.setState(st => ({ ai: !st.ai })),
+      aiLabel: this.state.ai ? 'Đang bật' : 'Đang tắt',
+      aiBtn: 'font:600 10.5px/1 \'IBM Plex Mono\',monospace;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1.5px solid #1F3A5F;border-radius:4px;cursor:pointer;'
+        + (this.state.ai ? 'background:#1F3A5F;color:#F6EFE3' : 'background:#FFFDF7;color:#4C6079'),
+      toggleNotes: () => this.setState(st => ({ notes: !st.notes })),
+      noteLabel: this.state.notes ? 'Đang hiện' : 'Đang ẩn',
+      noteBtn: 'font:600 10.5px/1 \'IBM Plex Mono\',monospace;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1.5px solid #1F3A5F;border-radius:4px;cursor:pointer;'
+        + (this.state.notes ? 'background:#1F3A5F;color:#F6EFE3' : 'background:#FFFDF7;color:#4C6079')
+    };
+  }
+}
+</script>
+</body>
+</html>

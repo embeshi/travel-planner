@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#F6EFE3}
+  *{box-sizing:border-box}
+  a{color:#E14B4B;text-decoration:none}
+  a:hover{color:#1F3A5F}
+  input,button{font-family:inherit}
+  input:focus-visible,button:focus-visible{outline:3px solid #F2B33D;outline-offset:2px}
+  @keyframes drain{from{width:100%}to{width:0%}}
+  @keyframes rise{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</helmet>
+<div style="font-family:'Be Vietnam Pro',system-ui,sans-serif;color:#1F3A5F;background:#F6EFE3;padding:24px 20px 80px;min-height:100vh">
+<div style="max-width:1300px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+
+  <header style="background:#FFFDF7;border:2px solid #1F3A5F;border-radius:6px;box-shadow:5px 5px 0 #1F3A5F;overflow:hidden">
+    <div style="height:9px;background:repeating-linear-gradient(90deg,#E14B4B 0 24px,#1F3A5F 24px 48px,#F2B33D 48px 72px)"></div>
+    <div style="padding:16px 20px;display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+      <div style="min-width:220px">
+        <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#E14B4B">Prototype chạm được</div>
+        <div style="font:600 20px 'IBM Plex Mono',monospace;letter-spacing:.02em;margin-top:5px">Kế hoạch du lịch v10</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Tư thế</span>
+        <div style="display:flex;border:1.5px solid #1F3A5F;border-radius:4px;overflow:hidden">
+          <button type="button" onClick="{{ setMobile }}" style="{{ btnMobile }}">Điện thoại</button>
+          <button type="button" onClick="{{ setLaptop }}" style="{{ btnLaptop }}">Laptop</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#6C7F98">Giai đoạn</span>
+        <div style="display:flex;border:1.5px solid #1F3A5F;border-radius:4px;overflow:hidden">
+          <button type="button" onClick="{{ setDuring }}" style="{{ btnDuring }}">Trong chuyến</button>
+          <button type="button" onClick="{{ setAfter }}" style="{{ btnAfter }}">Sau chuyến</button>
+        </div>
+      </div>
+      <a href="Bang thiet ke - Ke hoach du lich v10.dc.html" style="margin-left:auto;font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:9px 12px">← Bảng thiết kế</a>
+      <button type="button" onClick="{{ resetAll }}" style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:9px 12px;cursor:pointer" style-hover="background:#F6EFE3">Đặt lại dữ liệu</button>
+    </div>
+    <div style="border-top:2px dashed #C7BCA8;background:#F6EFE3;padding:12px 20px;display:flex;flex-wrap:wrap;gap:10px">
+      <span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:7px 10px">F1 · Chạm ＋ rồi ghi một khoản</span>
+      <span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:7px 10px">F2 · Gõ «bolt về khách sạn 120 baht tiền mặt»</span>
+      <span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:7px 10px">F3 · Kéo ⠿ đổi thứ tự, đổi ngày, thêm dòng</span>
+      <span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.06em;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:7px 10px">F6 · Chuyển sang «Sau chuyến» rồi tạo bản tổng kết</span>
+    </div>
+  </header>
+
+  <div style="display:flex;justify-content:center">
+    <div style="{{ frameStyle }}">
+      <div style="height:8px;background:repeating-linear-gradient(90deg,#E14B4B 0 20px,#1F3A5F 20px 40px,#F2B33D 40px 60px);flex:none"></div>
+      <div style="{{ shellStyle }}">
+
+        <sc-if value="{{ isLaptop }}" hint-placeholder-val="{{ false }}">
+          <div style="width:190px;flex:none;border-right:2px solid #1F3A5F;background:#FFFDF7;padding:14px 12px;display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <span style="width:26px;height:26px;border:2px solid #1F3A5F;border-radius:4px;background:#1F3A5F;color:#F6EFE3;display:flex;align-items:center;justify-content:center;font-size:13px">✈</span>
+              <span style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.06em">BANGKOK 2026 ▾</span>
+            </div>
+            <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="4">
+              <button type="button" onClick="{{ nav.go }}" style="{{ nav.sideStyle }}">{{ nav.icon }} {{ nav.label }}</button>
+            </sc-for>
+            <div style="flex:1"></div>
+            <div style="border-top:1.5px dashed #C7BCA8;padding-top:10px;display:flex;flex-direction:column;gap:6px">
+              <span style="border:2px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:5px 8px;font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-4deg);text-align:center">Đã đồng bộ</span>
+              <span style="font:500 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">v10.0 · ⟳</span>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:#F6EFE3;position:relative;overflow:hidden">
+
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FFFDF7;border-bottom:1.5px solid #D9CFBB;flex:none">
+              <div style="flex:1;min-width:0">
+                <div style="font:600 12.5px 'IBM Plex Mono',monospace;letter-spacing:.04em">BANGKOK 2026 ▾</div>
+                <div style="font:500 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98;margin-top:2px">{{ dayLine }}</div>
+              </div>
+              <span style="border:2px solid #2E6F4E;color:#2E6F4E;border-radius:4px;padding:4px 7px;font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-5deg)">Đã đồng bộ</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isLaptop }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:14px 16px 0;flex:none">
+              <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:9px 12px;display:flex;align-items:center;gap:10px">
+                <span style="font:600 11px 'IBM Plex Mono',monospace;color:#E14B4B">✦</span>
+                <input value="{{ nlText }}" onChange="{{ onNl }}" onKeyDown="{{ onNlKey }}" placeholder="Ghi nhanh bằng một câu: bolt về khách sạn 120 baht tiền mặt" style="flex:1;border:0;background:transparent;font-size:13.5px;color:#1F3A5F;padding:2px 0" />
+                <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:3px 6px;background:#F6EFE3">⌘K</span>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showBanner }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:12px 12px 0;border:2px solid #1F3A5F;border-radius:6px;background:#E14B4B;color:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F;padding:13px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;flex:none;animation:rise 240ms cubic-bezier(.2,.8,.3,1)">
+              <div style="flex:1;min-width:200px">
+                <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px">Chuyến đi hoàn tất 🎉</div>
+                <div style="font-size:13.5px;line-height:1.5">{{ bannerText }}</div>
+              </div>
+              <button type="button" onClick="{{ closeBanner }}" style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:transparent;color:#FFFDF7;border:2px solid #FFFDF7;border-radius:4px;padding:8px 12px;cursor:pointer">Đóng</button>
+            </div>
+          </sc-if>
+
+          <div style="flex:1;overflow:auto;padding:12px">
+
+            <sc-if value="{{ tabToday }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="{{ kpiGrid }}">
+                  <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Đã chi hôm nay</div><div style="font:600 22px 'IBM Plex Mono',monospace;margin-top:3px">{{ todaySpent }}</div></div>
+                  <div style="{{ cashCardStyle }}"><div style="{{ cashLabelStyle }}">Ví tiền mặt còn</div><div style="{{ cashValueStyle }}">{{ cashLeft }}</div></div>
+                </div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;overflow:hidden">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB"><span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Lịch trình hôm nay</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">{{ todayCount }}</span></div>
+                  <sc-for list="{{ todayRows }}" as="r" hint-placeholder-count="4">
+                    <div style="{{ r.style }}">
+                      <button type="button" onClick="{{ r.toggle }}" style="{{ r.boxStyle }}">{{ r.check }}</button>
+                      <span style="{{ r.nameStyle }}">{{ r.activity }}</span>
+                      <span style="font:600 10px 'IBM Plex Mono',monospace;border:1.5px solid #1F3A5F;border-radius:3px;padding:3px 6px">{{ r.catShort }}</span>
+                      <span style="font:600 13px 'IBM Plex Mono',monospace;min-width:66px;text-align:right">{{ r.costText }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px">
+                  <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:8px">Tick nhanh sổ tay</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ quickTicks }}" as="q" hint-placeholder-count="3">
+                      <button type="button" onClick="{{ q.toggle }}" style="{{ q.style }}">{{ q.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <sc-if value="{{ isLaptop }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;padding:12px">
+                    <div style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">Ghi nhanh · luôn mở</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px">
+                      <input value="{{ quickName }}" onChange="{{ onQuickName }}" placeholder="Tên khoản chi…" style="flex:1;min-width:180px;border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;padding:9px 10px;font-size:13.5px;color:#1F3A5F" />
+                      <input value="{{ amountText }}" onChange="{{ onAmountType }}" placeholder="0" style="width:110px;border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:8px 10px;font:600 14px 'IBM Plex Mono',monospace;text-align:right;color:#1F3A5F" />
+                      <span style="font:600 12px 'IBM Plex Mono',monospace;color:#6C7F98">฿</span>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+                      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+                        <button type="button" onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }}</button>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+                      <sc-for list="{{ pays }}" as="p" hint-placeholder-count="4">
+                        <button type="button" onClick="{{ p.pick }}" style="{{ p.style }}">{{ p.label }}</button>
+                      </sc-for>
+                      <span style="flex:1"></span>
+                      <button type="button" onClick="{{ save }}" style="{{ saveStyle }}">Lưu · Enter</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ tabPlan }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                  <span style="font-size:12.5px;color:#5B6F87">Kéo ⠿ để đổi thứ tự hoặc thả sang ngày khác</span>
+                  <span style="flex:1"></span>
+                  <button type="button" onClick="{{ addRow }}" style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:2px 2px 0 #1F3A5F;padding:8px 12px;cursor:pointer">＋ Thêm dòng</button>
+                </div>
+                <sc-for list="{{ planItems }}" as="it" hint-placeholder-count="8">
+                  <div style="{{ it.wrapStyle }}" draggable="{{ it.draggable }}" onDragStart="{{ it.onDragStart }}" onDragOver="{{ it.onDragOver }}" onDrop="{{ it.onDrop }}" onDragEnd="{{ it.onDragEnd }}">
+                    <sc-if value="{{ it.isHeader }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;justify-content:space-between;align-items:center;width:100%"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">{{ it.title }}</span><span style="font:600 11px 'IBM Plex Mono',monospace">{{ it.sum }}</span></div>
+                    </sc-if>
+                    <sc-if value="{{ it.isRow }}" hint-placeholder-val="{{ true }}">
+                      <span style="cursor:grab;color:#C7BCA8;font-size:13px;padding:0 2px">⠿</span>
+                      <input value="{{ it.activity }}" onChange="{{ it.onName }}" placeholder="Tên hoạt động…" style="{{ it.nameStyle }}" />
+                      <input value="{{ it.costText }}" onChange="{{ it.onCost }}" placeholder="0" style="width:78px;border:1.5px solid #E4DECE;border-radius:4px;background:#FFFDF7;padding:8px 9px;font:600 13px 'IBM Plex Mono',monospace;text-align:right;color:#1F3A5F" />
+                      <button type="button" onClick="{{ it.cycleCat }}" style="{{ it.catStyle }}">{{ it.catShort }}</button>
+                      <button type="button" onClick="{{ it.cyclePay }}" style="{{ it.payStyle }}">{{ it.payShort }}</button>
+                      <button type="button" onClick="{{ it.nextDay }}" style="font:600 9.5px 'IBM Plex Mono',monospace;border:1.5px solid #B9AC97;border-radius:4px;background:#FFFDF7;color:#5B6F87;padding:6px 7px;cursor:pointer" style-hover="border-color:#1F3A5F;color:#1F3A5F">{{ it.dayShort }} ▸</button>
+                      <button type="button" onClick="{{ it.remove }}" style="font:600 12px 'IBM Plex Mono',monospace;border:0;background:transparent;color:#C7BCA8;cursor:pointer;padding:4px 6px" style-hover="color:#B3261E">×</button>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <div style="display:flex;justify-content:space-between;align-items:center;background:#1F3A5F;color:#F6EFE3;border-radius:4px;padding:13px 14px;font:600 12.5px 'IBM Plex Mono',monospace;letter-spacing:.06em;background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.16) 3px 4px)"><span>TỔNG CỘNG</span><span>{{ grandTotal }}</span></div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ tabBook }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ lists }}" as="L" hint-placeholder-count="2">
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;overflow:hidden">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:#F6EFE3;border-bottom:1.5px solid #D9CFBB"><span style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">{{ L.name }}</span><span style="font:600 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">{{ L.progress }}</span></div>
+                    <sc-for list="{{ L.items }}" as="item" hint-placeholder-count="3">
+                      <div style="{{ item.style }}">
+                        <button type="button" onClick="{{ item.toggle }}" style="{{ item.boxStyle }}">{{ item.check }}</button>
+                        <span style="{{ item.nameStyle }}">{{ item.name }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ tabSum }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="{{ kpiGrid3 }}">
+                  <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Chi tiêu tại chỗ</div><div style="font:600 21px 'IBM Plex Mono',monospace;margin-top:3px">{{ sumSpent }}</div></div>
+                  <div style="border:2px solid #1F3A5F;border-radius:4px;background:#FFFDF7;padding:10px 12px"><div style="font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#6C7F98">Tổng cả chuyến</div><div style="font:600 21px 'IBM Plex Mono',monospace;margin-top:3px">{{ sumAll }}</div></div>
+                  <div style="{{ budgetCardStyle }}"><div style="{{ budgetLabelStyle }}">So dự trù</div><div style="{{ budgetValueStyle }}">{{ budgetDelta }}</div></div>
+                </div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:12px">
+                  <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:10px">Chi theo ngày</div>
+                  <div style="display:flex;align-items:flex-end;gap:8px;height:120px">
+                    <sc-for list="{{ dayBars }}" as="d" hint-placeholder-count="6">
+                      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end">
+                        <span style="font:600 10px 'IBM Plex Mono',monospace;color:#5B6F87">{{ d.label }}</span>
+                        <div style="{{ d.barStyle }}"></div>
+                        <span style="font:500 9.5px 'IBM Plex Mono',monospace;color:#6C7F98">{{ d.day }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="{{ splitGrid }}">
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:12px">
+                    <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Theo danh mục</div>
+                    <sc-for list="{{ catRows }}" as="c" hint-placeholder-count="5">
+                      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px"><span style="font-size:12.5px;width:96px">{{ c.label }}</span><span style="flex:1;height:9px;background:#F1EAE0;border:1px solid #D9CFBB"><span style="{{ c.fillStyle }}"></span></span><span style="font:600 11px 'IBM Plex Mono',monospace;width:34px;text-align:right">{{ c.pct }}</span></div>
+                    </sc-for>
+                  </div>
+                  <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:12px">
+                    <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">Theo kênh thanh toán</div>
+                    <sc-for list="{{ payRows }}" as="p" hint-placeholder-count="4">
+                      <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #E4DECE;font-size:13px"><span>{{ p.label }}</span><span style="font:600 12.5px 'IBM Plex Mono',monospace">{{ p.value }}</span></div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="border:2px dashed #1F3A5F;border-radius:6px;background:#FFFDF7;padding:13px;background-image:repeating-linear-gradient(#FFFDF7 0 21px,#F3EBDD 21px 22px)">
+                  <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">✦ AI kể chuyện chuyến đi</div>
+                  <div style="font-size:13.5px;line-height:1.65;color:#1F3A5F;text-wrap:pretty;min-height:44px">{{ storyText }}</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+                    <button type="button" onClick="{{ makeStory }}" style="{{ storyBtnStyle }}">{{ storyBtnLabel }}</button>
+                    <button type="button" onClick="{{ exportPdf }}" style="{{ exportStyle }}">Xuất PDF</button>
+                    <span style="font-size:12px;color:#5B6F87;align-self:center">{{ storyNote }}</span>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+          </div>
+
+          <sc-if value="{{ nlPreviewOn }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:12px;right:12px;bottom:12px;border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;box-shadow:4px 4px 0 #1F3A5F;padding:13px;animation:rise 200ms cubic-bezier(.2,.8,.3,1)">
+              <div style="font:600 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B;margin-bottom:9px">✦ Bản xem trước — sửa được trước khi ghi</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px">
+                <span style="border:1.5px solid #B9AC97;border-radius:4px;padding:7px 9px;font-size:13px;flex:1;min-width:140px">{{ nlName }}</span>
+                <span style="border:1.5px solid #B9AC97;border-radius:4px;padding:7px 9px;font:600 13px 'IBM Plex Mono',monospace">{{ nlAmount }}</span>
+                <span style="border:1.5px solid #B9AC97;border-radius:4px;padding:7px 9px;font:600 11px 'IBM Plex Mono',monospace">{{ nlPay }}</span>
+                <span style="border:1.5px dashed #E14B4B;background:#FBE4E1;border-radius:4px;padding:7px 9px;font:600 11px 'IBM Plex Mono',monospace;color:#E14B4B">{{ nlCat }}</span>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button type="button" onClick="{{ confirmNl }}" style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:9px 13px;cursor:pointer">Xác nhận ghi</button>
+                <button type="button" onClick="{{ cancelNl }}" style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;background:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;padding:9px 13px;cursor:pointer">Sửa tay</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:12px;right:12px;bottom:12px;animation:rise 160ms cubic-bezier(.2,.8,.3,1)">
+              <div style="background:#1F3A5F;color:#F6EFE3;border-radius:4px;padding:11px 12px;display:flex;align-items:center;gap:10px;box-shadow:3px 3px 0 #12263E">
+                <span style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.08em">ĐÃ GHI ✓</span>
+                <span style="flex:1;font-size:12.5px">{{ toastText }}</span>
+                <button type="button" onClick="{{ undo }}" style="font:600 10.5px 'IBM Plex Mono',monospace;border:1.5px solid #F2B33D;color:#F2B33D;background:transparent;border-radius:4px;padding:5px 9px;cursor:pointer">Hoàn tác</button>
+              </div>
+              <div style="height:3px;background:#C7BCA8;border-radius:2px;overflow:hidden"><div style="height:3px;background:#F2B33D;animation:drain 5s linear forwards"></div></div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ sheetOn }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(31,58,95,.42);display:flex;flex-direction:column;justify-content:flex-end">
+              <div onClick="{{ closeSheet }}" style="flex:1"></div>
+              <div style="border:2px solid #1F3A5F;border-radius:14px 14px 0 0;background:#FFFDF7;padding:12px 12px 14px;animation:rise 220ms cubic-bezier(.2,.8,.3,1)">
+                <div style="width:44px;height:4px;border-radius:2px;background:#C7BCA8;margin:0 auto 10px"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#E14B4B">Ghi chi tiêu · ba chạm</span><button type="button" onClick="{{ closeSheet }}" style="font:600 14px 'IBM Plex Mono',monospace;border:0;background:transparent;color:#6C7F98;cursor:pointer">×</button></div>
+                <div style="border:2px solid #1F3A5F;border-radius:6px;background:#FFFDF7;padding:11px;text-align:center;margin-bottom:10px">
+                  <div style="font:600 32px 'IBM Plex Mono',monospace;letter-spacing:-.02em">{{ amountBig }}<span style="font-size:17px;color:#6C7F98"> ฿</span></div>
+                  <div style="font-size:12px;color:#5B6F87;margin-top:2px">{{ amountVnd }}</div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px">
+                  <sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+                    <button type="button" onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px">
+                  <sc-for list="{{ pays }}" as="p" hint-placeholder-count="4">
+                    <button type="button" onClick="{{ p.pick }}" style="{{ p.style }}">{{ p.label }}</button>
+                  </sc-for>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px">
+                  <sc-for list="{{ keys }}" as="k" hint-placeholder-count="12">
+                    <button type="button" onClick="{{ k.tap }}" style="border:1.5px solid #1F3A5F;border-radius:4px;background:#F6EFE3;text-align:center;padding:11px 0;font:600 15px 'IBM Plex Mono',monospace;color:#1F3A5F;cursor:pointer" style-active="background:#E4DCCC;transform:scale(.98)">{{ k.label }}</button>
+                  </sc-for>
+                </div>
+                <button type="button" onClick="{{ save }}" style="{{ saveWideStyle }}">Lưu khoản chi</button>
+                <div style="border:1.5px dashed #1F3A5F;border-radius:4px;background:#FFFDF7;padding:8px 9px;margin-top:10px;display:flex;gap:8px;align-items:center">
+                  <span style="font:600 11px 'IBM Plex Mono',monospace;color:#E14B4B">✦</span>
+                  <input value="{{ nlText }}" onChange="{{ onNl }}" onKeyDown="{{ onNlKey }}" placeholder="Hoặc gõ một câu rồi Enter…" style="flex:1;border:0;background:transparent;font-size:12.5px;color:#1F3A5F" />
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ fabOn }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ openSheet }}" style="position:absolute;right:14px;bottom:14px;width:56px;height:56px;border-radius:50%;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;box-shadow:4px 4px 0 #1F3A5F;font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center" style-active="transform:translate(3px,3px);box-shadow:1px 1px 0 #1F3A5F;background:#AE3232">＋</button>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px;border-top:2px solid #1F3A5F;background:#FFFDF7;flex:none">
+            <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="4">
+              <button type="button" onClick="{{ nav.go }}" style="{{ nav.tabStyle }}"><span style="font-size:14px;display:block;margin-bottom:2px">{{ nav.icon }}</span>{{ nav.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:12.5px;color:#5B6F87">
+    <span>Dữ liệu mẫu: chuyến Bangkok 6 ngày, hôm nay là ngày 04/08.</span>
+    <span>Mọi con số trong Tổng kết đều tính lại từ dữ liệu bạn vừa sửa.</span>
+  </div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;posture&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;mobile&quot;,&quot;laptop&quot;],&quot;default&quot;:&quot;mobile&quot;,&quot;tsType&quot;:&quot;'mobile'|'laptop'&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;phase&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;during&quot;,&quot;after&quot;],&quot;default&quot;:&quot;during&quot;,&quot;tsType&quot;:&quot;'during'|'after'&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+const DAYS = ['2026-08-01','2026-08-02','2026-08-03','2026-08-04','2026-08-05','2026-08-06'];
+const DOW = { '2026-08-01':'Thứ bảy','2026-08-02':'Chủ nhật','2026-08-03':'Thứ hai','2026-08-04':'Thứ ba','2026-08-05':'Thứ tư','2026-08-06':'Thứ năm' };
+const TODAY = '2026-08-04';
+const RATE = 720;
+const CASH_INIT = 3740;
+const BOOKINGS_VND = 17700000;
+const BUDGET_VND = 22800000;
+const CATS = [
+  { key: 'an', label: '🍜 Ăn uống', short: '🍜' },
+  { key: 'di', label: '🚕 Di chuyển', short: '🚕' },
+  { key: 've', label: '🎟 Vé', short: '🎟' },
+  { key: 'mua', label: '🛍 Mua sắm', short: '🛍' },
+  { key: 'luu', label: '🏨 Lưu trú', short: '🏨' },
+  { key: 'khac', label: '📦 Khác', short: '📦' }
+];
+const PAYS = ['Tiền mặt', 'Momo', 'Zalo', 'Thẻ'];
+const SEED = [
+  { date: '2026-08-01', activity: 'Taxi sân bay Suvarnabhumi', cost: 350, pay: 'Tiền mặt', cat: 'di', done: true },
+  { date: '2026-08-01', activity: 'Ăn tối phố Silom', cost: 240, pay: 'Tiền mặt', cat: 'an', done: true },
+  { date: '2026-08-02', activity: 'Grand Palace', cost: 500, pay: 'Thẻ', cat: 've', done: true },
+  { date: '2026-08-02', activity: 'Boat noodles Victory', cost: 120, pay: 'Tiền mặt', cat: 'an', done: true },
+  { date: '2026-08-02', activity: 'Chợ đêm Rot Fai', cost: 680, pay: 'Tiền mặt', cat: 'mua', done: true },
+  { date: '2026-08-03', activity: 'Ayutthaya một ngày', cost: 1800, pay: 'Thẻ', cat: 've', done: true },
+  { date: '2026-08-03', activity: 'Cà phê Icon Siam', cost: 320, pay: 'Momo', cat: 'an', done: true },
+  { date: '2026-08-03', activity: 'Tàu về Hua Lamphong', cost: 45, pay: 'Tiền mặt', cat: 'di', done: true },
+  { date: '2026-08-04', activity: 'Khon Boat Noodles', cost: 120, pay: 'Tiền mặt', cat: 'an', done: true },
+  { date: '2026-08-04', activity: 'PunThai Coffee', cost: 85, pay: 'Momo', cat: 'an', done: false },
+  { date: '2026-08-04', activity: 'Chatuchak Weekend Market', cost: 835, pay: 'Tiền mặt', cat: 'mua', done: false },
+  { date: '2026-08-04', activity: 'Wat Arun lúc hoàng hôn', cost: 200, pay: 'Tiền mặt', cat: 've', done: false },
+  { date: '2026-08-05', activity: 'Mango sticky rice Thong Lo', cost: 0, pay: '', cat: '', done: false },
+  { date: '2026-08-06', activity: 'Ra sân bay, chuyến 19:40', cost: 0, pay: '', cat: 'di', done: false }
+];
+const LISTS = [
+  { name: 'Hành lý', items: [{ name: 'Kem chống nắng SPF50', done: true }, { name: 'Sạc dự phòng', done: true }, { name: 'Ổ cắm chuyển', done: false }, { name: 'Thuốc cảm', done: false }] },
+  { name: 'Ăn gì', items: [{ name: 'Boat noodles', done: true }, { name: 'Mango sticky rice', done: false }, { name: 'Tom yum Jay Fai', done: false }] }
+];
+
+class Component extends DCLogic {
+  state = {
+    posture: this.props.posture || 'mobile',
+    phase: this.props.phase || 'during',
+    tab: 'today',
+    rows: SEED.map((r, i) => ({ ...r, id: i + 1 })),
+    lists: LISTS.map(l => ({ name: l.name, items: l.items.map(x => ({ ...x })) })),
+    seq: 100,
+    sheet: false, amount: '', cat: '', pay: '', quickName: '',
+    nl: '', nlPrev: null,
+    toast: null, lastId: null,
+    story: 'idle', storyText: '',
+    banner: true, dragId: null, flash: null
+  };
+
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._s); clearTimeout(this._f); }
+
+  fmt(n) { return Math.round(n).toLocaleString('vi-VN'); }
+  fmtB(n) { return this.fmt(n) + ' ฿'; }
+  fmtVnd(n) { return (n / 1000000).toFixed(1).replace('.', ',') + ' tr ₫'; }
+  catOf(k) { return CATS.find(c => c.key === k); }
+  dayIndex(d) { return DAYS.indexOf(d); }
+
+  spentToday() { return this.state.rows.filter(r => r.date === TODAY).reduce((s, r) => s + (r.cost || 0), 0); }
+  cashLeft() { return CASH_INIT - this.state.rows.filter(r => r.pay === 'Tiền mặt').reduce((s, r) => s + (r.cost || 0), 0); }
+  totalB() { return this.state.rows.reduce((s, r) => s + (r.cost || 0), 0); }
+
+  flash(id) { clearTimeout(this._f); this.setState({ flash: id }); this._f = setTimeout(() => this.setState({ flash: null }), 1400); }
+
+  showToast(text, id) {
+    clearTimeout(this._t);
+    this.setState({ toast: text, lastId: id });
+    this._t = setTimeout(() => this.setState({ toast: null }), 5000);
+  }
+
+  addExpense(name, amount, cat, pay) {
+    const id = this.state.seq + 1;
+    const row = { id, date: TODAY, activity: name || 'Khoản chi mới', cost: amount, pay: pay || '', cat: cat || '', done: false };
+    this.setState(s => ({ rows: [...s.rows, row], seq: id, sheet: false, amount: '', cat: '', pay: '', quickName: '', nl: '', nlPrev: null }));
+    this.flash(id);
+    const c = this.catOf(cat);
+    this.showToast(this.fmtB(amount) + (c ? ' · ' + c.label : '') + (pay ? ' · ' + pay : ''), id);
+  }
+
+  parse(text) {
+    const t = text.trim();
+    if (!t) return null;
+    const m = t.match(/(\d[\d.,]*)\s*(k|nghìn|ngàn|baht|bath|฿|thb)?/i);
+    if (!m) return null;
+    let amount = parseFloat(m[1].replace(/[.,]/g, ''));
+    if (/^k$/i.test(m[2] || '')) amount *= 1000;
+    const low = t.toLowerCase();
+    let pay = '';
+    if (/tiền mặt|tien mat|cash/.test(low)) pay = 'Tiền mặt';
+    else if (/momo/.test(low)) pay = 'Momo';
+    else if (/zalo/.test(low)) pay = 'Zalo';
+    else if (/thẻ|the ngan hang|card|visa/.test(low)) pay = 'Thẻ';
+    let cat = 'khac';
+    if (/bolt|grab|taxi|tuk|xe|tàu|bts|mrt|xăng|ferry/.test(low)) cat = 'di';
+    else if (/ăn|an trua|cơm|phở|quán|cà phê|coffee|noodle|trà|bún|lẩu|nướng|bia/.test(low)) cat = 'an';
+    else if (/vé|ve tham quan|wat|chùa|bảo tàng|museum|tour|show/.test(low)) cat = 've';
+    else if (/mua|chợ|market|shop|siêu thị|quà/.test(low)) cat = 'mua';
+    else if (/khách sạn|hotel|homestay|phòng/.test(low)) cat = 'luu';
+    let name = t
+      .replace(m[0], ' ')
+      .replace(/tiền mặt|tien mat|cash|momo|zalo|thẻ ngân hàng|thẻ|card|visa/gi, ' ')
+      .replace(/\s+/g, ' ').trim();
+    if (!name) name = this.catOf(cat).label;
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    return { name, amount, cat, pay };
+  }
+
+  moveRow(fromId, toId) {
+    this.setState(s => {
+      const rows = s.rows.slice();
+      const fi = rows.findIndex(r => r.id === fromId);
+      const ti = rows.findIndex(r => r.id === toId);
+      if (fi < 0 || ti < 0 || fi === ti) return null;
+      const moved = { ...rows[fi], date: rows[ti].date };
+      rows.splice(fi, 1);
+      rows.splice(rows.findIndex(r => r.id === toId), 0, moved);
+      return { rows, dragId: null };
+    });
+    this.flash(fromId);
+  }
+
+  patch(id, key, value) {
+    this.setState(s => ({ rows: s.rows.map(r => r.id === id ? { ...r, [key]: value } : r) }));
+  }
+
+  chip(on, extra) {
+    return 'font:600 10.5px \'IBM Plex Mono\',monospace;letter-spacing:.04em;border:1.5px solid #1F3A5F;border-radius:4px;padding:7px 9px;cursor:pointer;'
+      + (on ? 'background:#E14B4B;color:#FFFDF7;box-shadow:2px 2px 0 #1F3A5F;' : 'background:#FFFDF7;color:#1F3A5F;') + (extra || '');
+  }
+
+  buildStory() {
+    const rows = this.state.rows.filter(r => r.cost > 0);
+    const total = this.totalB();
+    const byDay = DAYS.map(d => ({ d, v: this.state.rows.filter(r => r.date === d).reduce((s, r) => s + (r.cost || 0), 0) }));
+    const top = byDay.slice().sort((a, b) => b.v - a.v)[0];
+    const byCat = {};
+    rows.forEach(r => { const k = r.cat || 'khac'; byCat[k] = (byCat[k] || 0) + r.cost; });
+    const topCat = Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a])[0];
+    const topCatLabel = topCat ? this.catOf(topCat).label.split(' ').slice(1).join(' ') : 'Các khoản lặt vặt';
+    const pct = topCat ? Math.round(byCat[topCat] / total * 100) : 0;
+    const topName = this.state.rows.filter(r => r.date === top.d).sort((a, b) => b.cost - a.cost)[0];
+    return 'Sáu ngày ở Bangkok, bạn ghi lại ' + rows.length + ' khoản chi với tổng ' + this.fmtB(total)
+      + ' (khoảng ' + this.fmtVnd(total * RATE) + '). Ngày ' + top.d.slice(8) + '/08 tiêu nhiều nhất với ' + this.fmtB(top.v)
+      + (topName ? ', phần lớn nằm ở «' + topName.activity + '»' : '') + '. '
+      + topCatLabel + ' chiếm ' + pct + '% tổng chi. Ví tiền mặt còn ' + this.fmtB(this.cashLeft())
+      + ' trên ' + this.fmtB(CASH_INIT) + ' đã đổi.';
+  }
+
+  renderVals() {
+    const s = this.state;
+    const isMobile = s.posture === 'mobile';
+    const isLaptop = !isMobile;
+    const after = s.phase === 'after';
+    const tab = after && s.tab === 'today' ? 'sum' : s.tab;
+    const seg = on => 'font:600 10px \'IBM Plex Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;padding:9px 12px;border:0;cursor:pointer;'
+      + (on ? 'background:#E14B4B;color:#FFFDF7' : 'background:#FFFDF7;color:#4C6079');
+
+    const navDefs = [
+      { key: 'today', icon: '🏠', label: 'Hôm nay' },
+      { key: 'plan', icon: '🗓', label: 'Kế hoạch' },
+      { key: 'book', icon: '🧳', label: 'Sổ tay' },
+      { key: 'sum', icon: '📊', label: 'Tổng kết' }
+    ];
+    const navItems = navDefs.map(n => ({
+      icon: n.icon, label: n.label,
+      go: () => this.setState({ tab: n.key }),
+      sideStyle: 'display:flex;align-items:center;gap:8px;border-radius:4px;padding:8px 10px;font:600 10.5px \'IBM Plex Mono\',monospace;letter-spacing:.06em;text-align:left;cursor:pointer;width:100%;'
+        + (tab === n.key ? 'border:1.5px solid #1F3A5F;background:#E14B4B;color:#FFFDF7' : 'border:1.5px solid transparent;background:transparent;color:#4C6079'),
+      tabStyle: 'border:1.5px solid #1F3A5F;border-radius:4px;text-align:center;padding:7px 2px;font:600 9px \'IBM Plex Mono\',monospace;cursor:pointer;'
+        + (tab === n.key ? 'background:#E14B4B;color:#FFFDF7' : 'background:#FFFDF7;color:#1F3A5F')
+    }));
+
+    const todayRows = s.rows.filter(r => r.date === TODAY).map(r => ({
+      activity: r.activity,
+      costText: r.cost ? this.fmtB(r.cost) : '—',
+      catShort: r.cat ? this.catOf(r.cat).short : '—',
+      check: r.done ? '✓' : '',
+      toggle: () => this.patch(r.id, 'done', !r.done),
+      style: 'display:flex;align-items:center;gap:9px;padding:10px 11px;border-top:1px solid #EDE5D6;'
+        + (s.flash === r.id ? 'background:#FBE4E1;transition:background 1.2s linear' : (r.done ? 'background:#E7F0E9' : 'background:#FFFDF7')),
+      boxStyle: 'width:18px;height:18px;border-radius:3px;flex:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0;'
+        + (r.done ? 'border:2px solid #2E6F4E;background:#2E6F4E;color:#FFFDF7' : 'border:2px solid #1F3A5F;background:#FFFDF7;color:transparent'),
+      nameStyle: 'flex:1;font-size:13px;' + (r.done ? 'color:#7E8B78;text-decoration:line-through' : 'color:#1F3A5F')
+    }));
+
+    const planItems = [];
+    DAYS.forEach(d => {
+      const rs = s.rows.filter(r => r.date === d);
+      planItems.push({
+        isHeader: true, isRow: false, draggable: false,
+        title: DOW[d] + ' · ' + d.slice(8) + '/08',
+        sum: this.fmtB(rs.reduce((a, b) => a + (b.cost || 0), 0)),
+        wrapStyle: 'display:flex;padding:9px 4px 4px'
+      });
+      rs.forEach(r => {
+        planItems.push({
+          isHeader: false, isRow: true, draggable: true,
+          activity: r.activity,
+          costText: r.cost ? String(r.cost) : '',
+          catShort: r.cat ? this.catOf(r.cat).short : '—',
+          payShort: r.pay || '—',
+          dayShort: d.slice(8) + '/08',
+          wrapStyle: 'display:flex;align-items:center;gap:6px;border:1.5px solid #E4DECE;border-radius:4px;padding:6px;margin-bottom:5px;flex-wrap:wrap;'
+            + (s.dragId === r.id ? 'background:#FFFDF7;border-color:#E14B4B;transform:rotate(-.5deg);box-shadow:3px 3px 0 rgba(31,58,95,.2)'
+              : (s.flash === r.id ? 'background:#FBE4E1;transition:background 1.2s linear' : 'background:#FFFDF7')),
+          nameStyle: 'border:1.5px solid #E4DECE;border-radius:4px;background:#FFFDF7;padding:8px 9px;font-size:13.5px;color:#1F3A5F;'
+            + (isMobile ? 'flex:1 1 100%;min-width:0' : 'flex:1;min-width:120px'),
+          catStyle: 'font:600 11px \'IBM Plex Mono\',monospace;border:1.5px solid #1F3A5F;border-radius:4px;background:#FFFDF7;color:#1F3A5F;padding:6px 8px;cursor:pointer',
+          payStyle: 'font:600 9.5px \'IBM Plex Mono\',monospace;border:1.5px solid ' + (r.pay ? '#1F3A5F' : '#B9AC97') + ';border-radius:4px;background:#FFFDF7;color:' + (r.pay ? '#1F3A5F' : '#A99C88') + ';padding:6px 7px;cursor:pointer;min-width:64px',
+          onName: e => this.patch(r.id, 'activity', e.target.value),
+          onCost: e => this.patch(r.id, 'cost', parseInt(e.target.value.replace(/\D/g, ''), 10) || 0),
+          cycleCat: () => { const i = CATS.findIndex(c => c.key === r.cat); this.patch(r.id, 'cat', CATS[(i + 1) % CATS.length].key); },
+          cyclePay: () => { const i = PAYS.indexOf(r.pay); this.patch(r.id, 'pay', PAYS[(i + 1) % PAYS.length]); },
+          nextDay: () => { const i = this.dayIndex(r.date); this.patch(r.id, 'date', DAYS[(i + 1) % DAYS.length]); this.flash(r.id); },
+          remove: () => this.setState(st => ({ rows: st.rows.filter(x => x.id !== r.id) })),
+          onDragStart: () => this.setState({ dragId: r.id }),
+          onDragOver: e => e.preventDefault(),
+          onDrop: e => { e.preventDefault(); if (s.dragId && s.dragId !== r.id) this.moveRow(s.dragId, r.id); },
+          onDragEnd: () => this.setState({ dragId: null })
+        });
+      });
+    });
+
+    const total = this.totalB();
+    const byDay = DAYS.map(d => ({ d, v: s.rows.filter(r => r.date === d).reduce((a, b) => a + (b.cost || 0), 0) }));
+    const maxDay = Math.max(1, ...byDay.map(x => x.v));
+    const dayBars = byDay.map(x => ({
+      day: x.d.slice(8),
+      label: x.v ? this.fmt(x.v) : '—',
+      barStyle: 'width:100%;height:' + Math.max(3, Math.round(x.v / maxDay * 84)) + 'px;border:1.5px solid #1F3A5F;'
+        + (x.v === maxDay && x.v > 0 ? 'background:#F2B33D' : 'background:#1F3A5F')
+    }));
+
+    const catTotals = CATS.map(c => ({ c, v: s.rows.filter(r => r.cat === c.key).reduce((a, b) => a + (b.cost || 0), 0) })).filter(x => x.v > 0).sort((a, b) => b.v - a.v);
+    const catRows = catTotals.map(x => ({
+      label: x.c.label,
+      pct: Math.round(x.v / (total || 1) * 100) + '%',
+      fillStyle: 'display:block;height:100%;background:#1F3A5F;width:' + Math.round(x.v / (total || 1) * 100) + '%'
+    }));
+    const payRows = PAYS.concat(['Chưa chọn']).map(p => ({
+      label: p,
+      v: s.rows.filter(r => (p === 'Chưa chọn' ? !r.pay : r.pay === p)).reduce((a, b) => a + (b.cost || 0), 0)
+    })).filter(x => x.v > 0).map(x => ({ label: x.label, value: this.fmtB(x.v) }));
+
+    const allVnd = total * RATE + BOOKINGS_VND;
+    const deltaPct = Math.round((allVnd - BUDGET_VND) / BUDGET_VND * 100);
+    const over = deltaPct > 0;
+    const cash = this.cashLeft();
+    const cashOver = cash < 0;
+    const amountNum = parseInt(s.amount || '0', 10);
+
+    return {
+      isMobile, isLaptop,
+      frameStyle: isMobile
+        ? 'width:390px;max-width:100%;height:760px;border:2px solid #1F3A5F;border-radius:20px;background:#F6EFE3;box-shadow:6px 6px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column'
+        : 'width:100%;max-width:1180px;height:680px;border:2px solid #1F3A5F;border-radius:6px;background:#F6EFE3;box-shadow:6px 6px 0 #1F3A5F;overflow:hidden;display:flex;flex-direction:column',
+      shellStyle: 'flex:1;min-height:0;display:flex;' + (isMobile ? 'flex-direction:column' : 'flex-direction:row'),
+      kpiGrid: 'display:grid;grid-template-columns:1fr 1fr;gap:10px',
+      kpiGrid3: 'display:grid;grid-template-columns:repeat(3,1fr);gap:10px',
+      splitGrid: 'display:grid;grid-template-columns:' + (isMobile ? '1fr' : '1fr 1fr') + ';gap:12px',
+      dayLine: 'Ngày 4/6 · 04 AUG',
+      btnMobile: seg(isMobile), btnLaptop: seg(isLaptop),
+      btnDuring: seg(!after), btnAfter: seg(after),
+      setMobile: () => this.setState({ posture: 'mobile' }),
+      setLaptop: () => this.setState({ posture: 'laptop' }),
+      setDuring: () => this.setState({ phase: 'during', tab: 'today', banner: true }),
+      setAfter: () => this.setState({ phase: 'after', tab: 'sum', banner: true }),
+      resetAll: () => this.setState({ rows: SEED.map((r, i) => ({ ...r, id: i + 1 })), lists: LISTS.map(l => ({ name: l.name, items: l.items.map(x => ({ ...x })) })), seq: 100, story: 'idle', storyText: '', toast: null, sheet: false, amount: '', cat: '', pay: '', nl: '', nlPrev: null, banner: true }),
+
+      navItems,
+      tabToday: tab === 'today', tabPlan: tab === 'plan', tabBook: tab === 'book', tabSum: tab === 'sum',
+      showBanner: after && s.banner,
+      bannerText: 'Sáu ngày ở Bangkok đã khép lại. Cuống vé được lưu lại nguyên vẹn, mọi con số bên dưới tính từ dữ liệu thật.',
+      closeBanner: () => this.setState({ banner: false }),
+
+      todaySpent: this.fmtB(this.spentToday()),
+      cashLeft: this.fmtB(cash),
+      cashCardStyle: 'border:2px solid ' + (cashOver ? '#B3261E' : '#1F3A5F') + ';border-radius:4px;background:' + (cashOver ? '#FBE4E1' : '#FFFDF7') + ';padding:10px 12px',
+      cashLabelStyle: 'font:600 9px \'IBM Plex Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;color:' + (cashOver ? '#B3261E' : '#6C7F98'),
+      cashValueStyle: 'font:600 22px \'IBM Plex Mono\',monospace;margin-top:3px;color:' + (cashOver ? '#B3261E' : '#1F3A5F'),
+      todayRows, todayCount: todayRows.length + ' mục',
+      quickTicks: s.lists[1].items.map((it, i) => ({
+        label: it.name,
+        toggle: () => this.setState(st => { const ls = st.lists.map(l => ({ name: l.name, items: l.items.map(x => ({ ...x })) })); ls[1].items[i].done = !ls[1].items[i].done; return { lists: ls }; }),
+        style: this.chip(it.done)
+      })),
+
+      planItems, grandTotal: this.fmtB(total) + ' · ' + this.fmtVnd(total * RATE),
+      addRow: () => { const id = s.seq + 1; this.setState(st => ({ rows: [...st.rows, { id, date: TODAY, activity: '', cost: 0, pay: '', cat: '', done: false }], seq: id, tab: 'plan' })); this.flash(id); },
+
+      lists: s.lists.map((l, li) => ({
+        name: l.name,
+        progress: l.items.filter(x => x.done).length + '/' + l.items.length,
+        items: l.items.map((it, i) => ({
+          name: it.name,
+          check: it.done ? '✓' : '',
+          style: 'display:flex;align-items:center;gap:9px;padding:10px 11px;border-top:1px solid #EDE5D6;' + (it.done ? 'background:#E7F0E9' : 'background:#FFFDF7'),
+          boxStyle: 'width:18px;height:18px;border-radius:3px;flex:none;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0;'
+            + (it.done ? 'border:2px solid #2E6F4E;background:#2E6F4E;color:#FFFDF7' : 'border:2px solid #1F3A5F;background:#FFFDF7;color:transparent'),
+          nameStyle: 'flex:1;font-size:13.5px;' + (it.done ? 'color:#7E8B78;text-decoration:line-through' : 'color:#1F3A5F'),
+          toggle: () => this.setState(st => { const ls = st.lists.map(x => ({ name: x.name, items: x.items.map(y => ({ ...y })) })); ls[li].items[i].done = !ls[li].items[i].done; return { lists: ls }; })
+        }))
+      })),
+
+      sumSpent: this.fmtB(total),
+      sumAll: this.fmtVnd(allVnd),
+      budgetDelta: (over ? '+' : '') + deltaPct + '%',
+      budgetCardStyle: 'border:2px solid ' + (over ? '#B3261E' : '#2E6F4E') + ';border-radius:4px;background:' + (over ? '#FBE4E1' : '#E7F0E9') + ';padding:10px 12px',
+      budgetLabelStyle: 'font:600 9px \'IBM Plex Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;color:' + (over ? '#B3261E' : '#2E6F4E'),
+      budgetValueStyle: 'font:600 21px \'IBM Plex Mono\',monospace;margin-top:3px;color:' + (over ? '#B3261E' : '#2E6F4E'),
+      dayBars, catRows, payRows,
+      storyText: s.story === 'loading' ? 'Đang đọc số liệu chuyến đi…' : (s.story === 'ready' ? s.storyText : 'Chưa có bản nháp. Bấm «Tạo bản tổng kết» để AI đọc lại toàn bộ số liệu, hoặc tự viết tay — không có gì ghi vào dữ liệu khi bạn chưa đồng ý.'),
+      storyBtnLabel: s.story === 'ready' ? 'Viết lại' : 'Tạo bản tổng kết',
+      storyBtnStyle: 'font:600 10.5px \'IBM Plex Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;background:#E14B4B;color:#FFFDF7;border:2px solid #1F3A5F;border-radius:4px;box-shadow:3px 3px 0 #1F3A5F;padding:9px 13px;cursor:pointer',
+      exportStyle: 'font:600 10.5px \'IBM Plex Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;background:' + (s.story === 'ready' ? '#F2B33D' : '#F1EAE0') + ';color:' + (s.story === 'ready' ? '#1F3A5F' : '#A99C88') + ';border:2px solid ' + (s.story === 'ready' ? '#1F3A5F' : '#C7BCA8') + ';border-radius:4px;padding:9px 13px;cursor:pointer',
+      storyNote: s.story === 'ready' ? 'Xem trước xong mới xuất tệp.' : '',
+      makeStory: () => { clearTimeout(this._s); this.setState({ story: 'loading' }); this._s = setTimeout(() => this.setState({ story: 'ready', storyText: this.buildStory() }), 900); },
+      exportPdf: () => { if (s.story === 'ready') this.showToast('Đã xuất bản tổng kết ra PDF', null); },
+
+      fabOn: isMobile && !s.sheet && !s.nlPrev,
+      sheetOn: s.sheet,
+      openSheet: () => this.setState({ sheet: true, amount: '', cat: '', pay: '', nl: '', nlPrev: null }),
+      closeSheet: () => this.setState({ sheet: false }),
+      amountBig: s.amount ? this.fmt(parseInt(s.amount, 10)) : '0',
+      amountText: s.amount,
+      amountVnd: amountNum ? '≈ ' + this.fmt(amountNum * RATE) + ' ₫ · tỷ giá ' + RATE + ' ₫/฿' : 'Gõ số tiền bằng bàn phím bên dưới',
+      keys: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '000', '0', '⌫'].map(k => ({
+        label: k,
+        tap: () => this.setState(st => ({ amount: k === '⌫' ? st.amount.slice(0, -1) : (st.amount + k).replace(/^0+(?=\d)/, '').slice(0, 7) }))
+      })),
+      cats: CATS.map(c => ({ label: isMobile && s.sheet ? c.short : c.label, pick: () => this.setState({ cat: c.key }), style: this.chip(s.cat === c.key) })),
+      pays: PAYS.map(p => ({ label: p, pick: () => this.setState({ pay: p }), style: this.chip(s.pay === p) })),
+      quickName: s.quickName,
+      onQuickName: e => this.setState({ quickName: e.target.value }),
+      onAmountType: e => this.setState({ amount: e.target.value.replace(/\D/g, '').slice(0, 7) }),
+      save: () => { if (amountNum > 0) this.addExpense(s.quickName || (s.cat ? this.catOf(s.cat).label : ''), amountNum, s.cat, s.pay); },
+      saveStyle: 'font:600 11px \'IBM Plex Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;border:2px solid #1F3A5F;border-radius:4px;padding:9px 16px;cursor:pointer;'
+        + (amountNum > 0 ? 'background:#E14B4B;color:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F' : 'background:#F1EAE0;color:#A99C88;border-color:#C7BCA8'),
+      saveWideStyle: 'width:100%;font:600 12px \'IBM Plex Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;border:2px solid #1F3A5F;border-radius:4px;padding:13px;cursor:pointer;'
+        + (amountNum > 0 ? 'background:#E14B4B;color:#FFFDF7;box-shadow:3px 3px 0 #1F3A5F' : 'background:#F1EAE0;color:#A99C88;border-color:#C7BCA8'),
+
+      nlText: s.nl,
+      onNl: e => this.setState({ nl: e.target.value }),
+      onNlKey: e => { if (e.key === 'Enter') { const p = this.parse(s.nl); if (p) this.setState({ nlPrev: p }); } },
+      nlPreviewOn: !!s.nlPrev,
+      nlName: s.nlPrev ? s.nlPrev.name : '',
+      nlAmount: s.nlPrev ? this.fmtB(s.nlPrev.amount) : '',
+      nlPay: s.nlPrev ? (s.nlPrev.pay || 'Chưa chọn') : '',
+      nlCat: s.nlPrev ? this.catOf(s.nlPrev.cat).label + ' · đoán' : '',
+      confirmNl: () => { const p = s.nlPrev; if (p) this.addExpense(p.name, p.amount, p.cat, p.pay); },
+      cancelNl: () => this.setState({ nlPrev: null, sheet: true, amount: s.nlPrev ? String(s.nlPrev.amount) : '', cat: s.nlPrev ? s.nlPrev.cat : '', pay: s.nlPrev ? s.nlPrev.pay : '', quickName: s.nlPrev ? s.nlPrev.name : '' }),
+
+      toastOn: !!s.toast && !s.sheet,
+      toastText: s.toast || '',
+      undo: () => { const id = s.lastId; this.setState(st => ({ rows: id ? st.rows.filter(r => r.id !== id) : st.rows, toast: null })); }
+    };
+  }
+}
+</script>
+</body>
+</html>
