@@ -1,11 +1,19 @@
 # Cấu hình riêng của máy, không chia sẻ
 .claude/settings.local.json
 
+# ============================================================
 # Luật 6 CLAUDE.md: KHÔNG BAO GIỜ commit dữ liệu thật của người dùng.
-# Repo này công khai. Giữ backup và bản chụp ở thư mục khác hẳn, ngoài repo.
-*.csv
+# Repo này CÔNG KHAI. Giữ backup và bản chụp ở thư mục khác hẳn, ngoài repo.
+#
+# Khuôn tên lấy từ hàm stampName() trong index.html — đừng đoán, đừng lấy
+# từ ảnh mẫu trong bảng thiết kế (bản mẫu ghi tên khác với code thật).
+# ============================================================
+du-lich-backup-*.json
 ke-hoach-du-lich-*.json
 backup*.json
+*.csv
+*.sql
+trips_rows*
 
 # macOS
 .DS_Store
