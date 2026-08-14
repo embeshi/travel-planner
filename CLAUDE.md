@@ -30,14 +30,44 @@ tránh thuật ngữ khi không cần thiết.
 - Breakpoint DUY NHẤT: 700px (mobile ≤700, laptop ≥701).
 
 ## LUẬT KHÔNG ĐƯỢC PHÁ
-App đang chạy thật với **HAI tài khoản người dùng thật** — chủ dự án và một người
-dùng khác. Cả hai vào chung một địa chỉ web, nên đẩy lên nhánh chính là đổi app cho
-cả hai cùng lúc. Dữ liệu một chuyến đi đã hoàn thành, không tái tạo được, và chủ dự án
-KHÔNG tự xuất backup hộ tài khoản kia được.
+App đang chạy thật với **MỘT tài khoản duy nhất: chủ dự án**. Dữ liệu một chuyến đi
+đã hoàn thành, không tái tạo được.
+
+> Đính chính (chủ dự án xác nhận): `docs/phu-luc-du-lieu-nguoi-dung-that.html` được
+> viết cho tình huống có tài khoản người dùng thứ hai. Tình huống đó KHÔNG còn đúng.
+> Bỏ qua phần lịch chuyển giao có hẹn giờ (mục 05) và phần nhờ người dùng kia xuất
+> backup. **Mọi phần còn lại của cả hai tài liệu vẫn nguyên giá trị** — bốn kịch bản
+> mất dữ liệu, luật đọc-trước-ghi-sau, hai cách thử an toàn, đường lui 60 giây.
+
 Đọc `docs/nghi-thuc-giu-du-lieu-v10.html` và `docs/phu-luc-du-lieu-nguoi-dung-that.html`
 trước khi làm bất cứ việc gì đụng tới dữ liệu.
+
+**Nỗi lo cần giải, nói thẳng:** chủ dự án sợ mất dữ liệu, và KHÔNG muốn build xong v10
+lại phải ngồi gõ tay 61 dòng lịch trình cùng 40 món checklist sang bản mới.
+Điều đó sẽ không xảy ra — nhưng chỉ khi giữ đủ bốn thứ dưới đây.
+
+## Bốn thứ giữ cho dữ liệu cũ TỰ HIỆN RA trong v10
+Không có bước "chuyển dữ liệu" nào cả. v10 mở lên là sổ cũ đã nằm sẵn ở đó — miễn là
+bốn thứ này không đổi một ký tự. Đây là danh sách phải soi lại trước mỗi lần đẩy lên
+nhánh chính.
+
+| # | Phải giữ nguyên | Đổi thì sao |
+|---|---|---|
+| 1 | Địa chỉ Supabase + khoá công khai | v10 mở nhầm căn phòng khác, thấy trống trơn |
+| 2 | `STORAGE_KEY = "ke-hoach-du-lich-v1"` | Bản offline trên máy thành vô hình |
+| 3 | Tên mọi khối và mọi cột trong sổ | Dữ liệu còn nhưng app đọc không ra |
+| 4 | Cùng một địa chỉ web `embeshi.github.io/travel-planner` | Bản offline gắn với địa chỉ, đổi chỗ là mất |
+
+Trường mới (`cat`, và sau này có thể `done`) chỉ được THÊM và phải là tùy chọn: dòng cũ
+không có thì hiện «Chưa phân loại», không bắt nhập, không tự điền bừa.
+
+## Chín luật không được phá
 1. KHÔNG chạy bất kỳ câu SQL nào lên Supabase. Không tạo, sửa, xoá bảng hay cột.
 2. KHÔNG đổi địa chỉ Supabase, khoá công khai, hay cách gắn dòng dữ liệu với tài khoản.
+2b. KHÔNG đổi khoá lưu trên máy: `STORAGE_KEY = "ke-hoach-du-lich-v1"`.
+   Đổi một ký tự là bản offline trên máy người dùng thành vô hình — app mở ra trắng
+   trơn dù dữ liệu vẫn nằm nguyên đó. Đây là một trong bốn thứ giữ cho dữ liệu cũ
+   tự hiện ra trong v10 mà không phải nhập lại gì.
 3. Chỉ được THÊM trường vào hình dạng dữ liệu. Cấm đổi tên hoặc bỏ trường cũ —
    để bản cũ vẫn đọc được dữ liệu, giữ đường lui.
 4. Đọc trước — ghi sau: chưa đọc và dựng xong dữ liệu thì không được lưu gì lên máy chủ.
@@ -53,6 +83,7 @@ trước khi làm bất cứ việc gì đụng tới dữ liệu.
 7. KHÔNG đăng nhập tài khoản thật vào bản v10 chưa nghiệm thu. Muốn thử thì mở file
    trên máy và KHÔNG đăng nhập, hoặc đăng ký một tài khoản thử bằng email phụ.
    Đây là con đường DUY NHẤT dẫn tới kịch bản «ghi đè trang trắng».
+   (Chủ dự án chỉ có một tài khoản, nên đây cũng là con đường duy nhất còn rủi ro.)
 8. Giữ đường lui 60 giây: `index.html` v9.6 luôn lùi về được. Đường lui này CHỈ còn
    hiệu lực chừng nào v10 tuân thủ luật chỉ-thêm-không-đổi ở mục 3 — phá mục 3 là
    mất luôn đường lui.
