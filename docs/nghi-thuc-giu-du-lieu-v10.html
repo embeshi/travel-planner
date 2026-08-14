@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nghi thức giữ dữ liệu qua đại tu v10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#EFE5CE;
+    --parchment-deep:#E4D7BA;
+    --ink:#2E2417;
+    --ink-soft:#5C4E38;
+    --muted:#8A7A5D;
+    --line:#D2C1A0;
+    --rust:#A8452C;
+    --moss:#4A6B3A;
+    --gold:#C08A2E;
+    --font-display:'Anton',Impact,sans-serif;
+    --font-body:'Be Vietnam Pro',-apple-system,sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--parchment);
+    background-image:radial-gradient(rgba(90,72,44,.05) 1px, transparent 1.4px);
+    background-size:14px 14px;
+    color:var(--ink);font-family:var(--font-body);font-size:15.5px;line-height:1.62;
+    padding:34px 16px 90px;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+
+  .hero{background:#FBF6EA;border:2px solid var(--ink);border-radius:14px;padding:24px 24px 20px;box-shadow:5px 5px 0 rgba(46,36,23,.18)}
+  .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#FBF6EA;background:var(--ink);padding:5px 12px;border-radius:5px;margin-bottom:12px}
+  h1{font-family:var(--font-display);font-weight:400;font-size:clamp(25px,4.6vw,38px);line-height:1.08;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--rust)}
+  .hero p{margin-top:10px;color:var(--ink-soft);max-width:740px}
+  .hero p b{color:var(--ink)}
+
+  h2.sec{font-family:var(--font-display);font-weight:400;font-size:clamp(19px,3.2vw,26px);text-transform:uppercase;margin:38px 2px 12px;display:flex;align-items:center;gap:10px}
+  h2.sec .no{font-family:var(--font-mono);font-size:12px;color:#FBF6EA;background:var(--ink);border-radius:5px;padding:3px 8px}
+
+  .panel{background:#FBF6EA;border:1.5px solid var(--line);border-radius:13px;padding:19px 21px;box-shadow:3px 3px 0 rgba(46,36,23,.10)}
+  .panel + .panel{margin-top:13px}
+  .panel p{color:var(--ink-soft);font-size:14.5px}
+  .panel p + p{margin-top:8px}
+  .panel b{color:var(--ink)}
+  .panel h3{font-size:16px;margin:14px 0 6px}
+  .panel h3:first-child{margin-top:0}
+  .panel ul{margin:7px 0 0 19px;font-size:14px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px}
+  code{font-family:var(--font-mono);font-size:.87em;background:var(--parchment-deep);padding:1px 6px;border-radius:4px}
+
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:12px}
+  .cell{border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--parchment)}
+  .cell h4{font-size:14.5px;margin-bottom:4px}
+  .cell p{font-size:13px;color:var(--ink-soft)}
+  .cell .k{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+
+  .law{border-left:4px solid var(--rust);background:#FAEDE6;border-radius:0 12px 12px 0;padding:13px 16px;margin-top:12px}
+  .law b{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--rust);margin-bottom:3px}
+  .law p{color:#6B3527;font-size:14.5px}
+  .good{border-left:4px solid var(--moss);background:#EEF3E8;border-radius:0 12px 12px 0;padding:11px 15px;margin-top:10px;font-size:14px;color:#33502A}
+  .good b{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;margin-bottom:2px}
+
+  /* ==== NGHI THỨC CHECKLIST ==== */
+  .ritual-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:4px}
+  .ritual-head .prog{margin-left:auto;font-family:var(--font-mono);font-size:12px;font-weight:600;color:#FBF6EA;background:var(--moss);border-radius:999px;padding:3px 11px}
+  .step{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;background:var(--parchment);padding:12px 14px;margin-top:10px;cursor:pointer;transition:background .15s,border-color .15s}
+  .step:hover{border-color:var(--ink)}
+  .tick{
+    flex:none;width:24px;height:24px;border:2px solid var(--ink);border-radius:6px;background:#FBF6EA;
+    display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;margin-top:1px;
+  }
+  .tick.on{background:var(--moss);border-color:var(--moss);color:#fff}
+  .tick.on::after{content:"✓"}
+  .step-body{flex:1;min-width:0}
+  .step-body .sn{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);display:block}
+  .step-body h4{font-size:15px;margin:1px 0 3px}
+  .step-body p{font-size:13.5px;color:var(--ink-soft)}
+  .step.done{background:#F1F5EC;border-color:#B7C9A8}
+  .step.done h4{text-decoration:line-through;text-decoration-color:rgba(74,107,58,.5)}
+
+  .tw{overflow-x:auto;margin-top:12px}
+  table{border-collapse:collapse;width:100%;min-width:560px}
+  th{font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:9px 11px;background:var(--parchment-deep);color:#6B5C3E}
+  td{padding:9px 11px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:top;color:var(--ink-soft)}
+  td.n{font-weight:600;white-space:nowrap;color:var(--ink)}
+  tr:last-child td{border-bottom:none}
+
+  .outro{margin-top:24px;color:#6B5C3E;font-size:14px;max-width:740px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Sổ tay xưởng · Nghi thức giữ dữ liệu</span>
+    <h1>Dữ liệu cũ đi qua <em>đại tu v10</em> thế nào</h1>
+    <p>Câu trả lời ngắn: <b>dữ liệu không nằm trong file HTML</b> — thay <code>index.html</code> không hề đụng tới nó. Bằng chứng sống: chín lần upload đè vừa qua, sổ chi tiêu Bangkok vẫn còn nguyên vẹn. Nhưng v10 là cuộc đại tu lớn nhất từ trước tới nay, nên vẫn cần một nghi thức tử tế — tài liệu này là nghi thức đó.</p>
+  </header>
+
+  <!-- 01 -->
+  <h2 class="sec"><span class="no">01</span>Dữ liệu đang nằm ở ba lớp</h2>
+  <div class="panel">
+    <div class="cols">
+      <div class="cell"><span class="k">Lớp 1 · Bản chính</span><h4>☁️ Supabase</h4><p>Toàn bộ sổ nằm gọn trong một khoản dữ liệu trên đám mây, gắn với tài khoản email của bạn. File HTML chỉ là <b>cái cửa sổ</b> nhìn vào đó — thay cửa sổ không làm mất căn phòng.</p></div>
+      <div class="cell"><span class="k">Lớp 2 · Bản offline</span><h4>📱 Bộ nhớ máy</h4><p>Mỗi thiết bị giữ một bản sao để dùng khi mất sóng. Bản này thuộc về <b>địa chỉ web</b> (embeshi.github.io), không thuộc về file — nên nó cũng sống sót qua mọi lần upload.</p></div>
+      <div class="cell"><span class="k">Lớp 3 · Bản đóng băng</span><h4>💾 File backup JSON</h4><p>Ảnh chụp bất động, nằm trong máy bạn, không ai với tới được. Đây là <b>tấm lưới an toàn cuối cùng</b> — và là lớp duy nhất cần bạn chủ động tạo ra.</p></div>
+    </div>
+    <div class="good"><b>Nghĩa là</b>Trong hầu hết kịch bản, bạn chỉ cần upload v10 rồi mở app — dữ liệu tự hiện ra như chưa từng có chuyện gì. Nghi thức bên dưới là để phòng cái «hầu hết» ấy chừa lại 1%.</div>
+  </div>
+
+  <!-- 02 -->
+  <h2 class="sec"><span class="no">02</span>Ba điều kiện để v10 nhận đúng sổ cũ</h2>
+  <div class="panel">
+    <p>Đây là ba điều kiện xưởng phải tuân thủ khi thi công. Bạn không cần làm gì, nhưng nên biết để <b>bắt lỗi nếu xưởng lỡ tay</b>:</p>
+    <ul>
+      <li><b>① Giữ nguyên cấu hình đám mây</b> — địa chỉ Supabase và khóa công khai trong code không đổi <i>một ký tự</i>. Đổi là v10 đi mở nhầm căn phòng khác, thấy trống trơn (dữ liệu vẫn còn, chỉ là không ai nhìn thấy).</li>
+      <li><b>② Giữ nguyên hình dạng sổ</b> — tên các khối (<code>rows</code> lịch trình · <code>bookings</code> gói bay · <code>cash</code> tiền mặt · 6 danh sách checklist · tên chuyến · tiền tệ) và tên từng cột giữ y như cũ. v10 đổi <i>cách bày</i>, không đổi <i>cách cất</i>.</li>
+      <li><b>③ Trường mới phải là tùy chọn</b> — danh mục <code>cat</code> (🍜🚕🎟🛍) là món mới của v10; các dòng cũ không có nó thì hiển thị «Chưa phân loại», <b>không bắt nhập, không tự điền bừa, không chặn thao tác nào</b>. Bạn gắn nhãn dần khi rảnh, hoặc không gắn cũng chẳng sao.</li>
+    </ul>
+    <div class="good"><b>Tin tốt</b>PRD đã khóa sẵn cả ba điều này (mục 02, 03B và luật «không đổi cấu trúc dữ liệu» ở mục 05) — nên bảng thiết kế v10 vốn đã được ràng buộc từ đầu.</div>
+  </div>
+
+  <!-- 03 -->
+  <h2 class="sec"><span class="no">03</span>Luật vàng: đọc trước — ghi sau</h2>
+  <div class="panel">
+    <p>Chỉ có <b>đúng một kịch bản</b> thực sự xóa được dữ liệu, và nó không phải là upload file mới. Nó là thế này: app khởi động, chưa kịp đọc sổ cũ (mạng chậm, chưa đăng nhập xong), liền dựng một sổ trắng tinh rồi <b>tự động lưu đè</b> lên bản chính.</p>
+    <div class="law"><b>Luật khắc bia</b><p>v10 chỉ được phép ghi sau khi đã đọc xong và dựng đủ dữ liệu. Chưa đọc được thì <b>không ghi bất cứ thứ gì</b> — thà hiện «đang tải» mãi còn hơn lưu đè một trang trắng.</p></div>
+    <div class="law"><b>Luật cho thuyền trưởng</b><p>Mở app v10 lần đầu mà thấy <b>trống trơn</b> → <b>DỪNG TAY NGAY</b>. Đừng gõ, đừng thêm dòng, đừng bấm gì. Mỗi thao tác gõ vào lúc đó đều có nguy cơ ghi trang trắng đè lên sổ thật. Đóng app lại và xem mục 05.</p></div>
+  </div>
+
+  <!-- 04 -->
+  <h2 class="sec"><span class="no">04</span>Nghi thức năm bước</h2>
+  <div class="panel">
+    <div class="ritual-head">
+      <p style="margin:0"><b>Tick dần theo tiến độ</b> — trạng thái được nhớ lại khi bạn mở lại file này.</p>
+      <span class="prog" id="progress">0/5</span>
+    </div>
+
+    <div class="step" data-id="b1">
+      <span class="tick" role="checkbox" aria-checked="false" data-id="b1"></span>
+      <div class="step-body">
+        <span class="sn">Bước 1 · Dọn boong</span>
+        <h4>Đưa con tàu về mốc sạch v9.6</h4>
+        <p>Repo đang ở v9.4, còn bản v9.6 (kéo thả ⠿ + chip phương thức + đối chiếu ví mới) vẫn nằm chờ. Upload đè <code>index.html</code> v9.6 trước, để mốc xuất phát của v10 là một trạng thái <b>đã biết rõ và đã nghiệm thu</b>, không phải một mớ nửa vời.</p>
+      </div>
+    </div>
+
+    <div class="step" data-id="b2">
+      <span class="tick" role="checkbox" aria-checked="false" data-id="b2"></span>
+      <div class="step-body">
+        <span class="sn">Bước 2 · Đóng băng</span>
+        <h4>Xuất backup và gửi nó ra khỏi máy</h4>
+        <p>Vào khu 💾 cuối trang → <b>Xuất backup</b> → được file kèm ngày giờ. Rồi làm đúng nghi thức gửi xuống: <b>tự gửi email cho chính mình</b> (hoặc thả lên Drive). Backup nằm trong thư mục Tải về của một chiếc máy duy nhất thì chưa gọi là backup.</p>
+      </div>
+    </div>
+
+    <div class="step" data-id="b3">
+      <span class="tick" role="checkbox" aria-checked="false" data-id="b3"></span>
+      <div class="step-body">
+        <span class="sn">Bước 3 · Ghi ba con số</span>
+        <h4>Chép lại ba con số để đối chiếu về sau</h4>
+        <p>Trước khi đại tu, nhìn app và ghi ra giấy (hoặc chụp màn hình): <b>số dòng trong bảng Lịch trình</b> · <b>Tổng chi phí cả chuyến (VNĐ)</b> · <b>Ví tiền mặt còn lại</b>. Ba con số này là <b>vân tay của sổ</b> — sau khi lên v10, khớp cả ba là chắc chắn không rơi rớt gì.</p>
+      </div>
+    </div>
+
+    <div class="step" data-id="b4">
+      <span class="tick" role="checkbox" aria-checked="false" data-id="b4"></span>
+      <div class="step-body">
+        <span class="sn">Bước 4 · Thử trên bản sao</span>
+        <h4>Chạy v10 trên máy bạn trước, đừng đăng nhập</h4>
+        <p>Khi xưởng giao v10, <b>mở file đó ngay trên máy</b> (nhấp đúp, không upload) và <b>không đăng nhập</b> — file mở từ máy có kho riêng, hoàn toàn không chạm tới dữ liệu thật. Bấm <b>Nhập backup</b>, chọn file ở bước 2, rồi soi: ba con số có khớp không, các bảng có dựng đủ không, danh mục cũ có hiện «Chưa phân loại» đàng hoàng không.</p>
+      </div>
+    </div>
+
+    <div class="step" data-id="b5">
+      <span class="tick" role="checkbox" aria-checked="false" data-id="b5"></span>
+      <div class="step-body">
+        <span class="sn">Bước 5 · Lên hàng &amp; đối chiếu</span>
+        <h4>Upload, kiểm lại ba con số, giữ backup thêm một tuần</h4>
+        <p>Bước 4 khớp thì mới upload đè lên repo. Mở app thật, bấm <b>⟳</b>, kiểm tem <b>v10</b>, rồi đối chiếu ba con số lần nữa. Giữ file backup ít nhất tới khi bạn đã dùng v10 trọn một tuần yên ổn — <b>xóa backup là việc của tương lai, không bao giờ là việc của hôm nay</b>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <h2 class="sec"><span class="no">05</span>Gặp gì thì làm gì</h2>
+  <div class="panel">
+    <div class="tw"><table>
+      <thead><tr><th>Hiện tượng</th><th>Thường là gì</th><th>Làm ngay</th></tr></thead>
+      <tbody>
+        <tr><td class="n">Mở v10 thấy trống trơn</td><td>Chưa đăng nhập xong, hoặc mạng chưa kịp trả dữ liệu về</td><td><b>Không gõ gì cả.</b> Kiểm đã đăng nhập chưa · bấm ⟳ · đóng mở lại. Vẫn trống thì báo xưởng, đừng thao tác tiếp.</td></tr>
+        <tr><td class="n">Thiếu vài dòng so với trí nhớ</td><td>Bản trên máy đang cũ hơn bản đám mây (hoặc ngược lại)</td><td>Mở backup bước 2 đối chiếu. Nếu backup đủ hơn → dùng <b>Nhập backup</b> để phục hồi.</td></tr>
+        <tr><td class="n">Tem vẫn hiện phiên bản cũ</td><td>Trình duyệt giữ bản cũ trong bộ nhớ đệm</td><td>Bấm <b>⟳</b> cạnh tem. Nếu vào từ icon PWA thì đóng hẳn app rồi mở lại.</td></tr>
+        <tr><td class="n">Dòng cũ mất cột danh mục</td><td>Đúng như thiết kế — dòng cũ vốn không có <code>cat</code></td><td>Không phải lỗi. Hiện «Chưa phân loại»; gắn nhãn dần khi rảnh.</td></tr>
+        <tr><td class="n">Lỡ gõ đè lên sổ trắng</td><td>Kịch bản xấu nhất — và là lý do có bước 2</td><td><b>Nhập backup</b> ngay, chọn file đã gửi email. Sổ trở lại đúng thời điểm chụp.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 06 -->
+  <h2 class="sec"><span class="no">06</span>Mang gì sang cuộc trò chuyện mới</h2>
+  <div class="panel">
+    <p>Khi mở chat mới để thi công v10, gửi kèm bốn thứ:</p>
+    <ul>
+      <li><b>Bảng thiết kế v10</b> (từ Claude Design)</li>
+      <li><b>PRD</b> <code>prd-ke-hoach-du-lich.html</code></li>
+      <li><b>index.html hiện tại</b> (v9.6) — để xưởng đọc đúng ruột đang chạy</li>
+      <li><b>File backup JSON</b> ở bước 2 — để xưởng thử v10 với <b>hình dạng dữ liệu thật</b> thay vì dữ liệu tưởng tượng. Đây chính là thứ khiến bước 4 kiểm được tử tế.</li>
+    </ul>
+    <div class="law"><b>Dặn xưởng một câu</b><p>«Dữ liệu chuyến Thái là bản gốc không tái tạo được — v10 phải đọc được sổ cũ nguyên vẹn, giữ nguyên cấu hình đám mây và hình dạng dữ liệu, trường <code>cat</code> là tùy chọn. Ưu tiên chia lô nhỏ, mỗi lô nghiệm thu xong mới đi tiếp.»</p></div>
+  </div>
+
+  <p class="outro">Một câu để yên tâm: sổ chi tiêu Bangkok đã sống sót qua chín lần thay cửa sổ, hai lần phẫu thuật nhầm dây và một bản nháp ma. Nó không mong manh như cảm giác — nhưng nó là <b>bản gốc không tái tạo được</b>, nên vẫn đáng có một nghi thức đàng hoàng. Làm đủ năm bước, đại tu v10 chỉ là chuyện đổi áo cho con tàu, không phải chuyện đánh cược. ⚓</p>
+
+</div>
+
+<script>
+(function(){
+  var KEY = "nghi-thuc-giu-du-lieu-v10-v1";
+  var boxes = Array.prototype.slice.call(document.querySelectorAll(".tick"));
+  var steps = Array.prototype.slice.call(document.querySelectorAll(".step"));
+  var state = {};
+
+  function paint(){
+    var done = 0;
+    boxes.forEach(function(b){
+      var on = !!state[b.dataset.id];
+      if(on) done++;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    steps.forEach(function(s){
+      s.classList.toggle("done", !!state[s.dataset.id]);
+    });
+    var p = document.getElementById("progress");
+    if(p) p.textContent = done + "/" + boxes.length;
+  }
+
+  function save(){
+    try{
+      if(window.storage && window.storage.set){
+        window.storage.set(KEY, JSON.stringify(state)).catch(function(){});
+      }
+    }catch(e){}
+  }
+
+  function load(){
+    try{
+      if(window.storage && window.storage.get){
+        window.storage.get(KEY).then(function(r){
+          if(r && r.value){
+            try{ state = JSON.parse(r.value) || {}; }catch(e){ state = {}; }
+          }
+          paint();
+        }).catch(function(){ paint(); });
+        return;
+      }
+    }catch(e){}
+    paint();
+  }
+
+  steps.forEach(function(s){
+    s.addEventListener("click", function(){
+      var id = s.dataset.id;
+      state[id] = !state[id];
+      paint();
+      save();
+    });
+  });
+
+  paint();
+  load();
+})();
+</script>
+</body>
+</html>

@@ -30,8 +30,12 @@ tránh thuật ngữ khi không cần thiết.
 - Breakpoint DUY NHẤT: 700px (mobile ≤700, laptop ≥701).
 
 ## LUẬT KHÔNG ĐƯỢC PHÁ
-App đang chạy thật với tài khoản người dùng thật; dữ liệu một chuyến đi đã hoàn thành,
-không tái tạo được.
+App đang chạy thật với **HAI tài khoản người dùng thật** — chủ dự án và một người
+dùng khác. Cả hai vào chung một địa chỉ web, nên đẩy lên nhánh chính là đổi app cho
+cả hai cùng lúc. Dữ liệu một chuyến đi đã hoàn thành, không tái tạo được, và chủ dự án
+KHÔNG tự xuất backup hộ tài khoản kia được.
+Đọc `docs/nghi-thuc-giu-du-lieu-v10.html` và `docs/phu-luc-du-lieu-nguoi-dung-that.html`
+trước khi làm bất cứ việc gì đụng tới dữ liệu.
 1. KHÔNG chạy bất kỳ câu SQL nào lên Supabase. Không tạo, sửa, xoá bảng hay cột.
 2. KHÔNG đổi địa chỉ Supabase, khoá công khai, hay cách gắn dòng dữ liệu với tài khoản.
 3. Chỉ được THÊM trường vào hình dạng dữ liệu. Cấm đổi tên hoặc bỏ trường cũ —
@@ -44,6 +48,17 @@ không tái tạo được.
    Không thêm thư viện UI (Tailwind, Vuetify, Headless UI…) — áo Retro là hàng may đo,
    và bảng thiết kế đã bàn giao đủ token. App phải chạy trọn vẹn khi offline.
 6. KHÔNG commit file backup JSON hay bản chụp CSV vào repo — chứa dữ liệu thật, repo công khai.
+   Khuôn tên thật do `stampName()` sinh ra: `du-lich-backup-YYYY-MM-DD-HHMM.json`.
+   Bản chụp Supabase: `trips_rows*.csv` / `.sql`. Cả hai đã bị `.gitignore` chặn.
+7. KHÔNG đăng nhập tài khoản thật vào bản v10 chưa nghiệm thu. Muốn thử thì mở file
+   trên máy và KHÔNG đăng nhập, hoặc đăng ký một tài khoản thử bằng email phụ.
+   Đây là con đường DUY NHẤT dẫn tới kịch bản «ghi đè trang trắng».
+8. Giữ đường lui 60 giây: `index.html` v9.6 luôn lùi về được. Đường lui này CHỈ còn
+   hiệu lực chừng nào v10 tuân thủ luật chỉ-thêm-không-đổi ở mục 3 — phá mục 3 là
+   mất luôn đường lui.
+9. Nghiệm thu bằng BA CON SỐ VÂN TAY: số dòng lịch trình · tổng chi phí cả chuyến (VNĐ)
+   · ví tiền mặt còn lại. Ba con số này được ghi ở file NGOÀI repo (chúng là dữ liệu
+   tài chính thật) — hỏi chủ dự án khi cần đối chiếu.
 
 ## Quy trình mỗi lần sửa
 1. Đọc `docs/prd-ke-hoach-du-lich.html` trước khi đổi giao diện. Mục 05 là luật nên/không-nên,
@@ -86,6 +101,17 @@ không tái tạo được.
 - `docs/prompt-claude-artifacts.md` — bản tóm tắt áo Retro Boarding Pass dạng prompt,
   dùng như bản rút gọn của mục 01B
 - `docs/support.js` — thư viện chạy nội bộ của hai file .dc.html trên. Không phải mã của app.
-- CHƯA CÓ trong repo, cần bổ sung: `docs/nghi-thuc-giu-du-lieu-v10.html` và
-  `docs/phu-luc-du-lieu-nguoi-dung-that.html` — nghi thức an toàn dữ liệu,
-  đọc trước khi làm bất cứ việc gì đụng tới dữ liệu
+- `docs/nghi-thuc-giu-du-lieu-v10.html` — nghi thức 5 bước, luật «đọc trước ghi sau»,
+  bảng «gặp gì thì làm gì». ĐỌC TRƯỚC khi làm bất cứ việc gì đụng tới dữ liệu.
+- `docs/phu-luc-du-lieu-nguoi-dung-that.html` — phụ lục cho tình huống có tài khoản
+  người dùng thứ hai: bốn kịch bản mất dữ liệu, hai cách thử an toàn, lịch chuyển giao
+  có báo trước, và đường lui 60 giây.
+
+## Cảnh báo tên gọi
+`docs/prompt-claude-artifacts.md` mô tả dòng lịch trình là `date, activity, cost, pay,
+cat, done`. Đó là bản RÚT GỌN cho Artifacts, KHÔNG phải hình dạng thật. Hình dạng thật
+(đã đối chiếu với file backup): `id, date, activity, location, tripCost, pay, notes`
+— `cost` thật ra tên là `tripCost`, và `done` chưa tồn tại. Luôn tin PRD mục 02 và
+dữ liệu thật, đừng tin file prompt.
+Tiền được lưu dạng CHUỖI, không phải số — `tripCost`, `cost`, `vnd`, `fx`. Luôn đi qua
+`num()` trước khi tính.

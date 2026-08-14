@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phụ lục · Đại tu v10 khi đã có tài khoản người dùng thật</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#EFE5CE;
+    --parchment-deep:#E4D7BA;
+    --ink:#2E2417;
+    --ink-soft:#5C4E38;
+    --muted:#8A7A5D;
+    --line:#D2C1A0;
+    --rust:#A8452C;
+    --moss:#4A6B3A;
+    --gold:#C08A2E;
+    --font-display:'Anton',Impact,sans-serif;
+    --font-body:'Be Vietnam Pro',-apple-system,sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--parchment);
+    background-image:radial-gradient(rgba(90,72,44,.05) 1px, transparent 1.4px);
+    background-size:14px 14px;
+    color:var(--ink);font-family:var(--font-body);font-size:15.5px;line-height:1.62;
+    padding:34px 16px 90px;
+  }
+  .wrap{max-width:960px;margin:0 auto}
+
+  .hero{background:#FBF6EA;border:2px solid var(--ink);border-radius:14px;padding:24px 24px 20px;box-shadow:5px 5px 0 rgba(46,36,23,.18)}
+  .eyebrow{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#FBF6EA;background:var(--ink);padding:5px 12px;border-radius:5px;margin-bottom:12px}
+  h1{font-family:var(--font-display);font-weight:400;font-size:clamp(24px,4.4vw,36px);line-height:1.08;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--rust)}
+  .hero p{margin-top:10px;color:var(--ink-soft);max-width:750px}
+  .hero p b{color:var(--ink)}
+  .verdict{margin-top:14px;display:inline-flex;align-items:center;gap:9px;background:#EEF3E8;border:2px solid var(--moss);color:#2F5024;border-radius:10px;padding:9px 15px;font-weight:700;font-size:15px}
+
+  h2.sec{font-family:var(--font-display);font-weight:400;font-size:clamp(19px,3.2vw,26px);text-transform:uppercase;margin:38px 2px 12px;display:flex;align-items:center;gap:10px}
+  h2.sec .no{font-family:var(--font-mono);font-size:12px;color:#FBF6EA;background:var(--ink);border-radius:5px;padding:3px 8px}
+
+  .panel{background:#FBF6EA;border:1.5px solid var(--line);border-radius:13px;padding:19px 21px;box-shadow:3px 3px 0 rgba(46,36,23,.10)}
+  .panel + .panel{margin-top:13px}
+  .panel p{color:var(--ink-soft);font-size:14.5px}
+  .panel p + p{margin-top:8px}
+  .panel b{color:var(--ink)}
+  .panel h3{font-size:16px;margin:15px 0 6px}
+  .panel h3:first-child{margin-top:0}
+  .panel ul,.panel ol{margin:7px 0 0 19px;font-size:14px;color:var(--ink-soft);display:flex;flex-direction:column;gap:5px}
+  code{font-family:var(--font-mono);font-size:.87em;background:var(--parchment-deep);padding:1px 6px;border-radius:4px}
+
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:12px}
+  .cell{border:1.5px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--parchment)}
+  .cell h4{font-size:14.5px;margin-bottom:4px}
+  .cell p{font-size:13px;color:var(--ink-soft)}
+  .cell .k{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+
+  .law{border-left:4px solid var(--rust);background:#FAEDE6;border-radius:0 12px 12px 0;padding:12px 16px;margin-top:12px}
+  .law b{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--rust);margin-bottom:3px}
+  .law p{color:#6B3527;font-size:14.5px}
+  .good{border-left:4px solid var(--moss);background:#EEF3E8;border-radius:0 12px 12px 0;padding:11px 15px;margin-top:11px;font-size:14px;color:#33502A}
+  .good b{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;margin-bottom:2px}
+  .warn{border-left:4px solid var(--gold);background:#FBF3E2;border-radius:0 12px 12px 0;padding:11px 15px;margin-top:11px;font-size:14px;color:#6B5320}
+  .warn b{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;margin-bottom:2px}
+
+  .tw{overflow-x:auto;margin-top:12px}
+  table{border-collapse:collapse;width:100%;min-width:600px}
+  th{font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:9px 11px;background:var(--parchment-deep);color:#6B5C3E}
+  td{padding:9px 11px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:top;color:var(--ink-soft)}
+  td.n{font-weight:600;color:var(--ink)}
+  td.no{font-family:var(--font-mono);font-size:11.5px;font-weight:600;color:#2F5024;white-space:nowrap}
+  td.yes{font-family:var(--font-mono);font-size:11.5px;font-weight:600;color:var(--rust);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+
+  .rank{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .way{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;background:var(--parchment);padding:12px 14px}
+  .way .badge{flex:none;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border-radius:5px;padding:4px 8px;margin-top:2px}
+  .b-ok{background:var(--moss);color:#fff}
+  .b-mid{background:var(--gold);color:#fff}
+  .b-no{background:var(--rust);color:#fff}
+  .way h4{font-size:14.5px;margin-bottom:2px}
+  .way p{font-size:13.5px;color:var(--ink-soft)}
+
+  .ritual-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:4px}
+  .ritual-head .prog{margin-left:auto;font-family:var(--font-mono);font-size:12px;font-weight:600;color:#FBF6EA;background:var(--moss);border-radius:999px;padding:3px 11px}
+  .step{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;background:var(--parchment);padding:12px 14px;margin-top:10px;cursor:pointer;transition:background .15s,border-color .15s}
+  .step:hover{border-color:var(--ink)}
+  .tick{flex:none;width:24px;height:24px;border:2px solid var(--ink);border-radius:6px;background:#FBF6EA;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;margin-top:1px}
+  .tick.on{background:var(--moss);border-color:var(--moss);color:#fff}
+  .tick.on::after{content:"✓"}
+  .step-body{flex:1;min-width:0}
+  .step-body .sn{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);display:block}
+  .step-body h4{font-size:15px;margin:1px 0 3px}
+  .step-body p{font-size:13.5px;color:var(--ink-soft)}
+  .step.done{background:#F1F5EC;border-color:#B7C9A8}
+  .step.done h4{text-decoration:line-through;text-decoration-color:rgba(74,107,58,.5)}
+
+  pre{margin-top:11px;background:var(--parchment-deep);border:1.5px solid var(--line);border-radius:11px;padding:14px 16px;overflow-x:auto;font-family:var(--font-mono);font-size:12.5px;line-height:1.75;color:#4A3D28;white-space:pre-wrap}
+  .outro{margin-top:24px;color:#6B5C3E;font-size:14px;max-width:750px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">Phụ lục nghi thức · Có tài khoản người dùng thật</span>
+    <h1>Xây lại v10 có làm <em>mất dữ liệu</em> của người dùng không?</h1>
+    <p>Tình huống mới: đã có một tài khoản thật, dùng suốt một chuyến đi, dữ liệu là <b>bản gốc không tái tạo được</b> — và bạn <b>không thể tự xuất backup hộ họ</b>. Nghi thức cũ (backup từ thiết bị của chính mình) vì thế chưa đủ. Phụ lục này bù đúng khoảng trống đó.</p>
+    <div class="verdict">✅ Trả lời thẳng: KHÔNG — xây lại giao diện không xoá được dữ liệu trên máy chủ.</div>
+  </header>
+
+  <!-- 01 -->
+  <h2 class="sec"><span class="no">01</span>Vì sao xây lại không đụng được tới dữ liệu</h2>
+  <div class="panel">
+    <div class="split">
+      <div class="cell"><span class="k">Tầng 1 · Vỏ</span><h4>🖼 File <code>index.html</code></h4><p>Là <b>giao diện</b>: nút bấm, bảng biểu, màu sắc. Đại tu v10 <b>chỉ viết lại tầng này</b>. Upload đè = thay cửa sổ.</p></div>
+      <div class="cell"><span class="k">Tầng 2 · Kho</span><h4>☁️ Bảng dữ liệu Supabase</h4><p>Là <b>căn phòng</b> chứa sổ, gắn với tài khoản người dùng, nằm trên máy chủ. Nó chỉ thay đổi khi có <b>lệnh SQL</b> tác động — mà v10 <b>không chạy một câu SQL nào</b>.</p></div>
+    </div>
+    <div class="good"><b>Điểm mấu chốt</b>v10 là cuộc đại tu <b>thuần giao diện</b>: không thêm bảng, không đổi cột, không chạy migration. Việc nới cấu trúc bảng nằm ở Thời đại 11 (đa chuyến) — một chuyến hoàn toàn khác, và khi đó nghi thức sẽ nặng hơn nhiều.</div>
+    <div class="warn"><b>Bằng chứng đã có</b>Chín lần thay <code>index.html</code> vừa qua — trong đó có những lần đổi ruột rất sâu (kéo thả, tự xếp ngày, đổi cách tính tiền mặt) — dữ liệu chưa mất một dòng nào.</div>
+  </div>
+
+  <!-- 02 -->
+  <h2 class="sec"><span class="no">02</span>Bốn kịch bản mất dữ liệu — và v10 đứng ở đâu</h2>
+  <div class="panel">
+    <div class="tw"><table>
+      <thead><tr><th>Kịch bản</th><th>Hậu quả thật</th><th>v10 có làm?</th><th>Cách chặn</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="n">Chạy SQL phá bảng<br>(xoá bảng, xoá dòng, đổi cột)</td>
+          <td><b>Mất thật, không cứu được</b> nếu không có bản chụp</td>
+          <td class="no">KHÔNG</td>
+          <td>v10 không đụng SQL. Quy tắc: mọi câu SQL đều phải chụp bảng trước — để dành cho Thời đại 11.</td>
+        </tr>
+        <tr>
+          <td class="n">Đổi cấu hình đám mây<br>hoặc đổi cách tìm dòng</td>
+          <td><b>Không mất</b> — dữ liệu vẫn nằm đó, chỉ là app nhìn nhầm chỗ nên thấy trống</td>
+          <td class="no">KHÔNG</td>
+          <td>PRD khoá: giữ nguyên địa chỉ + khoá công khai + cách gắn dòng với tài khoản.</td>
+        </tr>
+        <tr>
+          <td class="n">Ghi đè trang trắng<br>(app chưa đọc xong đã tự lưu)</td>
+          <td>Mất — nhưng <b>cứu được</b> bằng bản chụp</td>
+          <td class="yes">CÓ THỂ</td>
+          <td>Luật «đọc trước – ghi sau» + người dùng thấy trống thì <b>dừng tay</b> + có bản chụp máy chủ ở mục 03.</td>
+        </tr>
+        <tr>
+          <td class="n">Đổi tên/xoá trường trong sổ</td>
+          <td>Dữ liệu còn nhưng <b>app cũ đọc không ra</b> → mất đường lui</td>
+          <td class="no">KHÔNG</td>
+          <td>Luật chỉ-thêm-không-đổi: v10 chỉ được thêm <code>cat</code>, cấm đổi tên hay bỏ trường cũ.</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <div class="law"><b>Đọc bảng này thế nào</b><p>Ba trong bốn kịch bản v10 <b>không hề chạm tới</b>. Kịch bản duy nhất còn rủi ro là «ghi đè trang trắng» — và nó đã có hai lớp phanh cộng một bản chụp dự phòng. Đó là toàn bộ diện rủi ro thật của cuộc đại tu này.</p></div>
+  </div>
+
+  <!-- 03 -->
+  <h2 class="sec"><span class="no">03</span>Bản chụp phía máy chủ — mảnh còn thiếu</h2>
+  <div class="panel">
+    <p>Nút «Xuất backup» trong app chỉ chụp được <b>sổ của người đang đăng nhập trên máy đó</b>. Người dùng kia có tài khoản riêng, nên bạn cần một bản chụp <b>ở tầng máy chủ</b> — nó gom hết mọi tài khoản trong một phát:</p>
+    <ol>
+      <li>Mở bảng điều khiển Supabase của dự án → vào <b>Table Editor</b>, chọn bảng đang chứa dữ liệu app.</li>
+      <li>Dùng chức năng <b>xuất dữ liệu ra CSV</b> (thường nằm ở menu ⋯ phía trên bảng). File tải về chứa nguyên khối dữ liệu của <b>mọi tài khoản</b>, kể cả người dùng kia.</li>
+      <li>Đặt tên có ngày giờ, rồi <b>gửi ra khỏi máy</b> — email cho chính mình hoặc thả lên Drive, đúng nghi thức gửi xuống.</li>
+    </ol>
+    <div class="warn"><b>Đừng phụ thuộc vào bản chụp tự động</b>Tuỳ gói dịch vụ, Supabase có thể có sẵn bản chụp hằng ngày trong mục Backups — nhưng nó không chắc phủ hết và không chắc lấy lại được nhanh. Bản CSV tự tay tải về mới là thứ bạn chắc chắn cầm trong tay.</div>
+    <div class="good"><b>Song song, vẫn nên</b>Nhắn người dùng kia tự bấm «Xuất backup» trên máy họ và giữ lại file. Hai lớp chụp từ hai phía, mất một vẫn còn một.</div>
+  </div>
+
+  <!-- 04 -->
+  <h2 class="sec"><span class="no">04</span>Thử v10 mà không chạm dữ liệu thật</h2>
+  <div class="panel">
+    <div class="rank">
+      <div class="way"><span class="badge b-ok">An toàn nhất</span><div><h4>Mở file v10 ngay trên máy, không đăng nhập</h4><p>Nhấp đúp mở file (không upload), <b>không đăng nhập</b>, bấm «Nhập backup» với file JSON đã có. File mở từ máy có kho riêng và chưa đăng nhập thì không gửi gì lên máy chủ — tuyệt đối không chạm tài khoản nào.</p></div></div>
+      <div class="way"><span class="badge b-ok">An toàn</span><div><h4>Đăng ký một tài khoản thử bằng email phụ</h4><p>Dùng v10 với tài khoản mới toanh: nó ghi vào <b>dòng dữ liệu của riêng nó</b>, hai tài khoản thật nằm yên không suy suyển. Cách này thử được cả luồng đăng nhập và đồng bộ thật.</p></div></div>
+      <div class="way"><span class="badge b-no">Không nên</span><div><h4>Đăng nhập tài khoản thật vào bản v10 chưa nghiệm thu</h4><p>Đây là con đường duy nhất dẫn tới kịch bản «ghi đè trang trắng». Chỉ đăng nhập tài khoản thật sau khi hai cách trên đã chạy trơn.</p></div></div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <h2 class="sec"><span class="no">05</span>Lịch chuyển giao có báo trước</h2>
+  <div class="panel">
+    <p>Vì cả hai người dùng chung một địa chỉ web, upload v10 là <b>đổi app cho tất cả cùng lúc</b>. Nên hẹn giờ đàng hoàng:</p>
+    <ul>
+      <li><b>Trước 1 ngày:</b> nhắn người dùng kia — «app sắp lên bản mới, bạn bấm Xuất backup giữ lại giúp mình nhé».</li>
+      <li><b>Ngay trước giờ G:</b> bạn tải bản chụp CSV ở mục 03. Nhắn: «từ giờ tới lúc mình báo xong, đừng nhập liệu nhé» (cửa sổ ~15 phút).</li>
+      <li><b>Sau khi upload:</b> bạn mở app, bấm ⟳, kiểm tem v10 và ba con số vân tay của tài khoản mình.</li>
+      <li><b>Nhờ họ kiểm:</b> «mở app, bấm ⟳, xem sổ còn đủ không» — và dặn kỹ: <b>nếu thấy trống thì đừng gõ gì, báo mình ngay</b>.</li>
+    </ul>
+    <div class="law"><b>Đường lui 60 giây</b><p>Giữ sẵn file <code>index.html</code> v9.6 trong máy. Có bất kỳ dấu hiệu lạ nào → upload đè lại v9.6, app cũ trở về ngay và đọc lại dữ liệu như chưa có chuyện gì — vì v10 chỉ đọc, còn hình dạng sổ thì không đổi. <b>Đường lui này chỉ hiệu lực chừng nào v10 tuân thủ luật chỉ-thêm-không-đổi</b>, nên đó là điều kiện phải nhắc xưởng ngay từ đầu.</p></div>
+  </div>
+
+  <!-- 06 -->
+  <h2 class="sec"><span class="no">06</span>Danh mục chuẩn bị</h2>
+  <div class="panel">
+    <div class="ritual-head">
+      <p style="margin:0"><b>Tick dần</b> — trạng thái được nhớ khi mở lại file này.</p>
+      <span class="prog" id="progress">0/6</span>
+    </div>
+
+    <div class="step" data-id="p1">
+      <span class="tick" data-id="p1" role="checkbox" aria-checked="false"></span>
+      <div class="step-body"><span class="sn">Chuẩn bị 1</span><h4>Tải bản chụp CSV toàn bảng từ Supabase</h4><p>Phủ mọi tài khoản, kể cả người dùng kia. Đặt tên có ngày giờ và gửi ra khỏi máy.</p></div>
+    </div>
+    <div class="step" data-id="p2">
+      <span class="tick" data-id="p2" role="checkbox" aria-checked="false"></span>
+      <div class="step-body"><span class="sn">Chuẩn bị 2</span><h4>Nhờ người dùng kia tự xuất backup</h4><p>Lớp chụp thứ hai, từ phía họ. Dặn giữ file lại tới khi v10 chạy ổn một tuần.</p></div>
+    </div>
+    <div class="step" data-id="p3">
+      <span class="tick" data-id="p3" role="checkbox" aria-checked="false"></span>
+      <div class="step-body"><span class="sn">Chuẩn bị 3</span><h4>Cất riêng file <code>index.html</code> v9.6 làm đường lui</h4><p>Để một chỗ dễ tìm, đặt tên rõ ràng như <code>index-v9.6-duong-lui.html</code>.</p></div>
+    </div>
+    <div class="step" data-id="p4">
+      <span class="tick" data-id="p4" role="checkbox" aria-checked="false"></span>
+      <div class="step-body"><span class="sn">Chuẩn bị 4</span><h4>Ghi ba con số vân tay của cả hai tài khoản</h4><p>Số dòng lịch trình · tổng chi phí · ví tiền mặt. Của bạn thì tự xem; của người kia thì nhờ họ chụp màn hình gửi.</p></div>
+    </div>
+    <div class="step" data-id="p5">
+      <span class="tick" data-id="p5" role="checkbox" aria-checked="false"></span>
+      <div class="step-body"><span class="sn">Chuẩn bị 5</span><h4>Thử v10 theo hai cách an toàn ở mục 04</h4><p>Mở trên máy không đăng nhập trước, rồi tài khoản thử bằng email phụ. Khớp hết mới tính chuyện upload.</p></div>
+    </div>
+    <div class="step" data-id="p6">
+      <span class="tick" data-id="p6" role="checkbox" aria-checked="false"></span>
+      <div class="step-body"><span class="sn">Chuẩn bị 6</span><h4>Hẹn giờ chuyển giao và báo trước cho người dùng kia</h4><p>Theo lịch ở mục 05, kèm câu dặn «thấy trống thì đừng gõ, báo ngay».</p></div>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <h2 class="sec"><span class="no">07</span>Câu dặn xưởng ở cuộc trò chuyện mới</h2>
+  <div class="panel">
+    <p>Chép nguyên khối này gửi kèm khi giao việc thi công v10:</p>
+    <pre>Lưu ý sống còn: app đã có tài khoản người dùng thật với dữ liệu một chuyến đi
+không tái tạo được. Khi thi công v10, bắt buộc:
+
+1. Không chạy bất kỳ câu SQL nào; không đổi bảng, cột hay cấu hình Supabase.
+2. Chỉ THÊM trường (cat), cấm đổi tên hoặc bỏ bất kỳ trường cũ nào — để bản v9.6
+   vẫn đọc được dữ liệu, giữ đường lui upload ngược trong 60 giây.
+3. Luật đọc trước – ghi sau: chưa đọc và dựng xong dữ liệu thì tuyệt đối không
+   được lưu bất cứ thứ gì lên máy chủ. Thà hiện "đang tải" mãi còn hơn ghi đè trang trắng.
+4. Chia lô nhỏ, mỗi lô nghiệm thu xong mới đi tiếp; không gộp cả v10 vào một lần upload.
+5. Trước lô đầu tiên, nhắc mình chụp bản CSV toàn bảng từ Supabase.</pre>
+    <div class="warn"><b>Một việc nên xếp lịch sớm</b>Đã có người dùng thật thì <b>phân quyền dữ liệu (RLS)</b> — Thời đại 13 trong hải trình — nên được đẩy lên sớm hơn dự kiến. Nó không liên quan tới chuyện mất dữ liệu, nhưng liên quan tới việc mỗi tài khoản chỉ được thấy sổ của chính mình.</div>
+  </div>
+
+  <p class="outro">Tóm lại: nỗi lo là chính đáng, nhưng nó nhắm vào đúng <b>một</b> khe hở duy nhất — và khe đó đã có ba lớp bịt (luật đọc-trước-ghi-sau, bản chụp máy chủ, đường lui v9.6). Cứ tick đủ sáu mục chuẩn bị rồi bước vào v10 thoải mái: đây là đổi áo cho con tàu, không phải đục đáy thuyền. ⚓</p>
+
+</div>
+
+<script>
+(function(){
+  var KEY = "phu-luc-du-lieu-nguoi-dung-that-v1";
+  var boxes = Array.prototype.slice.call(document.querySelectorAll(".tick"));
+  var steps = Array.prototype.slice.call(document.querySelectorAll(".step"));
+  var state = {};
+
+  function paint(){
+    var done = 0;
+    boxes.forEach(function(b){
+      var on = !!state[b.dataset.id];
+      if(on) done++;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    steps.forEach(function(s){
+      s.classList.toggle("done", !!state[s.dataset.id]);
+    });
+    var p = document.getElementById("progress");
+    if(p) p.textContent = done + "/" + boxes.length;
+  }
+
+  function save(){
+    try{
+      if(window.storage && window.storage.set){
+        window.storage.set(KEY, JSON.stringify(state)).catch(function(){});
+      }
+    }catch(e){}
+  }
+
+  function load(){
+    try{
+      if(window.storage && window.storage.get){
+        window.storage.get(KEY).then(function(r){
+          if(r && r.value){
+            try{ state = JSON.parse(r.value) || {}; }catch(e){ state = {}; }
+          }
+          paint();
+        }).catch(function(){ paint(); });
+        return;
+      }
+    }catch(e){}
+    paint();
+  }
+
+  steps.forEach(function(s){
+    s.addEventListener("click", function(){
+      var id = s.dataset.id;
+      state[id] = !state[id];
+      paint();
+      save();
+    });
+  });
+
+  paint();
+  load();
+})();
+</script>
+</body>
+</html>
