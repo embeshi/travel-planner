@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soi backup · Kế hoạch du lịch</title>
+<!--
+  ============================================================
+  SOI BACKUP — file độc lập, cố tình KHÔNG dùng gì của app.
+
+  Vì sao tồn tại: nghi thức giữ dữ liệu (mục 04) bảo cách thử an toàn nhất
+  là mở file trên máy bằng cách NHẤP ĐÚP, không đăng nhập. App v10 dựng
+  bằng Vite nên dùng module — mà module thì trình duyệt chặn khi mở bằng
+  file://. File này lấp đúng khoảng trống đó.
+
+  Luật của nó: không import gì, không gọi mạng, không ghi gì xuống máy.
+  Vài hàm bị chép lại từ app — CỐ Ý. Đổi lấy sự độc lập tuyệt đối: file
+  này phải còn chạy được kể cả khi cả app hỏng.
+  ============================================================
+-->
+<style>
+  :root{
+    --kem:#F6EFE3; --giay:#FFFDF7; --navy:#1F3A5F; --muc-phu:#5B6F87;
+    --nhan:#6C7F98; --vach:#D9CFBB; --san-ho:#E14B4B; --loi:#B3261E;
+    --duyet:#2E6F4E; --duyet-nhat:#E7F0E9;
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--kem);color:var(--navy);
+    font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:0 0 40px}
+  .soc{height:9px;background:repeating-linear-gradient(90deg,
+    var(--san-ho) 0 20px,var(--navy) 20px 40px,#F2B33D 40px 60px)}
+  .khung{max-width:820px;margin:0 auto;padding:0 16px}
+  h1{font-family:var(--mono);font-size:22px;margin:18px 0 4px}
+  .nhan{font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--nhan)}
+  .an-toan{background:var(--duyet-nhat);border-left:4px solid var(--duyet);
+    border-radius:0 6px 6px 0;padding:12px 16px;margin:16px 0}
+  .an-toan b{display:block;color:var(--duyet);margin-bottom:4px}
+  .an-toan ul{margin:0;padding-left:20px;font-size:14px;color:var(--muc-phu)}
+  input[type=file]{font:inherit;font-size:14px;margin-top:8px}
+  .ba{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+  .o{background:var(--giay);border:2px solid var(--navy);border-radius:6px;
+    box-shadow:3px 3px 0 var(--navy);padding:12px 14px}
+  .o b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--nhan);font-weight:600}
+  .o span{font-family:var(--mono);font-size:24px;font-weight:600}
+  .o.canh-bao{background:#FBE4E1;border-color:var(--loi);color:var(--loi)}
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  td{padding:7px 10px;border-bottom:1px solid var(--vach);font-size:14px}
+  td:last-child{text-align:right;font-family:var(--mono)}
+  .loi{color:var(--loi);font-weight:600}
+  .ghi{font-size:13px;color:var(--muc-phu)}
+</style>
+</head>
+<body>
+<div class="soc"></div>
+<div class="khung">
+  <span class="nhan">Nghi thức giữ dữ liệu · bước 4</span>
+  <h1>Soi backup</h1>
+  <p class="ghi">Mở được bằng cách nhấp đúp, không cần chạy máy chủ nào.</p>
+
+  <div class="an-toan">
+    <b>Không chạm vào dữ liệu thật</b>
+    <ul>
+      <li>Không đăng nhập, không gọi một dòng nào tới máy chủ</li>
+      <li>Không ghi gì xuống bộ nhớ máy — file chỉ được đọc trong bộ nhớ tạm</li>
+      <li>Đóng tab là xong, không để lại dấu vết</li>
+    </ul>
+  </div>
+
+  <label class="nhan" for="f">Chọn file backup JSON</label><br>
+  <input id="f" type="file" accept="application/json,.json">
+  <p id="loi" class="loi"></p>
+  <div id="kq"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* Chép lại từ app — cố ý, để file này không phụ thuộc vào bất cứ thứ gì. */
+  function num(v){ var n = parseFloat(v); return isFinite(n) ? n : 0; }
+  var vndFmt = new Intl.NumberFormat("vi-VN");
+  function fmtVND(n){ return vndFmt.format(Math.round(n)) + " ₫"; }
+  function fmtFx(n){ return new Intl.NumberFormat("vi-VN",{maximumFractionDigits:2}).format(n); }
+
+  var KHOI = [["rows","Lịch trình"],["cash","Đổi tiền"],["bookings","Gói bay + KS"],
+    ["skincare","Skincare"],["makeup","Makeup"],["essentials","Đồ dùng"],
+    ["shopping","Mua mang về"],["places","Đi đâu"],["food","Ăn gì"]];
+
+  document.getElementById("f").addEventListener("change", function(e){
+    var f = e.target.files && e.target.files[0];
+    if(!f) return;
+    var doc = new FileReader();
+    doc.onload = function(){
+      try{ ve(JSON.parse(doc.result)); document.getElementById("loi").textContent = ""; }
+      catch(err){
+        document.getElementById("loi").textContent = "Không đọc được file này: " + err.message;
+        document.getElementById("kq").innerHTML = "";
+      }
+    };
+    doc.readAsText(f);
+  });
+
+  function ve(obj){
+    var s = (obj && obj.data && typeof obj.data === "object") ? obj.data : obj;
+    var rows = Array.isArray(s.rows) ? s.rows : [];
+    var cash = Array.isArray(s.cash) ? s.cash : [];
+    var bookings = Array.isArray(s.bookings) ? s.bookings : [];
+
+    var tripFx = 0; rows.forEach(function(r){ tripFx += num(r.tripCost); });
+    var bkFx = 0; bookings.forEach(function(r){ bkFx += num(r.cost); });
+    var tripVnd = s.rate ? tripFx * s.rate : null;
+    var bkVnd = s.bkRate ? bkFx * s.bkRate : null;
+    var tong = 0, thieu = [];
+    if(tripFx > 0){ if(tripVnd !== null) tong += tripVnd; else thieu.push(s.currency || "?"); }
+    if(bkFx > 0){ if(bkVnd !== null) tong += bkVnd; else thieu.push(s.bkCurrency || "?"); }
+
+    var daDoi = 0; cash.forEach(function(r){ daDoi += num(r.fx); });
+    var tieuMat = 0;
+    rows.forEach(function(r){ if(r.pay === "Tiền mặt") tieuMat += num(r.tripCost); });
+    var vi = daDoi - tieuMat;
+
+    var h = '<h2 class="nhan" style="margin-top:22px">Ba con số vân tay</h2><div class="ba">';
+    h += o("Số dòng lịch trình", rows.length, false);
+    h += o("Tổng chi phí cả chuyến", fmtVND(tong), false);
+    h += o("Ví tiền mặt còn lại", fmtFx(vi) + " " + (s.currency || ""), vi < 0);
+    h += '</div>';
+    if(thieu.length) h += '<p class="loi">Thiếu tỷ giá ' + thieu.join(", ") + ' — tổng trên chưa đủ.</p>';
+
+    h += '<h2 class="nhan">Từng khối có lên đủ không</h2><table><tbody>';
+    KHOI.forEach(function(k){
+      var n = Array.isArray(s[k[0]]) ? s[k[0]].length : 0;
+      h += '<tr><td>' + k[1] + '</td><td>' + n + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    h += '<p class="ghi">Ảnh chụp lúc: ' + (obj.exportedAt || "không ghi") +
+         ' · tiền tệ ' + (s.currency || "?") + ' · tỷ giá ' + (s.rate || "chưa có") + '</p>';
+    document.getElementById("kq").innerHTML = h;
+  }
+
+  function o(nhan, so, canhBao){
+    return '<div class="o' + (canhBao ? ' canh-bao' : '') + '"><b>' + nhan +
+           '</b><span>' + so + '</span></div>';
+  }
+})();
+</script>
+</body>
+</html>
