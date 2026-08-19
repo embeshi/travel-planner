@@ -126,8 +126,14 @@ function nhapBackup (e) {
         <div class="ve__phai">
           <ConDau :loai="nguoiDung && dongBoOk ? 'duyet' : 'canh-bao'" />
           <TemPhienBan />
-          <button v-if="!nguoiDung" type="button" class="ve__dn" @click="hienDangNhap = true">Đăng nhập</button>
-          <button v-else type="button" class="ve__dn" @click="dangXuat()">Đăng xuất</button>
+          <!-- Hiện email đang đăng nhập — để không bao giờ nhầm mình đang ở
+               tài khoản THẬT hay tài khoản THỬ. Nhầm chỗ này là nhầm đúng chỗ
+               nguy hiểm nhất (luật 7). -->
+          <template v-if="nguoiDung">
+            <span class="ve__email" :title="'Đang đăng nhập: ' + nguoiDung.email">{{ nguoiDung.email }}</span>
+            <button type="button" class="ve__dn" @click="dangXuat()">Đăng xuất</button>
+          </template>
+          <button v-else type="button" class="ve__dn" @click="hienDangNhap = true">Đăng nhập</button>
         </div>
       </header>
 
@@ -182,6 +188,10 @@ function nhapBackup (e) {
 .ve__nhap .nhan-mono { display: block; margin-bottom: 2px; }
 .ve__nhap input { font-size: 12px; max-width: 180px; }
 .ve__phai { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
+.ve__email {
+  font-family: var(--font-nhan); font-size: 10px; color: var(--nhan);
+  max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .ve__dn {
   font-family: var(--font-nhan); font-size: 10px; font-weight: 600;
   letter-spacing: var(--nhan-gian); text-transform: uppercase;

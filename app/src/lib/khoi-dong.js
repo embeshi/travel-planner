@@ -68,6 +68,8 @@ export function datHanNap (ms) { hanNap = ms }
 
 function napThuVien () {
   return new Promise((xong) => {
+    /* Đã có client (kể cả client giả trong bài kiểm) thì khỏi nạp lại. */
+    if (sb) return xong(sb)
     if (typeof window === 'undefined' || typeof document === 'undefined') return xong(null)
     if (window.supabase) { taoClient(); return xong(sb) }
 
@@ -128,6 +130,67 @@ export async function dangNhap (email, matKhau) {
   await keoVeTuMayChu()
   return data.user
 }
+
+/* ============================================================
+   ĐĂNG KÝ TÀI KHOẢN MỚI — bê từ signUpPassword() của index.html v9.6
+   (dòng 3027–3059).
+
+   Đây là cái cửa làm cho «thử bằng tài khoản phụ» khả thi: không có nó,
+   cách duy nhất để thử luồng đồng bộ là đăng nhập tài khoản THẬT — đúng
+   con đường luật 7 cấm.
+
+   Giữ bộ câu báo lỗi có hướng dẫn cụ thể của v9.6 — chúng được viết từ
+   đúng những trục trặc hay gặp trên bảng điều khiển Supabase.
+   ============================================================ */
+export async function dangKy (email, matKhau) {
+  await napThuVien()
+  if (!sb) throw new Error('Chưa nối được máy chủ — kiểm tra mạng rồi thử lại.')
+
+  let res
+  try {
+    res = await sb.auth.signUp({ email, password: matKhau })
+    if (res.error) throw res.error
+  } catch (e) {
+    throw new Error(dichLoiDangKy(e))
+  }
+
+  if (res.data && res.data.session) {
+    nguoiDung.value = res.data.user
+    await keoVeTuMayChu()
+    return { xong: true, chu: 'Tạo tài khoản xong, đã đăng nhập luôn.' }
+  }
+  /* Supabase đang bật «Confirm email»: tài khoản có rồi nhưng chưa vào được. */
+  return {
+    xong: false,
+    chu: 'Tài khoản đã tạo nhưng Supabase đang bật «Confirm email» nên còn chờ ' +
+         'xác nhận. Mở hộp thư bấm link xác nhận (hoặc vào dashboard → ' +
+         'Authentication → Sign In / Up tắt «Confirm email»), rồi quay lại đăng nhập.'
+  }
+}
+
+export function dichLoiDangKy (e) {
+  const m = (e && e.message) ? String(e.message) : ''
+  if (/already registered|already exists/i.test(m)) {
+    return 'Email này đã có tài khoản (có thể từ lần thử trước). Bấm «Lên máy bay» ' +
+           'để đăng nhập; nếu báo sai mật khẩu, vào dashboard → Authentication → ' +
+           'Users, xoá user này rồi tạo lại.'
+  }
+  if (/rate ?limit/i.test(m)) {
+    return 'Đụng giới hạn thao tác, đợi một lát rồi thử lại nhé.'
+  }
+  if (/signups? not allowed|disabled/i.test(m)) {
+    return 'Supabase đang tắt đăng ký: vào Authentication → Sign In / Up, bật ' +
+           '«Allow new users to sign up» rồi thử lại.'
+  }
+  if (/password/i.test(m)) {
+    return 'Mật khẩu chưa đạt yêu cầu của Supabase: «' + m + '».'
+  }
+  return 'Không tạo được tài khoản. Supabase báo: «' + (m || 'không rõ') + '».'
+}
+
+/* CHỈ DÙNG TRONG BÀI KIỂM — tiêm máy chủ giả để thử luồng tài khoản mà
+   không chạm mạng. Mã chạy thật không bao giờ gọi hàm này. */
+export function datClientThu (sbGia) { sb = sbGia }
 
 export async function dangXuat () {
   if (sb) await sb.auth.signOut()
