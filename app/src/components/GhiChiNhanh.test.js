@@ -117,3 +117,60 @@ describe('panel laptop', () => {
     expect(kho.rows).toHaveLength(0)
   })
 })
+
+describe('ô ✦ gõ tự nhiên · KHÔNG BAO GIỜ ghi thẳng', () => {
+  const oCau = (w) => w.findAllComponents({ name: 'ONhap' }).at(-1)
+
+  it('đọc câu xong chỉ HIỆN BẢN XEM TRƯỚC, chưa ghi dòng nào', async () => {
+    /* PRD mục 05: không tự ghi dữ liệu từ AI khi chưa xác nhận. */
+    const w = dungSheet()
+    await oCau(w).find('input').setValue('bolt về khách sạn 120 baht tiền mặt')
+    await oCau(w).find('input').trigger('keydown', { key: 'Enter' })
+    expect(w.find('.ai__xem').exists()).toBe(true)
+    expect(kho.rows).toHaveLength(0)
+  })
+
+  it('bản xem trước bày đủ bốn ô', async () => {
+    const w = dungSheet()
+    await oCau(w).find('input').setValue('bolt về khách sạn 120 baht tiền mặt')
+    await oCau(w).find('input').trigger('keydown', { key: 'Enter' })
+    const chu = w.find('.ai__bang').text()
+    expect(chu).toContain('Bolt về khách sạn')
+    expect(chu).toContain('120')
+    expect(chu).toContain('Tiền mặt')
+    expect(chu).toContain('Di chuyển')
+  })
+
+  it('bấm «Xác nhận ghi» mới thật sự ghi', async () => {
+    const w = dungSheet()
+    await oCau(w).find('input').setValue('ăn phở 85 momo')
+    await oCau(w).find('input').trigger('keydown', { key: 'Enter' })
+    await w.findAll('.ai__nut .nut--chinh')[0].trigger('click')
+    expect(kho.rows).toHaveLength(1)
+    expect(kho.rows[0]).toMatchObject({ tripCost: '85', pay: 'Momo', cat: '🍜 Ăn uống' })
+  })
+
+  it('«Sửa tay» đổ vào ô thường mà KHÔNG ghi', async () => {
+    const w = dungSheet()
+    await oCau(w).find('input').setValue('taxi 1.200 thẻ')
+    await oCau(w).find('input').trigger('keydown', { key: 'Enter' })
+    await w.findAll('.ai__nut .nut--vien')[0].trigger('click')
+    expect(kho.rows).toHaveLength(0)
+    expect(w.find('.tien__so').text()).toBe('1.200')   /* 1200 hiện kiểu Việt */
+    expect(w.find('.ai__xem').exists()).toBe(false)
+  })
+
+  it('câu không đọc ra số tiền thì KHÓA nút xác nhận', async () => {
+    const w = dungSheet()
+    await oCau(w).find('input').setValue('linh tinh gì đó')
+    await oCau(w).find('input').trigger('keydown', { key: 'Enter' })
+    expect(w.findAll('.ai__nut .nut--chinh')[0].attributes('disabled')).toBeDefined()
+    expect(kho.rows).toHaveLength(0)
+  })
+
+  it('đường làm tay vẫn còn nguyên bên cạnh — không ai bị ép qua cửa ✦', () => {
+    const w = dungSheet()
+    expect(w.findAll('.phim__o')).toHaveLength(12)
+    expect(w.findAll('.chip').length).toBeGreaterThan(0)
+  })
+})

@@ -3,6 +3,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { kho, dongMoi, DANH_MUC, KENH_THANH_TOAN } from '../lib/kho.js'
 import { sortByDate } from '../lib/xep-dong.js'
 import { bam, deLuu, deHien, PHIM } from '../lib/ban-phim-so.js'
+import { tachCau, duDeGhi } from '../lib/tach-cau.js'
 import { danhDauVuaGhi } from '../lib/vua-ghi.js'
 import { fmtVND, num } from '../lib/dinh-dang.js'
 import ONhap from './ONhap.vue'
@@ -37,6 +38,41 @@ watch(() => props.mo, async (v) => {
 })
 
 function goPhim (p) { tien.value = bam(tien.value, p) }
+
+/* ============================================================
+   Ô ✦ GÕ TỰ NHIÊN — luồng F2, chạy hoàn toàn offline.
+
+   LUẬT KHÔNG ĐƯỢC PHÁ: bộ tách KHÔNG BAO GIỜ ghi thẳng. Nó chỉ dựng một
+   bản xem trước bốn ô; người dùng nhìn, sửa được, rồi mới bấm xác nhận.
+   PRD mục 05: «không tự ghi dữ liệu từ AI khi chưa xác nhận».
+
+   Bên cạnh nó luôn có đường làm tay nhìn thấy được — bàn phím số và các
+   chip vẫn nằm nguyên đó, không ai bị ép đi qua cửa này.
+   ============================================================ */
+const cauTuNhien = ref('')
+const banXemTruoc = ref(null)
+
+function docCau () {
+  const c = cauTuNhien.value.trim()
+  if (!c) return
+  banXemTruoc.value = tachCau(c)
+}
+function suaTay () {
+  const b = banXemTruoc.value
+  if (!b) return
+  if (b.tripCost) tien.value = b.tripCost
+  ten.value = b.activity
+  cat.value = b.cat
+  pay.value = b.pay
+  banXemTruoc.value = null
+  cauTuNhien.value = ''
+}
+function xacNhanGhi () {
+  const b = banXemTruoc.value
+  if (!duDeGhi(b)) return
+  suaTay()
+  luu()
+}
 
 function donDep () { tien.value = ''; ten.value = ''; cat.value = ''; pay.value = '' }
 
@@ -85,6 +121,25 @@ function luu () {
               @click="pay = pay === k ? '' : k">{{ k }}</Chip>
       </div>
 
+      <div class="ai">
+        <span class="nhan-mono">✦ Hoặc gõ một câu</span>
+        <ONhap v-model="cauTuNhien" placeholder="bolt về khách sạn 120 baht tiền mặt"
+               @enter="docCau" />
+        <div v-if="banXemTruoc" class="ai__xem">
+          <p class="ai__nhan">Đọc được — sửa được trước khi ghi</p>
+          <dl class="ai__bang">
+            <dt>Hoạt động</dt><dd>{{ banXemTruoc.activity || '—' }}</dd>
+            <dt>Chi phí</dt><dd>{{ banXemTruoc.tripCost || '—' }} {{ kho.currency }}</dd>
+            <dt>Thanh toán</dt><dd>{{ banXemTruoc.pay || 'chưa đọc ra' }}</dd>
+            <dt>Danh mục</dt><dd>{{ banXemTruoc.cat || 'chưa đoán được' }}</dd>
+          </dl>
+          <div class="ai__nut">
+            <NutBam kieu="chinh" :khoa="!duDeGhi(banXemTruoc)" @click="xacNhanGhi">Xác nhận ghi</NutBam>
+            <NutBam kieu="vien" @click="suaTay">Sửa tay</NutBam>
+          </div>
+        </div>
+      </div>
+
       <div class="phim">
         <button v-for="p in PHIM" :key="p" type="button" class="phim__o"
                 :class="{ 'phim__o--phu': p === '⌫' || p === ',' }"
@@ -123,6 +178,26 @@ function luu () {
     </div>
 
     <NutBam kieu="chinh" rong :khoa="!luuDuoc" @click="luu">Lưu · Enter</NutBam>
+
+    <div class="ai">
+        <span class="nhan-mono">✦ Hoặc gõ một câu</span>
+        <ONhap v-model="cauTuNhien" placeholder="bolt về khách sạn 120 baht tiền mặt"
+               @enter="docCau" />
+        <div v-if="banXemTruoc" class="ai__xem">
+          <p class="ai__nhan">Đọc được — sửa được trước khi ghi</p>
+          <dl class="ai__bang">
+            <dt>Hoạt động</dt><dd>{{ banXemTruoc.activity || '—' }}</dd>
+            <dt>Chi phí</dt><dd>{{ banXemTruoc.tripCost || '—' }} {{ kho.currency }}</dd>
+            <dt>Thanh toán</dt><dd>{{ banXemTruoc.pay || 'chưa đọc ra' }}</dd>
+            <dt>Danh mục</dt><dd>{{ banXemTruoc.cat || 'chưa đoán được' }}</dd>
+          </dl>
+          <div class="ai__nut">
+            <NutBam kieu="chinh" :khoa="!duDeGhi(banXemTruoc)" @click="xacNhanGhi">Xác nhận ghi</NutBam>
+            <NutBam kieu="vien" @click="suaTay">Sửa tay</NutBam>
+          </div>
+        </div>
+      </div>
+
   </section>
 </template>
 
@@ -165,6 +240,23 @@ function luu () {
 .phim__o:focus-visible { outline: var(--focus); outline-offset: 2px; }
 
 .sheet__ghi { margin: 0; font-size: 12px; color: var(--muc-phu); text-align: center; }
+
+/* ---------------- Khối ✦ ---------------- */
+.ai {
+  display: flex; flex-direction: column; gap: var(--sp-2);
+  border: 1.5px dashed var(--vach); border-radius: var(--bo-the);
+  padding: var(--sp-3); background: var(--dien-tin);
+}
+.ai__xem { background: var(--giay); border: 1.5px solid var(--navy);
+  border-radius: var(--bo-nho); padding: var(--sp-2) var(--sp-3); }
+.ai__nhan { margin: 0 0 var(--sp-2); font-size: 12px; color: var(--muc-phu); }
+.ai__bang { display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px var(--sp-3); margin: 0 0 var(--sp-2); }
+.ai__bang dt { font-family: var(--font-nhan); font-size: 10px;
+  letter-spacing: var(--nhan-gian); text-transform: uppercase;
+  color: var(--nhan); align-self: center; }
+.ai__bang dd { margin: 0; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; }
+.ai__nut { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
 
 /* ---------------- Panel laptop ---------------- */
 .panel {
