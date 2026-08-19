@@ -21,7 +21,9 @@ export default defineConfig({
         /* Trang app thật */
         main: duongDan('./index.html'),
         /* Trang bày linh kiện — tài liệu sống, giữ luôn sau này */
-        'linh-kien': duongDan('./linh-kien.html')
+        'linh-kien': duongDan('./linh-kien.html'),
+        /* Trang nghiệm thu dữ liệu — nghi thức bước 4 */
+        'doi-chieu': duongDan('./doi-chieu.html')
       }
     }
   }
