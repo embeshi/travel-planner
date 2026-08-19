@@ -1,0 +1,67 @@
+# ============================================================
+# Dựng v10 và phát lên GitHub Pages.
+#
+# CHẠY KHI: đẩy lên nhánh chính. Đúng tinh thần cũ — tem phiên bản chỉ
+# nhảy khi thay đổi lên nhánh chính (CLAUDE.md, mục Đánh số phiên bản).
+#
+# TRƯỚC KHI DÙNG LẦN ĐẦU, chủ dự án phải bấm một lần trong GitHub:
+#   Settings → Pages → Source: chọn "GitHub Actions"
+# Không bấm thì workflow chạy xong vẫn không có gì lên sóng.
+#
+# ĐƯỜNG LUI: nếu bản mới có vấn đề, vào tab Actions chọn lần chạy cũ rồi
+# "Re-run all jobs" — hoặc dùng đường lui 60 giây bằng file
+# index-v9.6-duong-lui.html giữ ngoài repo.
+# ============================================================
+name: Phát bản v10
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # cho phép bấm chạy tay từ tab Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false   # không cắt ngang một lần phát đang chạy dở
+
+jobs:
+  dung:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      # npm ci đọc package-lock.json — cài ĐÚNG bộ thư viện đã khoá,
+      # không tự nâng cấp. Đây là thứ chặn "mục rữa phụ thuộc".
+      - run: npm ci
+        working-directory: app
+
+      # Test phải xanh mới được phát. Ba vết sẹo nhập liệu có lưới ở đây.
+      - run: npm test
+        working-directory: app
+
+      - run: npm run build
+        working-directory: app
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: app/dist
+
+  phat:
+    needs: dung
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.phat.outputs.page_url }}
+    steps:
+      - id: phat
+        uses: actions/deploy-pages@v4
