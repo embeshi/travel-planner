@@ -7,6 +7,7 @@ import { rowTotal } from '../lib/xep-dong.js'
 import { fmtFx, fmtVND, num } from '../lib/dinh-dang.js'
 import { homNayISO, ngayThuMay, mocChuyenDi } from '../lib/giai-doan.js'
 import { dayKeyInfo, pad2, weekdayOf } from '../lib/ngay.js'
+import { vuaGhiId } from '../lib/vua-ghi.js'
 import TheKPI from './TheKPI.vue'
 
 const props = defineProps({
@@ -67,7 +68,8 @@ function tickMon (o) { o.m.packed = true; baoDoi() }
     </h3>
 
     <ul v-if="dong.length" class="viec">
-      <li v-for="r in dong" :key="r.id" class="viec__o" :class="{ 'viec__o--xong': daXong(r) }">
+      <li v-for="r in dong" :key="r.id" class="viec__o"
+          :class="{ 'viec__o--xong': daXong(r), 'viec__o--vua-ghi': vuaGhiId === r.id }">
         <button type="button" class="viec__tick" :aria-pressed="daXong(r)"
                 :title="daXong(r) ? 'Bỏ đánh dấu' : 'Đánh dấu đã xong'" @click="tick(r)">
           <span aria-hidden="true">{{ daXong(r) ? '✓' : '' }}</span>
@@ -130,6 +132,11 @@ function tickMon (o) { o.m.packed = true; baoDoi() }
   padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--vach);
 }
 .viec__o:last-child { border-bottom: 0; }
+.viec__o--vua-ghi { animation: phai 1200ms linear; }
+@keyframes phai {
+  from { background: var(--san-ho-nhat) }
+  to { background: var(--giay) }
+}
 
 .viec__tick {
   width: 20px; height: 20px; padding: 0; cursor: pointer;

@@ -4,6 +4,7 @@ import { kho, dongMoi, danhMucCua, danhMucKeTiep, CHUA_PHAN_LOAI, KENH_THANH_TOA
 import { sortByDate, chuyenDong, rowTotal } from '../lib/xep-dong.js'
 import { nhomTheoNgay, nhomCaoNhat, traiPhang } from '../lib/nhom-ngay.js'
 import { fmtFx, fmtVND, num } from '../lib/dinh-dang.js'
+import { vuaGhiId } from '../lib/vua-ghi.js'
 import ONhap from './ONhap.vue'
 import ThanhTong from './ThanhTong.vue'
 
@@ -192,7 +193,9 @@ function thaKeo (giu) {
         </div>
 
         <div v-for="row in g.dong" :key="row.id" :data-dong="row.id"
-             class="dong" :class="{ 'dong--keo': keo && keo.id === row.id }">
+             class="dong"
+             :class="{ 'dong--keo': keo && keo.id === row.id,
+                       'dong--vua-ghi': vuaGhiId === row.id }">
 
           <span class="dong__grip" title="Kéo để sắp xếp" aria-hidden="true"
                 @pointerdown="batDauKeo($event, row)">⠿</span>
@@ -292,6 +295,15 @@ function thaKeo (giu) {
 /* Hàng dữ liệu: nền giấy trơn, KHÔNG bóng, không vân (luật 01B) */
 .dong { border-bottom: 1px solid var(--vach); background: var(--giay); }
 .dong:last-of-type { border-bottom: 0; }
+.dong--vua-ghi {
+  /* Nền san hô nhạt rồi phai dần về giấy trong 1,2 giây (bảng thiết kế mục 05) */
+  animation: phai 1200ms linear;
+}
+@keyframes phai {
+  from { background: var(--san-ho-nhat) }
+  to { background: var(--giay) }
+}
+
 .dong--keo {
   transform: rotate(-0.6deg);
   box-shadow: 0 6px 14px rgba(31, 58, 95, .18);
