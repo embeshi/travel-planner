@@ -90,9 +90,18 @@ tác lúc đó đều có nguy cơ ghi trang trắng đè lên sổ thật. Dùn
 
 ## Đường lui 60 giây
 
-Vào GitHub, mở `index.html` ở gốc repo, bấm bút chì, xoá hết rồi dán nội
-dung `index-v9.6-duong-lui.html` vào, lưu. Rồi bấm **⟳** trong app —
+**Sau khi đã đổi nguồn Pages sang GitHub Actions, đường lui là GẠT LẠI
+CÔNG TẮC — không phải sửa file:**
+
+> Settings → Pages → Source → chọn lại **Deploy from a branch** (main · root)
+
+`index.html` v9.6 vẫn nằm nguyên ở gốc repo (v10 không đụng tới nó), nên
+gạt công tắc về là bản cũ lên sóng lại ngay. Rồi bấm **⟳** trong app —
 không bấm thì trình duyệt còn giữ bản v10 trong bộ nhớ đệm.
+
+File `index-v9.6-duong-lui.html` trong `~/Downloads` là đai dự phòng cuối
+cùng: chỉ cần tới nếu chẳng may `index.html` ở gốc repo bị sửa mất — dán
+nội dung nó đè lên rồi mới gạt công tắc.
 
 Đường lui này còn hiệu lực vì v10 giữ đúng luật chỉ-thêm-không-đổi:
 `cat` và `done` là trường thêm trên dòng, đã kiểm là v9.6 đọc rồi lưu lại
