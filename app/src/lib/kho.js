@@ -147,3 +147,28 @@ export function ruotCuaBackup (obj) {
   if (obj && typeof obj === 'object' && obj.data && typeof obj.data === 'object') return obj.data
   return obj
 }
+
+/* Sáu danh mục của v10 (PRD mục 03B). Thứ tự này là thứ tự chip xoay vòng
+   khi bấm, nên đừng xáo — người dùng nhớ vị trí bằng cơ bắp ngón tay. */
+export const DANH_MUC = [
+  { ma: '🍜 Ăn uống', bt: '🍜', ten: 'Ăn uống' },
+  { ma: '🚕 Di chuyển', bt: '🚕', ten: 'Di chuyển' },
+  { ma: '🎟 Vé', bt: '🎟', ten: 'Vé' },
+  { ma: '🛍 Mua sắm', bt: '🛍', ten: 'Mua sắm' },
+  { ma: '🏨 Lưu trú', bt: '🏨', ten: 'Lưu trú' },
+  { ma: '📦 Khác', bt: '📦', ten: 'Khác' }
+]
+
+/* Bấm chip để xoay vòng danh mục (PRD luồng F3). Vòng cuối quay về rỗng,
+   để người dùng bỏ phân loại được — không có ngõ cụt. */
+export function danhMucKeTiep (hienTai) {
+  const i = DANH_MUC.findIndex((d) => d.ma === hienTai)
+  if (i === -1) return DANH_MUC[0].ma
+  if (i === DANH_MUC.length - 1) return ''
+  return DANH_MUC[i + 1].ma
+}
+
+/* Bốn kênh thanh toán — bê nguyên danh sách của v9.6, KHÔNG đổi chữ.
+   Dữ liệu thật đang dùng đúng những chuỗi này; đổi một chữ là 61 dòng cũ
+   rơi khỏi phép đối chiếu ví tiền mặt. */
+export const KENH_THANH_TOAN = ['Tiền mặt', 'Momo', 'Zalo', 'Thẻ ngân hàng', 'Khác']

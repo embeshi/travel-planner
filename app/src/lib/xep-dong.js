@@ -50,3 +50,31 @@ export function viTienMatConLai (rows, tongDaDoi) {
     .reduce((s, r) => s + rowTotal(r), 0)
   return num(tongDaDoi) - daTieu
 }
+
+/* ============================================================
+   CHUYỂN CHỖ MỘT DÒNG — bê nguyên luật của enableRowDrag()
+   trong index.html v9.6 (dòng 1698–1706).
+
+   Luật «nhận ngày của hàng xóm»: sau khi thả, dòng nhìn sang hàng xóm
+   PHÍA TRÊN trước; không có thì nhìn hàng xóm phía dưới. Nếu hàng xóm
+   đó khác ngày thì dòng nhận luôn ngày ấy.
+
+   Đây là thứ làm cho kéo-thả «hôn phối» được với tự-xếp-theo-ngày: thả
+   một dòng sang cụm ngày khác thì nó thuộc về ngày đó luôn, chứ không
+   bị cú sắp xếp kế tiếp ném ngược về chỗ cũ.
+
+   Trả về true nếu ngày của dòng bị đổi.
+   ============================================================ */
+export function chuyenDong (list, tu, den) {
+  if (tu === den || tu < 0 || tu >= list.length) return false
+  const dong = list.splice(tu, 1)[0]
+  list.splice(den, 0, dong)
+  if (!dong || !('date' in dong)) return false
+
+  const hangXom = list[den - 1] || list[den + 1]
+  if (hangXom && (hangXom.date || '') !== (dong.date || '')) {
+    dong.date = hangXom.date || ''
+    return true
+  }
+  return false
+}

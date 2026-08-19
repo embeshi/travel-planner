@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { khoMacDinh, applyData, ruotCuaBackup, dongMoi, danhMucCua, CHUA_PHAN_LOAI } from './kho.js'
+import { khoMacDinh, applyData, ruotCuaBackup, dongMoi, danhMucCua, CHUA_PHAN_LOAI, DANH_MUC, danhMucKeTiep, KENH_THANH_TOAN } from './kho.js'
 import { STORAGE_KEY } from './luu-tru.js'
 import { soMau, backupMau } from './du-lieu-mau.js'
 
@@ -111,5 +111,32 @@ describe('ruotCuaBackup', () => {
   })
   it('đưa thẳng state vào cũng nhận', () => {
     expect(ruotCuaBackup(soMau()).rows).toHaveLength(61)
+  })
+})
+
+describe('danhMucKeTiep · chip xoay vòng (F3)', () => {
+  it('chưa có danh mục thì bấm lần đầu ra món đầu tiên', () => {
+    expect(danhMucKeTiep('')).toBe('🍜 Ăn uống')
+    expect(danhMucKeTiep(undefined)).toBe('🍜 Ăn uống')
+  })
+  it('xoay đúng thứ tự sáu danh mục', () => {
+    let c = ''
+    const vong = []
+    for (let i = 0; i < 6; i++) { c = danhMucKeTiep(c); vong.push(c) }
+    expect(vong).toEqual(DANH_MUC.map((d) => d.ma))
+  })
+  it('hết vòng thì quay về rỗng — không có ngõ cụt', () => {
+    expect(danhMucKeTiep('📦 Khác')).toBe('')
+  })
+})
+
+describe('KENH_THANH_TOAN · không được đổi chữ', () => {
+  it('giữ đúng bốn kênh mà dữ liệu thật đang dùng', () => {
+    /* Đổi một chữ là 61 dòng cũ rơi khỏi phép đối chiếu ví tiền mặt,
+       vì viTienMatConLai lọc theo đúng chuỗi «Tiền mặt». */
+    expect(KENH_THANH_TOAN).toContain('Tiền mặt')
+    expect(KENH_THANH_TOAN).toContain('Momo')
+    expect(KENH_THANH_TOAN).toContain('Zalo')
+    expect(KENH_THANH_TOAN).toContain('Thẻ ngân hàng')
   })
 })

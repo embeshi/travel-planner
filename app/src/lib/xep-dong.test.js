@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sortByDate, rowTotal, tongLichTrinh, viTienMatConLai } from './xep-dong.js'
+import { sortByDate, rowTotal, tongLichTrinh, viTienMatConLai, chuyenDong } from './xep-dong.js'
 
 const dong = (id, date, tripCost = 0, pay = '') => ({ id, date, tripCost, pay })
 const thuTu = (list) => list.map((r) => r.id).join('|')
@@ -89,5 +89,54 @@ describe('viTienMatConLai — không so sai phạm trù', () => {
 
   it('chưa đổi đồng nào mà chưa tiêu gì thì bằng 0', () => {
     expect(viTienMatConLai([], '')).toBe(0)
+  })
+})
+
+describe('chuyenDong · luật nhận ngày của hàng xóm', () => {
+  const ds = () => [
+    dong('a', '2026-08-04'), dong('b', '2026-08-04'),
+    dong('c', '2026-08-05'), dong('d', '2026-08-05')
+  ]
+
+  it('kéo trong cùng một ngày thì chỉ đổi thứ tự, KHÔNG đổi ngày', () => {
+    const l = ds()
+    expect(chuyenDong(l, 1, 0)).toBe(false)
+    expect(thuTu(l)).toBe('b|a|c|d')
+    expect(l[0].date).toBe('2026-08-04')
+  })
+
+  it('thả sang cụm ngày khác thì nhận luôn ngày của cụm đó', () => {
+    /* Không có luật này, cú sắp xếp kế tiếp sẽ ném dòng ngược về chỗ cũ
+       và người dùng tưởng kéo thả bị hỏng. */
+    const l = ds()
+    expect(chuyenDong(l, 0, 3)).toBe(true)
+    expect(l[3].id).toBe('a')
+    expect(l[3].date).toBe('2026-08-05')
+  })
+
+  it('nhìn hàng xóm PHÍA TRÊN trước', () => {
+    const l = ds()
+    chuyenDong(l, 3, 1)          /* d (05) chen vào giữa a và b (04) */
+    expect(l[1].id).toBe('d')
+    expect(l[1].date).toBe('2026-08-04')
+  })
+
+  it('thả lên đầu bảng thì nhìn hàng xóm phía dưới', () => {
+    const l = ds()
+    chuyenDong(l, 2, 0)          /* c (05) lên đầu, dưới nó là a (04) */
+    expect(l[0].id).toBe('c')
+    expect(l[0].date).toBe('2026-08-04')
+  })
+
+  it('kéo về đúng chỗ cũ thì không làm gì', () => {
+    const l = ds()
+    expect(chuyenDong(l, 1, 1)).toBe(false)
+    expect(thuTu(l)).toBe('a|b|c|d')
+  })
+
+  it('danh sách một phần tử không vỡ', () => {
+    const l = [dong('a', '2026-08-04')]
+    expect(chuyenDong(l, 0, 0)).toBe(false)
+    expect(l).toHaveLength(1)
   })
 })
