@@ -4,6 +4,8 @@ import ThanhTab from './components/ThanhTab.vue'
 import ConDau from './components/ConDau.vue'
 import BangLichTrinh from './components/BangLichTrinh.vue'
 import ManHomNay from './components/ManHomNay.vue'
+import ManSoTay from './components/ManSoTay.vue'
+import ManTongKet from './components/ManTongKet.vue'
 import GhiChiNhanh from './components/GhiChiNhanh.vue'
 import ToastHoanTac from './components/ToastHoanTac.vue'
 import { kho, applyData, ruotCuaBackup } from './lib/kho.js'
@@ -25,7 +27,6 @@ const TABS = [
 const homNay = ref(new URLSearchParams(location.search).get('ngay') || homNayISO())
 
 const tab = ref(tabMoDau(kho, homNay.value))
-const dangXem = computed(() => TABS.find((t) => t.ma === tab.value))
 const vanTay = computed(() => baConSoVanTay(kho))
 const gd = computed(() => giaiDoan(kho, homNay.value))
 const NHAN_GD = { 'chua-co': 'chưa có chuyến', truoc: 'trước chuyến', trong: 'trong chuyến', sau: 'sau chuyến' }
@@ -98,12 +99,12 @@ function nhapBackup (e) {
     <main class="ve__than">
       <ManHomNay v-if="tab === 'hom-nay'" :hom-nay="homNay" @sang-tab="tab = $event" />
       <BangLichTrinh v-else-if="tab === 'ke-hoach'" />
-      <p v-else class="ve__cho">
-        Tab <strong>{{ dangXem.nhan }}</strong> sẽ có nội dung ở lô sau.
-      </p>
+      <ManSoTay v-else-if="tab === 'so-tay'" />
+      <ManTongKet v-else-if="tab === 'tong-ket'" />
 
-      <GhiChiNhanh v-if="!laDienThoai" kieu="panel" :hom-nay="homNay"
-                   class="ve__panel" @da-ghi="daGhi" />
+      <!-- Panel ghi nhanh chỉ có ích ở hai màn đang sống trong chuyến -->
+      <GhiChiNhanh v-if="!laDienThoai && (tab === 'hom-nay' || tab === 'ke-hoach')"
+                   kieu="panel" :hom-nay="homNay" class="ve__panel" @da-ghi="daGhi" />
 
       <p class="ve__van-tay">
         {{ vanTay.soDongLichTrinh }} dòng ·

@@ -58,8 +58,21 @@ nhánh chính.
 | 3 | Tên mọi khối và mọi cột trong sổ | Dữ liệu còn nhưng app đọc không ra |
 | 4 | Cùng một địa chỉ web `embeshi.github.io/travel-planner` | Bản offline gắn với địa chỉ, đổi chỗ là mất |
 
-Trường mới (`cat`, và sau này có thể `done`) chỉ được THÊM và phải là tùy chọn: dòng cũ
-không có thì hiện «Chưa phân loại», không bắt nhập, không tự điền bừa.
+Trường mới (`cat`, `done`) chỉ được THÊM và phải là tùy chọn: dòng cũ không có thì
+hiện «Chưa phân loại», không bắt nhập, không tự điền bừa.
+
+### Bất đối xứng đã đo được về đường lui 60 giây
+`applyData` của v9.6 gán từng trường ĐÃ BIẾT lên state mặc định, nhưng chuyển tiếp
+NGUYÊN OBJECT của từng dòng. Hệ quả, đã kiểm bằng mã chạy thật:
+
+| Thêm trường ở đâu | Lùi về v9.6 rồi lưu lại |
+|---|---|
+| Trên **dòng** (`rows[].cat`, `rows[].done`) | ✅ CÒN NGUYÊN |
+| Ở **cấp cao nhất** (ví dụ `budget`) | ❌ BỊ XOÁ |
+
+Nên: dữ liệu nào quan trọng thì gắn vào dòng. Trường cấp cao nhất chỉ dùng cho thứ
+gõ lại được trong mười giây (như ngân sách dự trù) — và phải chấp nhận rằng một vòng
+lùi-về-v9.6-rồi-lên-lại sẽ xoá nó.
 
 ## Chín luật không được phá
 1. KHÔNG chạy bất kỳ câu SQL nào lên Supabase. Không tạo, sửa, xoá bảng hay cột.

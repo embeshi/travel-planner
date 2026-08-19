@@ -21,6 +21,11 @@ export function khoMacDinh () {
     _updatedAt: 0,
     currency: 'THB',
     rate: null,
+    /* MỚI Ở v10 — ngân sách dự trù, để màn Tổng kết so được thực tế với dự trù.
+       CẢNH BÁO đã đo: trường cấp cao nhất KHÔNG sống sót qua đường lui 60 giây
+       (applyData của v9.6 chỉ gán các trường nó biết). Chấp nhận được vì đây là
+       một con số gõ lại trong mười giây, không phải dữ liệu chuyến đi. */
+    budget: '',
     rows: [],
     cash: [],
     bookings: [],
@@ -124,6 +129,8 @@ export function applyData (data, dich = kho) {
     }
   }).filter(Boolean)
 
+  dich.budget = (typeof data.budget === 'string' || typeof data.budget === 'number')
+    ? String(data.budget) : ''
   dich.bkCurrency = typeof data.bkCurrency === 'string' ? data.bkCurrency : dich.bkCurrency
   dich.bkRate = (typeof data.bkRate === 'number' && isFinite(data.bkRate)) ? data.bkRate : null
 

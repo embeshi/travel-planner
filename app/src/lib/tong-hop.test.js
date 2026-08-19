@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { tongChiPhiCaChuyen, tongDaDoi, baConSoVanTay, daChiHomNay, dongCuaHomNay } from './tong-hop.js'
+import { tongChiPhiCaChuyen, tongDaDoi, baConSoVanTay, daChiHomNay, dongCuaHomNay,
+  coCauTheoDanhMuc, coCauTheoKenh, trungBinhMoiNgay, soVoiDuTru } from './tong-hop.js'
+import { CHUA_PHAN_LOAI } from './kho.js'
 import { khoMacDinh, applyData } from './kho.js'
 import { soMau } from './du-lieu-mau.js'
 
@@ -96,5 +98,78 @@ describe('daChiHomNay · chỉ số sống còn của màn Hôm nay', () => {
 
   it('dongCuaHomNay lấy đúng những dòng của ngày đó', () => {
     expect(dongCuaHomNay(k(), '2026-08-04').map((r) => r.id)).toEqual(['a', 'b'])
+  })
+})
+
+describe('cơ cấu chi tiêu · màn Tổng kết', () => {
+  const k = () => kho({
+    rate: 700, currency: 'THB',
+    rows: [
+      { id: 'a', date: '2026-08-01', tripCost: '400', cat: '🍜 Ăn uống', pay: 'Tiền mặt' },
+      { id: 'b', date: '2026-08-01', tripCost: '300', cat: '🚕 Di chuyển', pay: 'Momo' },
+      { id: 'c', date: '2026-08-02', tripCost: '200', cat: '🍜 Ăn uống', pay: 'Tiền mặt' },
+      { id: 'd', date: '2026-08-02', tripCost: '100', pay: '' },
+      { id: 'e', date: '2026-08-02', tripCost: '0', cat: '🎟 Vé', pay: 'Zalo' }
+    ],
+    hotel: { checkin: '2026-08-01', checkout: '2026-08-04', name: '', address: '' }
+  })
+
+  it('gom đúng theo danh mục, xếp tiền giảm dần', () => {
+    const { ds, tong } = coCauTheoDanhMuc(k())
+    expect(tong).toBe(1000)
+    expect(ds[0]).toMatchObject({ ten: '🍜 Ăn uống', tien: 600 })
+    expect(ds[0].phanTram).toBeCloseTo(60, 5)
+    expect(ds[1]).toMatchObject({ ten: '🚕 Di chuyển', tien: 300 })
+  })
+
+  it('dòng chưa phân loại vẫn được đếm, không bị bỏ quên', () => {
+    const ten = coCauTheoDanhMuc(k()).ds.map((x) => x.ten)
+    expect(ten).toContain(CHUA_PHAN_LOAI)
+  })
+
+  it('dòng 0 đồng không tạo ra một lát bánh rỗng', () => {
+    expect(coCauTheoDanhMuc(k()).ds.map((x) => x.ten)).not.toContain('🎟 Vé')
+  })
+
+  it('gom theo kênh thanh toán, dòng chưa chọn gom riêng', () => {
+    const { ds } = coCauTheoKenh(k())
+    expect(ds.find((x) => x.ten === 'Tiền mặt').tien).toBe(600)
+    expect(ds.find((x) => x.ten === 'Chưa chọn').tien).toBe(100)
+  })
+
+  it('tổng các phần trăm bằng 100', () => {
+    const t = coCauTheoDanhMuc(k()).ds.reduce((s, x) => s + x.phanTram, 0)
+    expect(t).toBeCloseTo(100, 5)
+  })
+})
+
+describe('trungBinhMoiNgay · chia cho SỐ NGÀY CỦA CHUYẾN', () => {
+  it('ngày không tiêu đồng nào vẫn tính là một ngày', () => {
+    /* Bỏ ngày rỗng ra khỏi mẫu số là thổi trung bình cao lên — sai kiểu
+       «so sai phạm trù» mà mục 05 PRD cấm. */
+    const k2 = kho({
+      rate: 1, rows: [{ id: 'a', date: '2026-08-01', tripCost: '400' }],
+      hotel: { checkin: '2026-08-01', checkout: '2026-08-04', name: '', address: '' }
+    })
+    const r = trungBinhMoiNgay(k2)
+    expect(r.songay).toBe(4)
+    expect(r.moiNgay).toBe(100)
+  })
+
+  it('chưa có mốc chuyến thì không đoán bừa', () => {
+    expect(trungBinhMoiNgay(khoMacDinh())).toBe(null)
+  })
+})
+
+describe('soVoiDuTru', () => {
+  it('tính đúng chênh lệch và phần trăm', () => {
+    const k2 = kho({ rate: 1, budget: '1000', rows: [{ id: 'a', tripCost: '960' }] })
+    expect(soVoiDuTru(k2)).toMatchObject({ duTru: 1000, thucTe: 960, chenh: -40 })
+    expect(soVoiDuTru(k2).phanTram).toBeCloseTo(-4, 5)
+  })
+
+  it('chưa đặt ngân sách thì trả null, KHÔNG báo «vượt 100%»', () => {
+    const k2 = kho({ rate: 1, rows: [{ id: 'a', tripCost: '500' }] })
+    expect(soVoiDuTru(k2)).toBe(null)
   })
 })

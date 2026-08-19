@@ -73,3 +73,64 @@ export function dongCuaHomNay (state, homNay) {
   if (!homNay) return []
   return state.rows.filter((r) => (r.date || '') === homNay)
 }
+
+/* ============================================================
+   CƠ CẤU CHI TIÊU — cho màn Tổng kết (PRD mục 03B).
+   Mọi con số ở đây tính lại từ dữ liệu thật, không hardcode.
+   ============================================================ */
+import { DANH_MUC, danhMucCua, CHUA_PHAN_LOAI, KENH_THANH_TOAN } from './kho.js'
+import { mocChuyenDi } from './giai-doan.js'
+
+function goms (rows, lay, thuTuChuan) {
+  const bang = new Map()
+  let tong = 0
+  for (const r of rows) {
+    const t = rowTotal(r)
+    if (t <= 0) continue
+    const k = lay(r)
+    bang.set(k, (bang.get(k) || 0) + t)
+    tong += t
+  }
+  const ds = [...bang.entries()].map(([ten, tien]) => ({
+    ten, tien, phanTram: tong ? (tien / tong) * 100 : 0
+  }))
+  /* Xếp theo tiền giảm dần; bằng nhau thì theo thứ tự chuẩn để kết quả
+     ổn định, không nhảy lung tung giữa hai lần vẽ. */
+  ds.sort((a, b) => b.tien - a.tien ||
+    thuTuChuan.indexOf(a.ten) - thuTuChuan.indexOf(b.ten))
+  return { ds, tong }
+}
+
+export function coCauTheoDanhMuc (state) {
+  const thuTu = [...DANH_MUC.map((d) => d.ma), CHUA_PHAN_LOAI]
+  return goms(state.rows, danhMucCua, thuTu)
+}
+
+export function coCauTheoKenh (state) {
+  const thuTu = [...KENH_THANH_TOAN, 'Chưa chọn']
+  return goms(state.rows, (r) => r.pay || 'Chưa chọn', thuTu)
+}
+
+/* Trung bình mỗi ngày — chia cho SỐ NGÀY CỦA CHUYẾN, không phải số ngày
+   có phát sinh chi. Ngày không tiêu đồng nào vẫn là một ngày của chuyến;
+   bỏ nó ra là trung bình bị thổi cao lên. */
+export function trungBinhMoiNgay (state) {
+  const { di, ve } = mocChuyenDi(state)
+  const { tong } = tongChiPhiCaChuyen(state)
+  if (!di || !ve) return null
+  const songay = Math.round((new Date(ve) - new Date(di)) / 86400000) + 1
+  if (!isFinite(songay) || songay < 1) return null
+  return { tong, songay, moiNgay: tong / songay }
+}
+
+/* So thực tế với dự trù. Chưa đặt ngân sách thì trả null — KHÔNG bịa
+   một con số 0 rồi báo «vượt 100%». */
+export function soVoiDuTru (state) {
+  const duTru = num(state.budget)
+  if (duTru <= 0) return null
+  const { tong } = tongChiPhiCaChuyen(state)
+  return {
+    duTru, thucTe: tong, chenh: tong - duTru,
+    phanTram: ((tong - duTru) / duTru) * 100
+  }
+}

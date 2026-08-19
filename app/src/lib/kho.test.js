@@ -14,12 +14,23 @@ describe('CANH CỬA · bốn thứ không được đổi', () => {
     expect(STORAGE_KEY).toBe('ke-hoach-du-lich-v1')
   })
 
-  it('hình dạng sổ phải có đúng 20 khối, đúng tên của v9.6', () => {
+  it('hình dạng sổ: 20 khối của v9.6, cộng đúng MỘT khối mới của v10', () => {
+    /* Danh sách này cố tình khó sửa. Thêm bớt một tên ở đây phải là quyết định
+       có ý thức, không được trôi vào lúc nào không biết.
+       `budget` là khối MỚI của v10 — xem cảnh báo bất đối xứng trong CLAUDE.md. */
     expect(Object.keys(khoMacDinh()).sort()).toEqual([
       '_updatedAt', 'activeNote', 'activePack', 'bkCurrency', 'bkRate', 'bookings',
-      'cash', 'currency', 'essentials', 'food', 'hotel', 'makeup', 'packSeed1',
-      'packSeed2', 'places', 'rate', 'rows', 'shopping', 'skincare', 'title'
+      'budget', 'cash', 'currency', 'essentials', 'food', 'hotel', 'makeup',
+      'packSeed1', 'packSeed2', 'places', 'rate', 'rows', 'shopping', 'skincare', 'title'
     ])
+  })
+
+  it('budget nhận cả chuỗi lẫn số, sai kiểu thì về rỗng', () => {
+    const k = khoMacDinh()
+    applyData({ budget: 31900000 }, k); expect(k.budget).toBe('31900000')
+    applyData({ budget: '31900000' }, k); expect(k.budget).toBe('31900000')
+    applyData({ budget: {} }, k); expect(k.budget).toBe('')
+    applyData({}, k); expect(k.budget).toBe('')
   })
 
   it('khối hotel giữ đúng bốn cột', () => {
