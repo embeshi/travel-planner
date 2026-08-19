@@ -54,3 +54,22 @@ export function baConSoVanTay (state) {
     thieuTyGia
   }
 }
+
+/* ============================================================
+   ĐÃ CHI HÔM NAY — chỉ số sống còn thứ nhất của màn Hôm nay.
+   Chỉ cộng dòng có ngày ĐÚNG BẰNG hôm nay. Dòng chưa ghi ngày không
+   được cộng vào: người dùng đang gõ dở một dòng trống không có nghĩa
+   là hôm nay đã tiêu thêm.
+   ============================================================ */
+export function daChiHomNay (state, homNay) {
+  return dongCuaHomNay(state, homNay).reduce((s, r) => s + rowTotal(r), 0)
+}
+
+/* Chốt chặn: ngày rỗng thì trả danh sách rỗng, KHÔNG khớp với các dòng
+   chưa ghi ngày. Không có chốt này, một lỗi ở tầng trên truyền xuống chuỗi
+   rỗng sẽ làm mọi dòng trống ngày bị gom hết vào «đã chi hôm nay» — sai
+   âm thầm, không có dấu hiệu gì trên màn hình. */
+export function dongCuaHomNay (state, homNay) {
+  if (!homNay) return []
+  return state.rows.filter((r) => (r.date || '') === homNay)
+}

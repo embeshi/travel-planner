@@ -48,8 +48,16 @@ export const kho = reactive(khoMacDinh())
    dòng cũ không có thì hiện «Chưa phân loại», không bắt nhập,
    không tự điền bừa (nghi thức mục 02, điều ③). */
 export function dongMoi () {
-  return { id: uid(), activity: '', date: '', location: '', notes: '', tripCost: '', pay: '', cat: '' }
+  return {
+    id: uid(), activity: '', date: '', location: '', notes: '',
+    tripCost: '', pay: '', cat: '', done: false
+  }
 }
+
+/* `done` là trường tùy chọn THỨ HAI của v10 (màn Hôm nay tick được từng việc).
+   Cùng luật với `cat`: dòng cũ không có thì coi như chưa xong, không tự
+   điền bừa, và v9.6 đọc rồi lưu lại vẫn giữ nguyên — đã kiểm. */
+export function daXong (row) { return !!(row && row.done) }
 export function dongTienMatMoi () {
   return { id: uid(), date: '', vnd: '', fx: '', place: '' }
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { tongChiPhiCaChuyen, tongDaDoi, baConSoVanTay } from './tong-hop.js'
+import { tongChiPhiCaChuyen, tongDaDoi, baConSoVanTay, daChiHomNay, dongCuaHomNay } from './tong-hop.js'
 import { khoMacDinh, applyData } from './kho.js'
 import { soMau } from './du-lieu-mau.js'
 
@@ -68,5 +68,33 @@ describe('baConSoVanTay · tiêu chí nghiệm thu của nghi thức', () => {
     expect(v.soDongLichTrinh).toBe(0)
     expect(v.tongChiPhiVnd).toBe(0)
     expect(v.viTienMatConLai).toBe(0)
+  })
+})
+
+describe('daChiHomNay · chỉ số sống còn của màn Hôm nay', () => {
+  const k = () => kho({
+    rows: [
+      { id: 'a', date: '2026-08-04', tripCost: '120' },
+      { id: 'b', date: '2026-08-04', tripCost: '85' },
+      { id: 'c', date: '2026-08-05', tripCost: '900' },
+      { id: 'd', date: '', tripCost: '500' }
+    ]
+  })
+
+  it('chỉ cộng dòng đúng ngày hôm nay', () => {
+    expect(daChiHomNay(k(), '2026-08-04')).toBe(205)
+  })
+
+  it('dòng chưa ghi ngày KHÔNG được cộng vào', () => {
+    /* Đang gõ dở một dòng trống không có nghĩa là hôm nay đã tiêu thêm. */
+    expect(daChiHomNay(k(), '')).toBe(0)
+  })
+
+  it('ngày không có dòng nào thì bằng 0', () => {
+    expect(daChiHomNay(k(), '2026-08-09')).toBe(0)
+  })
+
+  it('dongCuaHomNay lấy đúng những dòng của ngày đó', () => {
+    expect(dongCuaHomNay(k(), '2026-08-04').map((r) => r.id)).toEqual(['a', 'b'])
   })
 })

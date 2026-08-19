@@ -3,8 +3,10 @@ import { ref, computed } from 'vue'
 import ThanhTab from './components/ThanhTab.vue'
 import ConDau from './components/ConDau.vue'
 import BangLichTrinh from './components/BangLichTrinh.vue'
+import ManHomNay from './components/ManHomNay.vue'
 import { kho, applyData, ruotCuaBackup } from './lib/kho.js'
 import { baConSoVanTay } from './lib/tong-hop.js'
+import { tabMoDau, giaiDoan, homNayISO } from './lib/giai-doan.js'
 import { fmtVND, fmtFx } from './lib/dinh-dang.js'
 
 const TABS = [
@@ -13,19 +15,27 @@ const TABS = [
   { ma: 'so-tay', nhan: 'Sổ tay', bieuTuong: '🧳' },
   { ma: 'tong-ket', nhan: 'Tổng kết', bieuTuong: '📊' }
 ]
-const tab = ref('ke-hoach')
+
+/* Cho phép ép ngày qua ?ngay=2026-08-04 để thử được cả ba giai đoạn mà
+   không phải vặn đồng hồ máy. Không có tham số thì lấy ngày thật. */
+const homNay = ref(new URLSearchParams(location.search).get('ngay') || homNayISO())
+
+const tab = ref(tabMoDau(kho, homNay.value))
 const dangXem = computed(() => TABS.find((t) => t.ma === tab.value))
 const vanTay = computed(() => baConSoVanTay(kho))
+const gd = computed(() => giaiDoan(kho, homNay.value))
+const NHAN_GD = { 'chua-co': 'chưa có chuyến', truoc: 'trước chuyến', trong: 'trong chuyến', sau: 'sau chuyến' }
 
-/* Nhập backup — tạm đặt ở đây cho lô 4 thử được với dữ liệu thật.
-   Lô 9 sẽ dời nó về khu Backup cho đúng chỗ.
-   Chỉ đọc file trong bộ nhớ tạm: không đăng nhập, không gọi máy chủ. */
 function nhapBackup (e) {
   const f = e.target.files && e.target.files[0]
   if (!f) return
   const doc = new FileReader()
   doc.onload = () => {
-    try { applyData(ruotCuaBackup(JSON.parse(doc.result)), kho) } catch (err) { alert('Không đọc được file: ' + err.message) }
+    try {
+      applyData(ruotCuaBackup(JSON.parse(doc.result)), kho)
+      /* App tự mở đúng tab theo giai đoạn (PRD mục 03B) */
+      tab.value = tabMoDau(kho, homNay.value)
+    } catch (err) { alert('Không đọc được file: ' + err.message) }
   }
   doc.readAsText(f)
   e.target.value = ''
@@ -38,7 +48,7 @@ function nhapBackup (e) {
 
     <header class="ve__dau">
       <div class="ve__ten">
-        <span class="nhan-mono">Sổ tay du lịch</span>
+        <span class="nhan-mono">Sổ tay du lịch · {{ NHAN_GD[gd] }}</span>
         <h1 class="ve__tieu-de">{{ kho.title }} <span class="ve__ver">v10</span></h1>
       </div>
       <label class="ve__nhap">
@@ -49,7 +59,8 @@ function nhapBackup (e) {
     </header>
 
     <main class="ve__than">
-      <BangLichTrinh v-if="tab === 'ke-hoach'" />
+      <ManHomNay v-if="tab === 'hom-nay'" :hom-nay="homNay" @sang-tab="tab = $event" />
+      <BangLichTrinh v-else-if="tab === 'ke-hoach'" />
       <p v-else class="ve__cho">
         Tab <strong>{{ dangXem.nhan }}</strong> sẽ có nội dung ở lô sau.
       </p>
@@ -72,10 +83,7 @@ function nhapBackup (e) {
   padding: var(--sp-4); background: var(--giay); border-bottom: var(--vien);
 }
 .ve__ten { min-width: 0; flex: 1; }
-.ve__tieu-de {
-  margin: var(--sp-1) 0 0; font-family: var(--font-nhan);
-  font-size: 20px; font-weight: 600;
-}
+.ve__tieu-de { margin: var(--sp-1) 0 0; font-family: var(--font-nhan); font-size: 20px; font-weight: 600; }
 .ve__ver { color: var(--san-ho); }
 .ve__nhap .nhan-mono { display: block; margin-bottom: 2px; }
 .ve__nhap input { font-size: 12px; max-width: 190px; }
@@ -88,8 +96,6 @@ function nhapBackup (e) {
 }
 .ve__tabs { position: sticky; bottom: 0; }
 
-/* Điện thoại: xếp dọc, tiêu đề một dòng — không để nhãn mono vỡ thành
-   bốn dòng như bản đầu. Ô nhập backup xuống hàng riêng cho khỏi chen. */
 @media (max-width: 700px) {
   .ve__dau { align-items: center; gap: var(--sp-2); }
   .ve__ten { flex: 1 1 100%; }
