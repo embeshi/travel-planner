@@ -8,16 +8,21 @@ tránh thuật ngữ khi không cần thiết.
 
 ## Kiến trúc
 
-Đang ở giữa đợt đại tu v10. Hai thứ cùng tồn tại cho tới lô 10:
+**v10 ĐÃ PHÁT ngày 20/08/2026** — nghiệm thu bằng ba con số vân tay, khớp cả ba.
+Bản chạy thật bây giờ là app Vue trong `app/`, do GitHub Actions dựng và phát
+(`.github/workflows/deploy.yml`: npm ci → npm test → npm run build → Pages).
+Đẩy lên `main` là kích hoạt phát bản; test đỏ thì robot tự dừng, không phát.
 
-**Bản đang chạy thật (v9.6) — nhánh `main`, ĐỪNG ĐỤNG khi làm v10**
-- `index.html` — TOÀN BỘ app v9.6 trong một file: HTML + CSS + JS thuần, ~147KB.
-- `sw.js` — service worker. Điều hướng network-first, không cache *.supabase.co.
-  Tên kho đệm hiện tại: travel-planner-v8
-- `manifest.webmanifest`, `icon-512.png`, `icon-192.png`, `apple-touch-icon.png`
+**Đường lui khẩn cấp — vì thế các file v9.6 ở gốc repo GIỮ NGUYÊN, KHÔNG XOÁ:**
+- `index.html` (~147KB), `sw.js` (kho đệm travel-planner-v8), `manifest.webmanifest`,
+  ba icon cũ — tất cả là bản v9.6 đóng băng.
+- Lùi về: GitHub → Settings → Pages → Source → «Deploy from a branch» (main · root)
+  → v9.6 lên sóng lại ngay, rồi bấm ⟳ trong app. Không cần sửa file nào.
+- Đường lui chỉ còn hiệu lực chừng nào giữ luật chỉ-thêm-không-đổi (luật 3).
 
-**Bản v10 đang thi công — thư mục `app/`, chỉ có trên nhánh `v10`**
-- Vue 3 + Vite. Bốn phụ thuộc, không hơn: `vue`, `vite`, `@vitejs/plugin-vue`, `vitest`.
+**App v10 — thư mục `app/`**
+- Vue 3 + Vite. Phụ thuộc chạy thật duy nhất: `vue`. Đồ phát triển: `vite`,
+  `@vitejs/plugin-vue`, `vitest`, `@vue/test-utils`, `jsdom` — không vào bản phát.
 - `app/index.html` — app thật · `app/linh-kien.html` — bảng linh kiện (tài liệu sống)
 - `app/src/assets/tokens.css` — chép từ mục 07 bảng thiết kế, nguồn duy nhất của màu và thang
 - `app/src/components/` — linh kiện dùng chung · `app/src/lib/` — logic thuần bê từ v9.6
@@ -26,7 +31,8 @@ tránh thuật ngữ khi không cần thiết.
 
 **Chung cho cả hai**
 - Dữ liệu: Supabase (một khoản jsonb cho mỗi tài khoản) + bản offline trên máy người dùng.
-- Triển khai: đẩy lên nhánh chính → GitHub Pages tại embeshi.github.io/travel-planner
+- Triển khai: đẩy lên `main` → workflow dựng `app/dist` → GitHub Pages tại
+  embeshi.github.io/travel-planner. Không ai upload file bằng tay nữa.
 - Breakpoint DUY NHẤT: 700px (mobile ≤700, laptop ≥701).
 
 ## LUẬT KHÔNG ĐƯỢC PHÁ
