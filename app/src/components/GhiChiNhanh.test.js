@@ -1,0 +1,119 @@
+// @vitest-environment jsdom
+import { describe, it, expect, beforeEach } from 'vitest'
+import { mount } from '@vue/test-utils'
+import GhiChiNhanh from './GhiChiNhanh.vue'
+import { kho, applyData, khoMacDinh } from '../lib/kho.js'
+
+beforeEach(() => {
+  applyData(khoMacDinh(), kho)
+  applyData({ currency: 'THB', rate: 700, rows: [] }, kho)
+})
+
+const dungSheet = () => mount(GhiChiNhanh, {
+  props: { kieu: 'sheet', mo: false, homNay: '2026-08-04' }
+})
+const phim = (w, k) => w.findAll('.phim__o').find((b) => b.text().trim() === k)
+const chip = (w, t) => w.findAll('.chip').find((b) => b.text().includes(t))
+/* KHÔNG tìm nút theo chữ «Lưu» — chip danh mục «🏨 Lưu trú» cũng chứa chữ đó
+   và đứng trước trong DOM. Bẫy rất tiếng Việt, đã dính một lần.
+   Nút chính của linh kiện NutBam luôn mang class .nut--chinh. */
+const nutLuu = (w) => w.find('.nut--chinh')
+
+describe('bàn phím số · DẤU PHẨY để hiện, DẤU CHẤM để lưu', () => {
+  it('gõ 236,17 thì màn hình hiện dấu phẩy', async () => {
+    const w = dungSheet()
+    for (const k of ['2', '3', '6', ',', '1', '7']) await phim(w, k).trigger('click')
+    expect(w.find('.tien__so').text()).toBe('236,17')
+  })
+
+  it('nhưng dữ liệu lưu xuống phải là DẤU CHẤM — đúng khuôn 61 dòng thật', async () => {
+    /* Ở bảng lịch trình, <input type="number"> được trình duyệt dịch hộ.
+       Bàn phím tự vẽ không có người gác đó, phải tự lo. Lẫn lộn hai thứ
+       này là mất tiền lẻ mà không ai thấy. */
+    const w = dungSheet()
+    for (const k of ['2', '3', '6', ',', '1', '7']) await phim(w, k).trigger('click')
+    await nutLuu(w).trigger('click')
+    expect(kho.rows).toHaveLength(1)
+    expect(kho.rows[0].tripCost).toBe('236.17')
+    expect(kho.rows[0].tripCost).toMatch(/^\d+\.\d{2}$/)
+  })
+
+  it('có phím thập phân — nửa số dòng thật của chủ dự án có phần lẻ', () => {
+    const w = dungSheet()
+    expect(phim(w, ',')).toBeTruthy()
+    expect(w.findAll('.phim__o')).toHaveLength(12)
+  })
+})
+
+describe('ghi chi ba chạm', () => {
+  it('danh mục → nguồn tiền → Lưu, đúng ba chạm', async () => {
+    const w = dungSheet()
+    for (const k of ['1', '2', '0']) await phim(w, k).trigger('click')
+
+    await chip(w, 'Ăn uống').trigger('click')      /* chạm 1 */
+    await chip(w, 'Tiền mặt').trigger('click')     /* chạm 2 */
+    await nutLuu(w).trigger('click')               /* chạm 3 */
+
+    expect(kho.rows).toHaveLength(1)
+    expect(kho.rows[0]).toMatchObject({
+      date: '2026-08-04', tripCost: '120', cat: '🍜 Ăn uống', pay: 'Tiền mặt', done: false
+    })
+  })
+
+  it('ngày tự điền bằng hôm nay, không bắt người dùng gõ', async () => {
+    const w = dungSheet()
+    for (const k of ['5', '0']) await phim(w, k).trigger('click')
+    await nutLuu(w).trigger('click')
+    expect(kho.rows[0].date).toBe('2026-08-04')
+  })
+
+  it('chưa gõ số tiền thì nút Lưu bị khoá — không ghi dòng rỗng', async () => {
+    const w = dungSheet()
+    expect(nutLuu(w).attributes('disabled')).toBeDefined()
+    await nutLuu(w).trigger('click')
+    expect(kho.rows).toHaveLength(0)
+  })
+
+  it('ghi xong thì dọn sạch ô, lần sau mở ra không dính số cũ', async () => {
+    const w = dungSheet()
+    for (const k of ['9', '9']) await phim(w, k).trigger('click')
+    await chip(w, 'Vé').trigger('click')
+    await nutLuu(w).trigger('click')
+    expect(w.find('.tien__so').text()).toBe('0')
+    expect(w.findAll('.chip--chon')).toHaveLength(0)
+  })
+})
+
+describe('panel laptop', () => {
+  const dungPanel = () => mount(GhiChiNhanh, {
+    props: { kieu: 'panel', homNay: '2026-08-04' }
+  })
+
+  it('mở sẵn, không phải hộp thoại che nội dung', () => {
+    const w = dungPanel()
+    expect(w.find('.panel').exists()).toBe(true)
+    expect(w.find('dialog').exists()).toBe(false)
+  })
+
+  it('Enter ở ô số tiền thì lưu luôn', async () => {
+    const w = dungPanel()
+    const o = w.findAll('input')
+    await o[0].setValue('Cà phê')
+    await o[1].setValue('85')
+    await o[1].trigger('keydown', { key: 'Enter' })
+    expect(kho.rows).toHaveLength(1)
+    expect(kho.rows[0].activity).toBe('Cà phê')
+    expect(kho.rows[0].tripCost).toBe('85')
+  })
+
+  it('Enter lúc đang nặn chữ thì KHÔNG lưu nửa chừng', async () => {
+    /* Người dùng gõ tên món tiếng Việt, bấm Enter để chốt dấu — mà app
+       lưu luôn thì được một dòng dở dang không ai muốn. */
+    const w = dungPanel()
+    const o = w.findAll('input')
+    await o[0].setValue('Phở')
+    await o[1].setValue('85')
+    await o[0].trigger('keydown', { key: 'Enter', isComposing: true })
+    expect(kho.rows).toHaveLength(0)
+  })
+})

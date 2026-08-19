@@ -15,6 +15,12 @@ export default defineConfig({
     alias: { '@': duongDan('./src') }
   },
 
+  test: {
+    /* Bài kiểm phần LOGIC chạy ở môi trường node cho nhanh (mặc định).
+       Bài kiểm LINH KIỆN tự khai `@vitest-environment jsdom` ở đầu file. */
+    setupFiles: ['./src/test-setup.js']
+  },
+
   build: {
     rollupOptions: {
       input: {
