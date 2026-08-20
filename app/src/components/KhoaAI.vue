@@ -28,14 +28,14 @@ function luu () {
       <button type="button" class="ka__xoa" @click="xoaKhoaAI">Gỡ khoá khỏi máy</button>
     </template>
     <template v-else>
-      <label class="nhan-mono" for="ka-o">Dán khoá API của Anthropic</label>
+      <label class="nhan-mono" for="ka-o">Dán khoá API của OpenRouter</label>
       <div class="ka__hang">
-        <ONhap id="ka-o" v-model="dang" type="password" placeholder="sk-ant-…" @enter="luu" />
+        <ONhap id="ka-o" v-model="dang" type="password" placeholder="sk-or-…" @enter="luu" />
         <NutBam kieu="phu" :khoa="!dang.trim()" @click="luu">Lưu vào máy</NutBam>
       </div>
       <p class="ka__ghi">
-        Lấy khoá ở console.anthropic.com → API keys. Khoá chỉ lưu trong trình duyệt
-        máy này; mỗi lần bấm ✦ tốn vài trăm đồng tiền gọi AI, trừ vào tài khoản của khoá.
+        Lấy khoá ở openrouter.ai → Keys. Khoá chỉ lưu trong trình duyệt máy này;
+        mỗi lần bấm ✦ tốn vài chục đồng, trừ vào credit OpenRouter của khoá.
       </p>
     </template>
   </div>

@@ -20,4 +20,4 @@ export const BANG = 'trips'
 
 /* Tem phiên bản — luôn hiển thị, đây là thứ CLAUDE.md liệt vào «phải giữ».
    Chỉ nhảy số khi thay đổi được đẩy lên nhánh chính. */
-export const PHIEN_BAN = 'v10.2'
+export const PHIEN_BAN = 'v10.3'

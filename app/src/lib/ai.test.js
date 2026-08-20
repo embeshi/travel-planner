@@ -2,15 +2,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import {
   KHOA_API, khoaAI, luuKhoaAI, xoaKhoaAI, coKhoaAI,
-  goiClaude, dichLoiHTTP, docJSON, soLieuChuyen, banNhapNoiBo,
+  goiAI, MODEL_AI, dichLoiHTTP, docJSON, soLieuChuyen, banNhapNoiBo,
   keChuyenBangAI, tachCauBangAI
 } from './ai.js'
 import { kho, applyData, khoMacDinh } from './kho.js'
 import { STORAGE_KEY } from './luu-tru.js'
 
-const traLoi = (chu, them = {}) => ({
+/* Khuôn trả lời OpenAI chat completions mà OpenRouter dùng */
+const traLoi = (chu, finish = 'stop') => ({
   ok: true, status: 200,
-  json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: chu }], ...them })
+  json: async () => ({ choices: [{ finish_reason: finish, message: { role: 'assistant', content: chu } }] })
 })
 
 let fetchCu
@@ -45,48 +46,54 @@ describe('khoá API · CỦA MÁY NÀY, không phải của sổ', () => {
   })
 })
 
-describe('goiClaude · gọi đúng chuẩn trình duyệt', () => {
+describe('goiAI · gọi OpenRouter đúng chuẩn', () => {
   it('chưa có khoá thì chặn ngay, không gọi mạng', async () => {
     let daGoi = false
     globalThis.fetch = async () => { daGoi = true; return traLoi('x') }
-    await expect(goiClaude('hỏi gì đó')).rejects.toThrow('Chưa có khoá API')
+    await expect(goiAI('hỏi gì đó')).rejects.toThrow('Chưa có khoá API')
     expect(daGoi).toBe(false)
   })
 
-  it('gửi đủ bốn header bắt buộc và thân đúng model', async () => {
-    luuKhoaAI('sk-ant-abc')
+  it('gửi đúng địa chỉ, Bearer key và model đã chốt', async () => {
+    luuKhoaAI('sk-or-abc')
     let bat = null
     globalThis.fetch = async (url, cfg) => { bat = { url, cfg }; return traLoi('chào') }
-    await goiClaude('xin chào')
-    expect(bat.url).toBe('https://api.anthropic.com/v1/messages')
-    expect(bat.cfg.headers['x-api-key']).toBe('sk-ant-abc')
-    expect(bat.cfg.headers['anthropic-version']).toBe('2023-06-01')
-    /* Header CORS bắt buộc để trình duyệt gọi thẳng — thiếu là bị chặn */
-    expect(bat.cfg.headers['anthropic-dangerous-direct-browser-access']).toBe('true')
-    expect(bat.cfg.headers['anthropic-beta']).toContain('server-side-fallback')
+    await goiAI('xin chào')
+    expect(bat.url).toBe('https://openrouter.ai/api/v1/chat/completions')
+    expect(bat.cfg.headers.authorization).toBe('Bearer sk-or-abc')
     const than = JSON.parse(bat.cfg.body)
-    expect(than.model).toBe('claude-opus-5')
-    expect(than.fallbacks).toBe('default')
-    expect(than.output_config.effort).toBe('low')
+    expect(than.model).toBe(MODEL_AI)
+    expect(MODEL_AI).toBe('google/gemini-3.7-flash')
+    expect(than.messages[0].role).toBe('user')
   })
 
-  it('bộ lọc an toàn từ chối (stop_reason refusal) → báo rõ, không đọc bừa nội dung', async () => {
+  it('bộ lọc nội dung chặn (finish_reason content_filter) → báo rõ', async () => {
     luuKhoaAI('sk-x')
-    globalThis.fetch = async () => traLoi('', { stop_reason: 'refusal' })
-    await expect(goiClaude('x')).rejects.toThrow('từ chối')
+    globalThis.fetch = async () => traLoi('', 'content_filter')
+    await expect(goiAI('x')).rejects.toThrow('từ chối')
+  })
+
+  it('lỗi HTTP kèm lời giải thích của OpenRouter thì đưa luôn cho người dùng', async () => {
+    luuKhoaAI('sk-x')
+    globalThis.fetch = async () => ({
+      ok: false, status: 402,
+      json: async () => ({ error: { message: 'Insufficient credits' } })
+    })
+    await expect(goiAI('x')).rejects.toThrow(/hết credit.*Insufficient credits/s)
   })
 
   it('mất mạng → nói rõ tính năng ✦ cần sóng, phần còn lại vẫn offline', async () => {
     luuKhoaAI('sk-x')
     globalThis.fetch = async () => { throw new TypeError('Failed to fetch') }
-    await expect(goiClaude('x')).rejects.toThrow('offline')
+    await expect(goiAI('x')).rejects.toThrow('offline')
   })
 })
 
 describe('dichLoiHTTP · lỗi nào cũng có lối ra', () => {
-  it('401 → chỉ chỗ kiểm khoá', () => expect(dichLoiHTTP(401)).toContain('console.anthropic.com'))
+  it('401 → chỉ chỗ kiểm khoá', () => expect(dichLoiHTTP(401)).toContain('openrouter.ai/keys'))
+  it('402 → chỉ chỗ nạp credit (mã riêng của OpenRouter)', () => expect(dichLoiHTTP(402)).toContain('openrouter.ai/credits'))
   it('429 → bảo đợi', () => expect(dichLoiHTTP(429)).toContain('Đợi'))
-  it('500 → máy chủ, thử lại sau', () => expect(dichLoiHTTP(500)).toContain('Anthropic'))
+  it('500 → máy chủ, thử lại sau', () => expect(dichLoiHTTP(500)).toContain('OpenRouter'))
 })
 
 describe('docJSON · gỡ rào như v9.6', () => {

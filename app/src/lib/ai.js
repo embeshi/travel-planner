@@ -14,7 +14,7 @@ import { doiSoKieuViet } from './tach-cau.js'
      · KHÔNG nằm trong `kho` — kho được đồng bộ lên Supabase
      · KHÔNG lọt vào file backup JSON — backup chỉ xuất `kho`
      · KHÔNG bao giờ vào repo — nó chỉ sống trong trình duyệt
-   Mất máy thì thu hồi khoá trên console.anthropic.com là xong.
+   Mất máy thì thu hồi khoá trên openrouter.ai/keys là xong.
 
    Và luật cũ không đổi: AI KHÔNG BAO GIỜ tự ghi vào sổ. Mọi kết quả đều
    đi qua bản xem trước cho người dùng sửa rồi mới xác nhận.
@@ -40,16 +40,17 @@ export function xoaKhoaAI () {
 export const coKhoaAI = () => !!khoaAI.value
 
 /* ------------------------------------------------------------
-   Gọi Messages API thẳng từ trình duyệt.
-   - model: claude-opus-5 · effort low (việc nhỏ, không cần nghĩ sâu)
-   - header anthropic-dangerous-direct-browser-access: bắt buộc cho CORS,
-     chấp nhận được vì khoá là CỦA người dùng, trên máy người dùng
-   - fallbacks "default": nếu bộ lọc an toàn từ chối nhầm, máy chủ tự
-     chuyển mẫu khác trả lời — không hỏng trải nghiệm
+   Gọi OpenRouter thẳng từ trình duyệt — v10.3 đổi nhà cung cấp theo
+   yêu cầu chủ dự án (trước đó là Anthropic trực tiếp).
+   - model: google/gemini-3.7-flash — nhẹ và rẻ, hợp hai việc nhỏ này
+   - chuẩn OpenAI chat completions: Authorization Bearer, đọc choices[]
+   - OpenRouter cho phép gọi từ trình duyệt; khoá là CỦA người dùng,
+     nằm trên máy người dùng — vẫn đúng «cách c»
    ------------------------------------------------------------ */
+export const MODEL_AI = 'google/gemini-3.7-flash'
 const HAN_GOI = 60000
 
-export async function goiClaude (noiDung, { maxTokens = 8000 } = {}) {
+export async function goiAI (noiDung, { maxTokens = 8000 } = {}) {
   const khoa = khoaAI.value
   if (!khoa) throw new Error('Chưa có khoá API. Dán khoá ở khối ✦ trong tab Tổng kết.')
 
@@ -57,21 +58,16 @@ export async function goiClaude (noiDung, { maxTokens = 8000 } = {}) {
   const henGio = setTimeout(() => dungGio.abort(), HAN_GOI)
   let res
   try {
-    res = await fetch('https://api.anthropic.com/v1/messages', {
+    res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       signal: dungGio.signal,
       headers: {
         'content-type': 'application/json',
-        'x-api-key': khoa,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-        'anthropic-beta': 'server-side-fallback-2026-07-01'
+        authorization: 'Bearer ' + khoa
       },
       body: JSON.stringify({
-        model: 'claude-opus-5',
+        model: MODEL_AI,
         max_tokens: maxTokens,
-        output_config: { effort: 'low' },
-        fallbacks: 'default',
         messages: [{ role: 'user', content: noiDung }]
       })
     })
@@ -82,26 +78,36 @@ export async function goiClaude (noiDung, { maxTokens = 8000 } = {}) {
     clearTimeout(henGio)
   }
 
-  if (!res.ok) throw new Error(dichLoiHTTP(res.status))
+  if (!res.ok) throw new Error(await dichLoiOpenRouter(res))
   const data = await res.json()
 
-  /* Bộ lọc an toàn có thể từ chối (HTTP 200, stop_reason refusal) —
-     luôn xem stop_reason trước khi đọc nội dung. */
-  if (data.stop_reason === 'refusal') {
-    throw new Error('Claude từ chối trả lời câu này. Thử diễn đạt khác, hoặc làm tay.')
+  const luaChon = data.choices && data.choices[0]
+  /* Bộ lọc nội dung có thể chặn — xem finish_reason trước khi đọc chữ */
+  if (luaChon && luaChon.finish_reason === 'content_filter') {
+    throw new Error('Model từ chối trả lời câu này. Thử diễn đạt khác, hoặc làm tay.')
   }
-  const chu = (data.content || [])
-    .filter((b) => b.type === 'text')
-    .map((b) => b.text || '')
-    .join('\n')
-    .trim()
-  if (!chu) throw new Error('Claude trả về rỗng — thử lại nhé.')
+  const chu = ((luaChon && luaChon.message && luaChon.message.content) || '').trim()
+  if (!chu) throw new Error('AI trả về rỗng — thử lại nhé.')
   return chu
+}
+
+/* OpenRouter hay kèm lời giải thích trong thân lỗi — đọc được thì đưa luôn
+   cho người dùng, đỡ phải đoán. */
+async function dichLoiOpenRouter (res) {
+  let them = ''
+  try {
+    const t = await res.json()
+    if (t && t.error && t.error.message) them = ' (' + t.error.message + ')'
+  } catch (e) { /* thân không phải JSON thì thôi */ }
+  return dichLoiHTTP(res.status) + them
 }
 
 export function dichLoiHTTP (status) {
   if (status === 401) {
-    return 'Khoá API không đúng hoặc đã bị thu hồi. Kiểm tra lại ở console.anthropic.com rồi dán lại.'
+    return 'Khoá API không đúng hoặc đã bị thu hồi. Kiểm tra lại ở openrouter.ai/keys rồi dán lại.'
+  }
+  if (status === 402) {
+    return 'Tài khoản OpenRouter hết credit. Nạp thêm ở openrouter.ai/credits rồi thử lại.'
   }
   if (status === 429) {
     return 'Gọi hơi dày, đụng giới hạn. Đợi một phút rồi thử lại.'
@@ -110,7 +116,7 @@ export function dichLoiHTTP (status) {
     return 'Yêu cầu không hợp lệ — có thể nội dung quá dài. Thử rút gọn.'
   }
   if (status >= 500) {
-    return 'Máy chủ Anthropic đang trục trặc. Thử lại sau ít phút.'
+    return 'Máy chủ OpenRouter đang trục trặc. Thử lại sau ít phút.'
   }
   return 'Không gọi được AI (mã ' + status + ').'
 }
@@ -212,7 +218,7 @@ export async function keChuyenBangAI (state) {
     'không bịa thêm số hay sự kiện nào; không tiêu đề, không gạch đầu dòng, không markdown; ' +
     'trả lời chỉ gồm đoạn văn.\n\n' + dong
 
-  return goiClaude(deBai, { maxTokens: 8000 })
+  return goiAI(deBai, { maxTokens: 8000 })
 }
 
 /* ------------------------------------------------------------
@@ -233,7 +239,7 @@ export async function tachCauBangAI (cau) {
     'activity là tên hoạt động đã bỏ số tiền và tên kênh thanh toán, viết hoa chữ đầu. ' +
     'Không chắc trường nào thì để trường đó rỗng, tuyệt đối không đoán bừa.\n\nCâu: ' + cau
 
-  const chu = await goiClaude(deBai, { maxTokens: 2000 })
+  const chu = await goiAI(deBai, { maxTokens: 2000 })
   let tho
   try { tho = docJSON(chu) } catch (e) {
     throw new Error('AI trả lời không đọc được — thử lại hoặc ghi tay.')

@@ -206,8 +206,8 @@ describe('✦ câu khó · AI chỉ ra tay khi bộ tách offline chịu thua', 
     globalThis.fetch = async () => ({
       ok: true, status: 200,
       json: async () => ({
-        stop_reason: 'end_turn',
-        content: [{ type: 'text', text: '{"activity":"Mua linh tinh ở chợ","tripCost":"250","pay":"","cat":"🛍 Mua sắm"}' }]
+        choices: [{ finish_reason: 'stop', message: { role: 'assistant',
+          content: '{"activity":"Mua linh tinh ở chợ","tripCost":"250","pay":"","cat":"🛍 Mua sắm"}' } }]
       })
     })
     const w = dungSheet()
