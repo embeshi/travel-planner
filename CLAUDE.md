@@ -28,6 +28,10 @@ Bản chạy thật bây giờ là app Vue trong `app/`, do GitHub Actions dựn
 - `app/src/components/` — linh kiện dùng chung · `app/src/lib/` — logic thuần bê từ v9.6
 - `vite.config.js` đặt `base: '/travel-planner/'`. Sai chỗ này chỉ lộ ra lúc deploy.
   Dev server chạy ở `http://localhost:5173/travel-planner/`, không phải ở gốc.
+- Tầng AI (✦) chạy theo «cách c»: người dùng tự dán khoá API Anthropic. Khoá nằm ở
+  localStorage riêng `ke-hoach-du-lich-api-key` (app/src/lib/ai.js) — TÁCH BIỆT với
+  sổ chuyến đi. TUYỆT ĐỐI không đưa khoá vào `kho`/backup/Supabase/repo. Bộ tách câu
+  offline vẫn là đường chính; AI chỉ là tầng phủ, mọi kết quả qua xem-trước-rồi-xác-nhận.
 
 **Chung cho cả hai**
 - Dữ liệu: Supabase (một khoản jsonb cho mỗi tài khoản) + bản offline trên máy người dùng.

@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { kho } from '../lib/kho.js'
 import { tongChiPhiCaChuyen, coCauTheoDanhMuc, coCauTheoKenh, trungBinhMoiNgay, soVoiDuTru, tongDaDoi } from '../lib/tong-hop.js'
 import { viTienMatConLai } from '../lib/xep-dong.js'
@@ -9,6 +9,8 @@ import TheKPI from './TheKPI.vue'
 import ThanhTong from './ThanhTong.vue'
 import NutBam from './NutBam.vue'
 import ONhap from './ONhap.vue'
+import KhoaAI from './KhoaAI.vue'
+import { coKhoaAI, khoaAI, keChuyenBangAI, banNhapNoiBo } from '../lib/ai.js'
 
 const emit = defineEmits(['doi'])
 
@@ -26,13 +28,44 @@ const viCon = computed(() => viTienMatConLai(kho.rows, tongDaDoi(kho)))
    offline, và trên iOS/Android/desktop đều có mục «Lưu thành PDF».
    Kéo cả một thư viện PDF vào chỉ để làm việc này là không đáng. */
 function xuatPDF () { window.print() }
+
+/* ============================================================
+   ✦ AI KỂ CHUYỆN — lô 11b. Ba luật:
+   1. Bản nháp là BẢN XEM TRƯỚC SỬA ĐƯỢC, không tự ghi đi đâu cả —
+      «bản nháp chỉ hiện ở đây; bấm Xuất PDF mới ghi ra tệp» (PRD F6).
+   2. Đường làm tay luôn hiện: nút «Viết nháp không cần AI» dựng đoạn văn
+      từ đúng số liệu thật, offline, 0 đồng.
+   3. Nút Xuất PDF chỉ bật sau khi có bản nháp (PRD F6).
+   ============================================================ */
+const banNhap = ref('')
+const dangKe = ref(false)
+const loiAI = ref('')
+
+function vietTay () {
+  loiAI.value = ''
+  banNhap.value = banNhapNoiBo(kho)
+}
+
+async function keBangAI () {
+  if (!coKhoaAI() || dangKe.value) return
+  loiAI.value = ''; dangKe.value = true
+  try {
+    banNhap.value = await keChuyenBangAI(kho)
+  } catch (e) {
+    loiAI.value = e.message || 'Không gọi được AI.'
+  } finally {
+    dangKe.value = false
+  }
+}
 </script>
 
 <template>
   <section class="tk">
     <div class="tk__dau">
       <h2 class="tk__ten">Tổng kết chuyến đi</h2>
-      <NutBam kieu="phu" class="tk__in" @click="xuatPDF">Xuất PDF</NutBam>
+      <NutBam kieu="phu" class="tk__in" :khoa="!banNhap.trim()"
+              :title="banNhap.trim() ? '' : 'Tạo bản nháp tổng kết trước đã (PRD F6)'"
+              @click="xuatPDF">Xuất PDF</NutBam>
     </div>
 
     <div class="tk__kpi">
@@ -103,8 +136,29 @@ function xuatPDF () { window.print() }
 
     <div class="tk__ai">
       <span class="nhan-mono">✦ AI kể chuyện chuyến đi</span>
-      <p>Phần này để dành cho lô 11, sau khi chốt đường nối ra ngoài mạng.</p>
+
+      <KhoaAI />
+
+      <div class="tk__ai-nut">
+        <NutBam kieu="chinh" :khoa="!khoaAI || dangKe" @click="keBangAI">
+          {{ dangKe ? 'Đang đọc số liệu chuyến đi…' : '✦ Tạo bản tổng kết' }}
+        </NutBam>
+        <NutBam kieu="vien" @click="vietTay">Viết nháp không cần AI</NutBam>
+      </div>
+      <p v-if="loiAI" class="tk__ai-loi">{{ loiAI }}</p>
+
+      <!-- Bản xem trước SỬA ĐƯỢC. Dùng textarea (không phải ONhap) có chủ ý:
+           đây là đoạn văn nhiều dòng, Enter nghĩa là xuống dòng chứ không phải
+           lệnh — nên không cần giáp Enter của ONhap. -->
+      <template v-if="banNhap">
+        <textarea v-model="banNhap" class="tk__nhap" rows="6"
+                  aria-label="Bản nháp tổng kết — sửa được trước khi xuất" />
+        <p class="tk__ai-ghi">Bản nháp chỉ hiện ở đây — bấm Xuất PDF mới ra tệp.</p>
+      </template>
     </div>
+
+    <!-- Bản in của đoạn tổng kết: chỉ hiện khi in -->
+    <div v-if="banNhap" class="tk__ban-in" aria-hidden="true">{{ banNhap }}</div>
   </section>
 </template>
 
@@ -156,11 +210,27 @@ function xuatPDF () { window.print() }
   border: 1.5px dashed var(--vach); border-radius: var(--bo-the);
   padding: var(--sp-3); background: var(--dien-tin);
 }
-.tk__ai p { margin: var(--sp-1) 0 0; font-size: 13px; color: var(--muc-phu); }
+.tk__ai { display: flex; flex-direction: column; gap: var(--sp-2); }
+.tk__ai-nut { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+.tk__ai-loi { margin: 0; color: var(--loi); font-size: 13px; font-weight: 600; }
+.tk__ai-ghi { margin: 0; font-size: 12px; color: var(--muc-phu); }
+.tk__nhap {
+  width: 100%; resize: vertical; font-family: var(--font-noi-dung);
+  font-size: 14px; line-height: 1.6; color: var(--navy);
+  background: var(--giay); border: 1.5px solid var(--navy);
+  border-radius: var(--bo-nho); padding: var(--sp-3);
+}
+.tk__nhap:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.tk__ban-in { display: none; }
 
 /* Xuất PDF: giấu mọi thứ không phải nội dung tổng kết */
 @media print {
   .tk__in, .tk__du-tru, .tk__ai { display: none; }
+  /* Đoạn tổng kết được in kèm — đây chính là «Xuất PDF» của bản nháp */
+  .tk__ban-in {
+    display: block; font-size: 14px; line-height: 1.7;
+    padding: 12px 0; border-top: 1px solid #999; margin-top: 12px;
+  }
   .tk { gap: 12px; }
   .cot-ngay, .tk__kpi > * { box-shadow: none; }
 }

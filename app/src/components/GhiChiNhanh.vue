@@ -4,6 +4,7 @@ import { kho, dongMoi, DANH_MUC, KENH_THANH_TOAN } from '../lib/kho.js'
 import { sortByDate } from '../lib/xep-dong.js'
 import { bam, deLuu, deHien, PHIM } from '../lib/ban-phim-so.js'
 import { tachCau, duDeGhi } from '../lib/tach-cau.js'
+import { khoaAI, tachCauBangAI } from '../lib/ai.js'
 import { danhDauVuaGhi } from '../lib/vua-ghi.js'
 import { fmtVND, num } from '../lib/dinh-dang.js'
 import ONhap from './ONhap.vue'
@@ -55,7 +56,27 @@ const banXemTruoc = ref(null)
 function docCau () {
   const c = cauTuNhien.value.trim()
   if (!c) return
+  loiAI.value = ''
   banXemTruoc.value = tachCau(c)
+}
+
+/* Câu khó: bộ tách offline chịu thua thì mới tới lượt AI (PRD F2 —
+   «bộ tách nội bộ lo mẫu phổ biến; câu khó chuyển AI khi có mạng»).
+   Kết quả AI đổ vào ĐÚNG bản xem trước đó — vẫn phải bấm xác nhận. */
+const dangHoiAI = ref(false)
+const loiAI = ref('')
+
+async function hoiAI () {
+  const c = cauTuNhien.value.trim()
+  if (!c || dangHoiAI.value) return
+  loiAI.value = ''; dangHoiAI.value = true
+  try {
+    banXemTruoc.value = await tachCauBangAI(c)
+  } catch (e) {
+    loiAI.value = e.message || 'Không hỏi được AI.'
+  } finally {
+    dangHoiAI.value = false
+  }
 }
 function suaTay () {
   const b = banXemTruoc.value
@@ -136,7 +157,15 @@ function luu () {
           <div class="ai__nut">
             <NutBam kieu="chinh" :khoa="!duDeGhi(banXemTruoc)" @click="xacNhanGhi">Xác nhận ghi</NutBam>
             <NutBam kieu="vien" @click="suaTay">Sửa tay</NutBam>
+            <NutBam v-if="!duDeGhi(banXemTruoc) && khoaAI" kieu="phu"
+                    :khoa="dangHoiAI" @click="hoiAI">
+              {{ dangHoiAI ? '✦ Đang đọc…' : '✦ Hỏi AI câu này' }}
+            </NutBam>
           </div>
+          <p v-if="!duDeGhi(banXemTruoc) && !khoaAI" class="ai__meo">
+            Bộ tách chưa đọc đủ. Dán khoá API ở tab Tổng kết thì hỏi được AI, hoặc bấm Sửa tay.
+          </p>
+          <p v-if="loiAI" class="ai__loi">{{ loiAI }}</p>
         </div>
       </div>
 
@@ -194,7 +223,15 @@ function luu () {
           <div class="ai__nut">
             <NutBam kieu="chinh" :khoa="!duDeGhi(banXemTruoc)" @click="xacNhanGhi">Xác nhận ghi</NutBam>
             <NutBam kieu="vien" @click="suaTay">Sửa tay</NutBam>
+            <NutBam v-if="!duDeGhi(banXemTruoc) && khoaAI" kieu="phu"
+                    :khoa="dangHoiAI" @click="hoiAI">
+              {{ dangHoiAI ? '✦ Đang đọc…' : '✦ Hỏi AI câu này' }}
+            </NutBam>
           </div>
+          <p v-if="!duDeGhi(banXemTruoc) && !khoaAI" class="ai__meo">
+            Bộ tách chưa đọc đủ. Dán khoá API ở tab Tổng kết thì hỏi được AI, hoặc bấm Sửa tay.
+          </p>
+          <p v-if="loiAI" class="ai__loi">{{ loiAI }}</p>
         </div>
       </div>
 
@@ -257,6 +294,8 @@ function luu () {
   color: var(--nhan); align-self: center; }
 .ai__bang dd { margin: 0; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; }
 .ai__nut { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
+.ai__meo { margin: var(--sp-1) 0 0; font-size: 12px; color: var(--muc-phu); }
+.ai__loi { margin: var(--sp-1) 0 0; font-size: 12.5px; font-weight: 600; color: var(--loi); }
 
 /* ---------------- Panel laptop ---------------- */
 .panel {

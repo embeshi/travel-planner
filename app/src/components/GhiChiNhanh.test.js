@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import GhiChiNhanh from './GhiChiNhanh.vue'
 import { kho, applyData, khoMacDinh } from '../lib/kho.js'
@@ -172,5 +172,52 @@ describe('ô ✦ gõ tự nhiên · KHÔNG BAO GIỜ ghi thẳng', () => {
     const w = dungSheet()
     expect(w.findAll('.phim__o')).toHaveLength(12)
     expect(w.findAll('.chip').length).toBeGreaterThan(0)
+  })
+})
+
+describe('✦ câu khó · AI chỉ ra tay khi bộ tách offline chịu thua', () => {
+  const oCau = (w) => w.findAllComponents({ name: 'ONhap' }).at(-1)
+  const docThu = async (w, cau) => {
+    await oCau(w).find('input').setValue(cau)
+    await oCau(w).find('input').trigger('keydown', { key: 'Enter' })
+  }
+
+  it('câu dễ đọc đủ rồi thì KHÔNG hiện nút hỏi AI — không mời gọi tiêu tiền vô cớ', async () => {
+    const { luuKhoaAI } = await import('../lib/ai.js')
+    luuKhoaAI('sk-thu')
+    const w = dungSheet()
+    await docThu(w, 'ăn phở 85 momo')
+    expect(w.text()).not.toContain('Hỏi AI câu này')
+    luuKhoaAI('')
+  })
+
+  it('câu khó + CHƯA có khoá → chỉ đường dán khoá, không hiện nút gọi', async () => {
+    const { xoaKhoaAI } = await import('../lib/ai.js')
+    xoaKhoaAI()
+    const w = dungSheet()
+    await docThu(w, 'hôm nay lỡ tiêu hơi nhiều linh tinh')
+    expect(w.text()).toContain('Dán khoá API ở tab Tổng kết')
+    expect(w.text()).not.toContain('Hỏi AI câu này')
+  })
+
+  it('câu khó + có khoá → hỏi AI, kết quả vẫn phải qua XÁC NHẬN, chưa ghi gì', async () => {
+    const { luuKhoaAI } = await import('../lib/ai.js')
+    luuKhoaAI('sk-thu')
+    globalThis.fetch = async () => ({
+      ok: true, status: 200,
+      json: async () => ({
+        stop_reason: 'end_turn',
+        content: [{ type: 'text', text: '{"activity":"Mua linh tinh ở chợ","tripCost":"250","pay":"","cat":"🛍 Mua sắm"}' }]
+      })
+    })
+    const w = dungSheet()
+    await docThu(w, 'lỡ tiêu tầm hai trăm rưỡi linh tinh ở chợ')
+    const nutAI = w.findAll('button').find((b) => b.text().includes('Hỏi AI câu này'))
+    expect(nutAI).toBeTruthy()
+    await nutAI.trigger('click')
+    await vi.waitFor(() => expect(w.find('.ai__bang').text()).toContain('Mua linh tinh ở chợ'))
+    expect(w.find('.ai__bang').text()).toContain('250')
+    expect(kho.rows).toHaveLength(0)          /* AI KHÔNG tự ghi */
+    luuKhoaAI('')
   })
 })
