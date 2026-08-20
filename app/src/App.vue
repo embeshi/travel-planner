@@ -17,6 +17,7 @@ import { rowTotal } from './lib/xep-dong.js'
 import { fmtVND, fmtFx } from './lib/dinh-dang.js'
 import { tabMoDau, giaiDoan, homNayISO, mocChuyenDi } from './lib/giai-doan.js'
 import { khoiDong, henLuu, trangThai, nguoiDung, dongBoOk, chuTrangThaiLuu, dangXuat } from './lib/khoi-dong.js'
+import { taiXuong } from './lib/backup.js'
 
 const TABS = [
   { ma: 'hom-nay', nhan: 'Hôm nay', bieuTuong: '🏠' },
@@ -83,6 +84,17 @@ function hoanTac () {
   toast.value = null
 }
 
+/* Xuất backup — tính năng PHẢI GIỮ (CLAUDE.md), lô 9 bê thiếu, giờ trả nợ.
+   Toast xác nhận kèm tên file để người dùng biết đã cất được gì. */
+function xuatBackup () {
+  try {
+    const ten = taiXuong(kho)
+    toast.value = { id: null, noiDung: 'Đã tạo file backup ✓', chiTiet: ten + ' — cất vào nơi an toàn nhé' }
+  } catch (e) {
+    alert('Không xuất được backup: ' + (e && e.message ? e.message : 'lỗi lạ'))
+  }
+}
+
 function nhapBackup (e) {
   const f = e.target.files && e.target.files[0]
   if (!f) return
@@ -119,10 +131,13 @@ function nhapBackup (e) {
           <span class="nhan-mono">Sổ tay du lịch · {{ chuTrangThaiLuu() }}</span>
           <h1 class="ve__tieu-de">{{ kho.title }}</h1>
         </div>
-        <label class="ve__nhap">
-          <span class="nhan-mono">Nhập backup</span>
-          <input type="file" accept="application/json,.json" @change="nhapBackup">
-        </label>
+        <div class="ve__backup">
+          <button type="button" class="ve__dn" @click="xuatBackup">Xuất backup</button>
+          <label class="ve__nhap">
+            <span class="nhan-mono">Nhập backup</span>
+            <input type="file" accept="application/json,.json" @change="nhapBackup">
+          </label>
+        </div>
         <div class="ve__phai">
           <ConDau :loai="nguoiDung && dongBoOk ? 'duyet' : 'canh-bao'" />
           <TemPhienBan />
@@ -164,8 +179,9 @@ function nhapBackup (e) {
                    @dong="moSheet = false" @da-ghi="daGhi" />
 
       <div v-if="toast" class="ve__toast">
-        <ToastHoanTac :hien="!!toast" noi-dung="Đã ghi ✓" :chi-tiet="toast.chiTiet"
-                      :giay="5" @hoan-tac="hoanTac" @het-gio="toast = null" />
+        <ToastHoanTac :hien="!!toast" :noi-dung="toast.noiDung || 'Đã ghi ✓'"
+                      :chi-tiet="toast.chiTiet" :giay="5" :co-hoan-tac="toast.id !== null"
+                      @hoan-tac="hoanTac" @het-gio="toast = null" />
       </div>
 
       <ThanhTab v-model="tab" :tabs="TABS" class="ve__tabs" />
@@ -185,6 +201,7 @@ function nhapBackup (e) {
 }
 .ve__ten { min-width: 0; flex: 1; }
 .ve__tieu-de { margin: var(--sp-1) 0 0; font-family: var(--font-nhan); font-size: 20px; font-weight: 600; }
+.ve__backup { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
 .ve__nhap .nhan-mono { display: block; margin-bottom: 2px; }
 .ve__nhap input { font-size: 12px; max-width: 180px; }
 .ve__phai { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }

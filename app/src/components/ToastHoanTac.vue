@@ -5,7 +5,9 @@ const props = defineProps({
   hien: { type: Boolean, default: false },
   noiDung: { type: String, default: 'Đã ghi ✓' },
   chiTiet: { type: String, default: '' },
-  giay: { type: Number, default: 5 }
+  giay: { type: Number, default: 5 },
+  /* Toast báo tin (như xuất backup xong) thì không có gì để hoàn tác */
+  coHoanTac: { type: Boolean, default: true }
 })
 const emit = defineEmits(['hoan-tac', 'het-gio'])
 
@@ -46,7 +48,7 @@ onUnmounted(dungLai)
         <strong class="toast__tieu-de">{{ noiDung }}</strong>
         <span v-if="chiTiet" class="toast__chi-tiet">{{ chiTiet }}</span>
       </div>
-      <button class="toast__hoan-tac" type="button" @click="emit('hoan-tac')">
+      <button v-if="coHoanTac" class="toast__hoan-tac" type="button" @click="emit('hoan-tac')">
         Hoàn tác
       </button>
     </div>
