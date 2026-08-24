@@ -73,6 +73,12 @@ nhánh chính.
 Trường mới (`cat`, `done`) chỉ được THÊM và phải là tùy chọn: dòng cũ không có thì
 hiện «Chưa phân loại», không bắt nhập, không tự điền bừa.
 
+Khối mới v10.5: `chuyenDaCat` — 🎫 Kệ vé (bảng thiết kế M9), mỗi vé = số liệu chốt
++ bản chụp trọn sổ của chuyến đã cất. Là khối CẤP CAO NHẤT nên không sống sót vòng
+lùi-v9.6 (xem bảng dưới) — đai thật là file backup được ÉP xuất trước mỗi lần cất.
+Luật riêng trong `applyData`: dữ liệu nạp vào VẮNG khối này thì kệ ĐƯỢC GIỮ NGUYÊN
+(kệ là đồ NHÀ, không phải đồ CHUYẾN — nhập backup cũ không được làm bay kệ).
+
 ### Bất đối xứng đã đo được về đường lui 60 giây
 `applyData` của v9.6 gán từng trường ĐÃ BIẾT lên state mặc định, nhưng chuyển tiếp
 NGUYÊN OBJECT của từng dòng. Hệ quả, đã kiểm bằng mã chạy thật:

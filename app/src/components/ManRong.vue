@@ -4,7 +4,7 @@ import { kho } from '../lib/kho.js'
 import ONhap from './ONhap.vue'
 import NutBam from './NutBam.vue'
 
-const emit = defineEmits(['xong'])
+const emit = defineEmits(['xong', 'xem-ke'])
 const ten = ref('')
 const di = ref('')
 const ve = ref('')
@@ -50,6 +50,11 @@ function tao () {
 
     <NutBam kieu="chinh" :khoa="!duoc()" @click="tao">Tạo chuyến</NutBam>
     <p class="rong__ghi">Chưa có ngày về cũng tạo được — điền sau cũng kịp.</p>
+
+    <button v-if="kho.chuyenDaCat.length" type="button" class="rong__ke"
+            @click="emit('xem-ke')">
+      🎫 Kệ vé đang giữ {{ kho.chuyenDaCat.length }} chuyến cũ — xem lại →
+    </button>
   </section>
 </template>
 
@@ -70,4 +75,8 @@ function tao () {
 .rong__o { display: flex; flex-direction: column; gap: var(--sp-1); flex: 1; min-width: 0; }
 .rong__hang { display: flex; gap: var(--sp-3); }
 .rong__ghi { margin: 0; font-size: 12px; color: var(--muc-phu); }
+.rong__ke { font-family: var(--font-nhan); font-size: 11px; font-weight: 600;
+  letter-spacing: var(--nhan-gian); text-transform: uppercase; color: var(--san-ho);
+  background: transparent; border: 0; cursor: pointer; padding: 0; text-align: left; }
+.rong__ke:focus-visible { outline: var(--focus); outline-offset: 2px; }
 </style>

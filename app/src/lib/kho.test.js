@@ -20,9 +20,21 @@ describe('CANH CỬA · bốn thứ không được đổi', () => {
        `budget` là khối MỚI của v10 — xem cảnh báo bất đối xứng trong CLAUDE.md. */
     expect(Object.keys(khoMacDinh()).sort()).toEqual([
       '_updatedAt', 'activeNote', 'activePack', 'bkCurrency', 'bkRate', 'bookings',
-      'budget', 'cash', 'currency', 'essentials', 'food', 'hotel', 'makeup',
-      'packSeed1', 'packSeed2', 'places', 'rate', 'rows', 'shopping', 'skincare', 'title'
+      'budget', 'cash', 'chuyenDaCat', 'currency', 'essentials', 'food', 'hotel',
+      'makeup', 'packSeed1', 'packSeed2', 'places', 'rate', 'rows', 'shopping',
+      'skincare', 'title'
     ])
+  })
+
+  it('kệ vé là đồ NHÀ: dữ liệu vắng khối này thì kệ ĐƯỢC GIỮ, không bị xoá', () => {
+    /* Nhập một backup từ thời chưa có kệ (hay bản chụp của một vé) mà
+       làm bay cả kệ thì người dùng mất chỗ xem lại mọi chuyến cũ. */
+    const k = khoMacDinh()
+    k.chuyenDaCat = [{ id: 'v1', ten: 'Bangkok' }]
+    applyData({ title: 'Chuyến khác', rows: [] }, k)
+    expect(k.chuyenDaCat).toHaveLength(1)
+    applyData({ chuyenDaCat: [] }, k)          /* nói rõ kệ rỗng thì mới rỗng */
+    expect(k.chuyenDaCat).toEqual([])
   })
 
   it('budget nhận cả chuỗi lẫn số, sai kiểu thì về rỗng', () => {

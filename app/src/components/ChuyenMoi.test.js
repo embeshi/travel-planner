@@ -79,3 +79,16 @@ describe('phanh hai nấc của «Bắt đầu chuyến mới»', () => {
     w.unmount()
   })
 })
+
+describe('v10.5 · nấc 2 cất vé lên kệ trước khi dọn', () => {
+  it('dọn xong thì chuyến cũ thành một tấm vé đầu kệ, đủ số liệu chốt', async () => {
+    const w = dung()
+    await w.find('.nut--phu').trigger('click')
+    await nutDon(w).trigger('click')
+    expect(kho.rows).toHaveLength(0)
+    expect(kho.chuyenDaCat).toHaveLength(1)
+    expect(kho.chuyenDaCat[0]).toMatchObject({ ten: 'Chuyến mẫu', soDong: 61 })
+    expect(kho.chuyenDaCat[0].data.rows).toHaveLength(61)
+    w.unmount()
+  })
+})

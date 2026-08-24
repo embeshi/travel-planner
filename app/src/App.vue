@@ -159,7 +159,9 @@ function nhapBackup (e) {
           <BangRon v-if="hienBangRon" class="ve__bang-ron"
                    @dong="dongBangRon" @xem="dongBangRon(); tab = 'tong-ket'" />
 
-          <ManRong v-if="chuaCoChuyen" @xong="tab = tabMoDau(kho, homNay)" />
+          <!-- Sổ trống nhưng tab Tổng kết vẫn mở được — Kệ vé nằm ở đó (M9) -->
+          <ManRong v-if="chuaCoChuyen && tab !== 'tong-ket'"
+                   @xong="tab = tabMoDau(kho, homNay)" @xem-ke="tab = 'tong-ket'" />
           <ManHomNay v-else-if="tab === 'hom-nay'" :hom-nay="homNay" @sang-tab="tab = $event" />
           <BangLichTrinh v-else-if="tab === 'ke-hoach'" />
           <ManSoTay v-else-if="tab === 'so-tay'" />

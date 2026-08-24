@@ -41,7 +41,13 @@ export function khoMacDinh () {
     shopping: [],
     places: [],
     food: [],
-    activeNote: 'shopping'
+    activeNote: 'shopping',
+    /* MỚI Ở v10.5 — KỆ VÉ (bảng thiết kế M9): các chuyến đã cất, mỗi vé
+       mang số liệu chốt + bản chụp trọn sổ của chuyến đó.
+       CẢNH BÁO như budget: khối cấp cao nhất KHÔNG sống sót vòng
+       lùi-về-v9.6-rồi-lưu. Đai thật là file backup được ÉP xuất trước
+       mỗi lần cất — kệ chỉ là tiện nghi xem lại trong app. */
+    chuyenDaCat: []
   }
 }
 
@@ -151,6 +157,11 @@ export function applyData (data, dich = kho) {
   dich.places = Array.isArray(data.places) ? data.places : []
   dich.food = Array.isArray(data.food) ? data.food : []
   dich.activeNote = (typeof data.activeNote === 'string') ? data.activeNote : 'shopping'
+  /* Kệ vé là đồ NHÀ, không phải đồ CHUYẾN: dữ liệu nạp vào (backup cũ,
+     bản chụp một vé) mà VẮNG khối này thì GIỮ NGUYÊN kệ đang có — khác
+     với các mảng chuyến (vắng là về rỗng). Không có luật này thì nhập
+     một backup từ thời chưa có kệ là cả kệ bay sạch. */
+  if (Array.isArray(data.chuyenDaCat)) dich.chuyenDaCat = data.chuyenDaCat
   dich._updatedAt = (typeof data._updatedAt === 'number') ? data._updatedAt : 0
 
   return dich

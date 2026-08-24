@@ -2,6 +2,7 @@
 import { ref, watch, computed } from 'vue'
 import { kho } from '../lib/kho.js'
 import { donSoChoChuyenMoi } from '../lib/chuyen-moi.js'
+import { catChuyenLenKe, coGiDeCat } from '../lib/ke-ve.js'
 import { taiXuong } from '../lib/backup.js'
 import NutBam from './NutBam.vue'
 
@@ -42,6 +43,9 @@ function xuat () {
 
 function batDau () {
   if (!tenFileDaXuat.value) return   /* nấc 1 chưa qua thì nấc 2 không chạy */
+  /* v10.5: chuyến cũ nằm ở HAI nơi — tấm vé trên Kệ vé (xem lại trong app)
+     và file backup vừa ép xuất (đai thật, sống sót cả khi lùi về v9.6). */
+  if (coGiDeCat(kho)) catChuyenLenKe(kho)
   donSoChoChuyenMoi(kho)
   emit('xong')
   emit('dong')
@@ -61,8 +65,8 @@ function batDau () {
         <strong>cất vào file backup</strong>, rồi sổ được dọn trống cho chuyến mới.
       </p>
       <ul class="cm__ghi">
-        <li>Sau bước này, chuyến cũ <strong>chỉ còn trong file backup</strong> —
-            muốn đọc lại thì bấm «Nhập backup» với file đó.</li>
+        <li>Chuyến cũ sẽ thành <strong>một tấm vé trên 🎫 Kệ vé</strong> (cuối tab
+            Tổng kết) — bấm «Xem lại» là cả sổ quay về.</li>
         <li>Danh sách hành lý (skincare, makeup, đồ dùng) <strong>giữ nguyên món</strong>,
             chỉ bỏ dấu tick.</li>
         <li>Nên gửi file backup ra khỏi máy (tự email cho mình / thả Drive).</li>
@@ -81,7 +85,7 @@ function batDau () {
         <span class="nhan-mono">Bước 2</span>
         <div class="cm__hang-nut">
           <NutBam kieu="pha-huy" :khoa="!tenFileDaXuat" @click="batDau">
-            Tôi hiểu, dọn sổ cho chuyến mới
+            Tôi hiểu, cất vé và dọn sổ
           </NutBam>
           <NutBam kieu="vien" @click="emit('dong')">Hủy</NutBam>
         </div>

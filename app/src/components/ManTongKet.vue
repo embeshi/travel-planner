@@ -10,7 +10,7 @@ import ThanhTong from './ThanhTong.vue'
 import NutBam from './NutBam.vue'
 import ONhap from './ONhap.vue'
 import KhoaAI from './KhoaAI.vue'
-import ChuyenMoi from './ChuyenMoi.vue'
+import KeVe from './KeVe.vue'
 import { coKhoaAI, khoaAI, keChuyenBangAI, banNhapNoiBo } from '../lib/ai.js'
 
 const emit = defineEmits(['doi'])
@@ -38,7 +38,6 @@ function xuatPDF () { window.print() }
       từ đúng số liệu thật, offline, 0 đồng.
    3. Nút Xuất PDF chỉ bật sau khi có bản nháp (PRD F6).
    ============================================================ */
-const moChuyenMoi = ref(false)
 function chuyenMoiXong () {
   banNhap.value = ''
   emit('doi')
@@ -167,12 +166,8 @@ async function keBangAI () {
     <!-- Bản in của đoạn tổng kết: chỉ hiện khi in -->
     <div v-if="banNhap" class="tk__ban-in" aria-hidden="true">{{ banNhap }}</div>
 
-    <!-- Chuyến sau bắt đầu từ đây — luồng có phanh hai nấc -->
-    <div class="tk__chuyen-moi">
-      <NutBam kieu="vien" @click="moChuyenMoi = true">🎫 Bắt đầu chuyến mới…</NutBam>
-      <span class="tk__chuyen-moi-ghi">Cất chuyến này vào backup rồi dọn sổ trống.</span>
-    </div>
-    <ChuyenMoi :mo="moChuyenMoi" @dong="moChuyenMoi = false" @xong="chuyenMoiXong" />
+    <!-- 🎫 Kệ vé (M9) — chuyến sau bắt đầu từ đây, chuyến cũ nằm lại đây -->
+    <KeVe @doi="chuyenMoiXong" />
   </section>
 </template>
 
@@ -236,13 +231,11 @@ async function keBangAI () {
 }
 .tk__nhap:focus-visible { outline: var(--focus); outline-offset: 2px; }
 .tk__ban-in { display: none; }
-.tk__chuyen-moi { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap;
-  border-top: 1px dashed var(--vach); padding-top: var(--sp-4); margin-top: var(--sp-2); }
-.tk__chuyen-moi-ghi { font-size: 13px; color: var(--muc-phu); }
+
 
 /* Xuất PDF: giấu mọi thứ không phải nội dung tổng kết */
 @media print {
-  .tk__in, .tk__du-tru, .tk__ai, .tk__chuyen-moi { display: none; }
+  .tk__in, .tk__du-tru, .tk__ai, .ke { display: none; }
   /* Đoạn tổng kết được in kèm — đây chính là «Xuất PDF» của bản nháp */
   .tk__ban-in {
     display: block; font-size: 14px; line-height: 1.7;
