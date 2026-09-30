@@ -21,6 +21,22 @@ export const trangThai = ref('dang-doc')   // dang-doc | san-sang | loi
 export const nguoiDung = ref(null)
 export const dongBoOk = ref(false)
 export const loiKhoiDong = ref('')
+/* Một dòng báo sau khi hoà giải phải cất bản trên máy — App hiện thành toast */
+export const thongBaoDongBo = ref('')
+
+/* ============================================================
+   LỖI MẠNG NÓI TIẾNG VIỆT (v10.7). «Failed to fetch» là câu trình duyệt
+   ném ra khi không nối được máy chủ — với người dùng nó vô nghĩa và đáng
+   sợ. Dịch một lần ở đây; lỗi khác giữ nguyên lời gốc.
+   ============================================================ */
+export const LOI_MANG = 'Không kết nối được máy chủ — có thể máy chủ đang ngủ hoặc mạng yếu. Dữ liệu trên máy vẫn an toàn.'
+export function dichLoiMang (e) {
+  const m = (e && e.message) ? String(e.message) : String(e || '')
+  if (/failed to fetch|fetch failed|networkerror|network request failed|load failed|err_internet|err_network/i.test(m)) {
+    return LOI_MANG
+  }
+  return m
+}
 
 let sb = null
 
@@ -97,6 +113,11 @@ export async function keoVeTuMayChu () {
     ghiXuong: () => ghiXuongMay(kho)
   })
   dongBoOk.value = true
+  if (kq && kq.viec === 'xung-dot-cat-ban-may') {
+    thongBaoDongBo.value = 'Sổ đang có trên máy khác với sổ tài khoản nên đã được cất thành vé «' +
+      kq.ve.ten + '» trên 🎫 Kệ vé — không đè lên nhau.'
+    await luuNgay()          /* đẩy kệ đã hợp nhất (kèm vé mới) lên mây ngay */
+  }
   return kq
 }
 
@@ -123,9 +144,15 @@ export async function luuNgay () {
 /* ---------------- Đăng nhập ---------------- */
 export async function dangNhap (email, matKhau) {
   await napThuVien()
-  if (!sb) throw new Error('chưa nối được máy chủ')
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: matKhau })
-  if (error) throw error
+  if (!sb) throw new Error(LOI_MANG)
+  let data
+  try {
+    const res = await sb.auth.signInWithPassword({ email, password: matKhau })
+    if (res.error) throw res.error
+    data = res.data
+  } catch (e) {
+    throw new Error(dichLoiMang(e))
+  }
   nguoiDung.value = data.user
   await keoVeTuMayChu()
   return data.user
@@ -170,6 +197,7 @@ export async function dangKy (email, matKhau) {
 
 export function dichLoiDangKy (e) {
   const m = (e && e.message) ? String(e.message) : ''
+  if (dichLoiMang(e) === LOI_MANG) return LOI_MANG
   if (/already registered|already exists/i.test(m)) {
     return 'Email này đã có tài khoản (có thể từ lần thử trước). Bấm «Lên máy bay» ' +
            'để đăng nhập; nếu báo sai mật khẩu, vào dashboard → Authentication → ' +

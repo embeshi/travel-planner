@@ -17,7 +17,7 @@ import { rowTotal } from './lib/xep-dong.js'
 import { tongChiPhiCaChuyen } from './lib/tong-hop.js'
 import { fmtVND, fmtFx } from './lib/dinh-dang.js'
 import { tabMoDau, giaiDoan, homNayISO, mocChuyenDi } from './lib/giai-doan.js'
-import { khoiDong, henLuu, trangThai, nguoiDung, dongBoOk, chuTrangThaiLuu, dangXuat } from './lib/khoi-dong.js'
+import { khoiDong, henLuu, trangThai, nguoiDung, dongBoOk, chuTrangThaiLuu, dangXuat, thongBaoDongBo } from './lib/khoi-dong.js'
 import { taiXuong } from './lib/backup.js'
 
 const TABS = [
@@ -96,6 +96,13 @@ function daGhi (d) {
     chiTiet: [fmtFx(rowTotal(d)) + ' ' + kho.currency, danhMucCua(d), d.pay || 'chưa chọn nguồn'].join(' · ')
   }
 }
+/* v10.7: hoà giải phải cất bản trên máy → báo một dòng, kiểu tin báo (không Hoàn tác) */
+watch(thongBaoDongBo, (v) => {
+  if (!v) return
+  toast.value = { id: null, noiDung: 'Đã cất bản trên máy ✓', chiTiet: v }
+  thongBaoDongBo.value = ''
+})
+
 function hoanTac () {
   if (!toast.value) return
   const i = kho.rows.findIndex((r) => r.id === toast.value.id)

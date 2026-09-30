@@ -162,6 +162,23 @@ lùi-về-v9.6-rồi-lên-lại sẽ xoá nó.
   (số đêm tự tính) · 💵 đổi tiền (tỷ giá thực tế, lời nhắc đủ/vượt/mẹo) — v10.0–10.5
   từng làm rơi cả ba dù kho vẫn giữ đủ dữ liệu.
 
+## Bảng đối chiếu 9 khu v9.6 → v10 (PHẢI GIỮ đủ 9, soi lại trước MỌI lô đổi giao diện)
+v10.0–10.5 từng làm rơi ba khu (fx · book · cash) dù kho giữ đủ dữ liệu, và không ai
+nhận ra suốt sáu bản — vì chưa có bảng này. Lô nào đổi giao diện phải rà từng dòng
+dưới đây trước khi đẩy lên nhánh chính.
+
+| # | Khu v9.6 (`id`) | Tên hiện trên màn v9.6 | Ở v10 nằm đâu |
+|---|---|---|---|
+| 1 | `sec-book` | ✈️🏨 Gói vé máy bay + khách sạn | `TheGoiBay.vue` — tab Kế hoạch |
+| 2 | `sec-fx` | 💱 Tỷ giá (loại tiền · tỷ giá · ⟳) | `TheTyGia.vue` (`#the-ty-gia`) — tab Kế hoạch |
+| 3 | `sec-plan` | 🗓 Lịch trình & chi phí | `BangLichTrinh.vue` — tab Kế hoạch |
+| 4 | `sec-daily` | 📊 Chi phí theo ngày | Cụm ngày trong bảng + biểu đồ «Chi theo ngày» ở `ManTongKet.vue` |
+| 5 | `sec-cash` | 💵 Tiền mặt dự trù | `TheDoiTien.vue` — tab Kế hoạch |
+| 6 | `sec-total` | 💰 Tổng chi phí cả chuyến đi | `ManTongKet.vue` (KPI + hai dòng Lịch trình/Gói bay + Tổng cả chuyến) |
+| 7 | `sec-pack` | 🧳 Hành lý cần mang | `ManSoTay.vue` — ba danh sách hành lý |
+| 8 | `sec-notes` | 🇹🇭 Sổ tay (mua gì · đi đâu · ăn gì) | `ManSoTay.vue` — ba danh sách sổ tay |
+| 9 | `sec-backup` | 💾 Xuồng cứu sinh · Backup | Header `App.vue` (Xuất/Nhập backup) + `public/soi-backup.html` |
+
 ## Tài liệu trong repo
 - `docs/prd-ke-hoach-du-lich.html` — PRD đầy đủ cho bản v10
 - `docs/bang-thiet-ke-v10.html` — bảng thiết kế từ Claude Design (mở bằng trình duyệt;

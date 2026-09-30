@@ -1,15 +1,11 @@
+import { khoMacDinh, applyData } from './kho.js'
+import { chupSo, catChuyenLenKe, coGiDeCat } from './ke-ve.js'
+import { pad2 } from './ngay.js'
+
 /* ============================================================
    ĐỒNG BỘ SUPABASE — bê từ index.html v9.6 (dòng 1527–1561, 3170–3195).
-
-   ⚠️ LÔ 3 KHÔNG GỌI MODULE NÀY. ⚠️
-   Code nằm đây để lô sau dùng, nhưng chưa có màn nào import nó, và chủ
-   dự án chưa đăng nhập lần nào vào v10. Đó là chủ ý: nghi thức giữ dữ
-   liệu (mục 04) nói cách thử an toàn nhất là mở app mà KHÔNG đăng nhập.
-
-   Cấu hình Supabase cố tình KHÔNG chép vào đây. Địa chỉ và khoá công khai
-   là điều kiện số 1 trong «bốn thứ giữ cho dữ liệu cũ tự hiện ra» — chúng
-   sẽ được đưa vào ở lô nối mạng thật, đúng nguyên văn từ index.html v9.6,
-   không gõ lại bằng tay.
+   Được khoi-dong.js gọi từ lô 9b (đăng nhập/đăng ký). Cấu hình Supabase
+   nằm ở cau-hinh.js, chép máy từ v9.6.
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -51,9 +47,47 @@ export async function ghiLenMayChu (sb, user, state) {
   return true
 }
 
-/* Hoà giải máy chủ với bản trên máy — nguyên văn v9.6 dòng 3170.
-   Ai mới hơn thì thắng, so bằng updated_at của máy chủ với _updatedAt cục bộ.
-   Trả về mô tả việc đã làm để bên gọi biết đường xử lý giao diện. */
+/* ============================================================
+   HOÀ GIẢI MÁY CHỦ VỚI BẢN TRÊN MÁY — v10.7 siết lại luật v9.6.
+
+   v9.6: «ai mới hơn thì thắng» (updated_at máy chủ so với _updatedAt cục
+   bộ). Lỗ hổng thật: máy mới, chưa đăng nhập, gõ MỘT dòng rồi mới đăng
+   nhập → bản trên máy «mới hơn» sổ thật trên mây → thắng → tự lưu đè.
+   Đúng kịch bản ghi-đè-trang-trắng, chỉ khác là trang có một dòng.
+
+   Luật mới, theo thứ tự:
+   1. Chỉ MỘT bên có dữ liệu → bên đó thắng, bất kể giờ.
+   2. Cả hai có dữ liệu và KHÔNG chung id dòng nào (hai sổ khác nhau) →
+      KHÔNG tự chọn theo giờ: sổ của TÀI KHOẢN (máy chủ) là sổ chính,
+      bản trên máy được CẤT thành một vé «Bản trên máy · ngày giờ» trên
+      Kệ vé — không nhánh nào mất dữ liệu.
+   3. Chung id (cùng một sổ sửa ở hai nơi) → luật cũ, ai mới hơn thắng.
+   Và trong MỌI trường hợp: kệ vé hai bên HỢP NHẤT theo id — kệ nằm trong
+   sổ, «ai thắng lấy hết» sẽ làm bay kệ của bên thua.
+   ============================================================ */
+export function hopNhatKe (a, b) {
+  const kq = [...(Array.isArray(a) ? a : [])]
+  const co = new Set(kq.map((v) => v && v.id))
+  for (const v of (Array.isArray(b) ? b : [])) if (v && !co.has(v.id)) { kq.push(v); co.add(v.id) }
+  return kq
+}
+
+function chungIdDong (a, b) {
+  const ids = new Set((a.rows || []).map((r) => r && r.id))
+  return (b.rows || []).some((r) => r && ids.has(r.id))
+}
+
+/* Vé cất bản trên máy — dựng qua đúng đường catChuyenLenKe để số liệu
+   chốt trên vé cùng một công thức với mọi vé khác. */
+function veBanTrenMay (state) {
+  const tam = applyData(chupSo(state), khoMacDinh())
+  const ve = catChuyenLenKe(tam)
+  const d = new Date()
+  ve.ten = 'Bản trên máy · ' + pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + ' ' +
+    pad2(d.getHours()) + ':' + pad2(d.getMinutes())
+  return ve
+}
+
 export async function hoaGiaiVoiMayChu (sb, user, state, { apDung, ghiXuong }) {
   const res = await sb.from('trips')
     .select('data, updated_at')
@@ -64,15 +98,38 @@ export async function hoaGiaiVoiMayChu (sb, user, state, { apDung, ghiXuong }) {
   const row = res.data
   if (!row || !row.data) return { viec: 'may-chu-trong' }
 
-  const gioMayChu = Date.parse(row.updated_at) || 0
-  const gioCucBo = state._updatedAt || 0
+  const tamMay = applyData(row.data, khoMacDinh())
+  const mayCoDL = coGiDeCat(tamMay)
+  const cucBoCoDL = coGiDeCat(state)
+  const keCucBo = state.chuyenDaCat
+  const keMay = row.data.chuyenDaCat
 
-  if (gioMayChu >= gioCucBo) {
+  const layMayChu = async (viec, veThem) => {
     apDung(row.data)
+    state.chuyenDaCat = hopNhatKe(keMay, keCucBo)
+    if (veThem) state.chuyenDaCat.unshift(veThem)
     danhDauDaDocXong()
     await ghiXuong()
-    return { viec: 'lay-ban-may-chu' }
+    return { viec, ve: veThem }
   }
-  danhDauDaDocXong()
-  return { viec: 'ban-cuc-bo-moi-hon' }
+  const giuCucBo = (viec) => {
+    state.chuyenDaCat = hopNhatKe(keCucBo, keMay)
+    danhDauDaDocXong()
+    return { viec }
+  }
+
+  /* 1 · chỉ một bên có dữ liệu */
+  if (mayCoDL && !cucBoCoDL) return layMayChu('lay-ban-may-chu')
+  if (!mayCoDL && cucBoCoDL) return giuCucBo('ban-cuc-bo-moi-hon')
+
+  /* 2 · hai sổ khác nhau → cất bản trên máy, mây là sổ chính */
+  if (mayCoDL && cucBoCoDL && !chungIdDong(tamMay, state)) {
+    return layMayChu('xung-dot-cat-ban-may', veBanTrenMay(state))
+  }
+
+  /* 3 · cùng một sổ (hoặc cả hai trống) → luật cũ: ai mới hơn thắng */
+  const gioMayChu = Date.parse(row.updated_at) || 0
+  const gioCucBo = state._updatedAt || 0
+  if (gioMayChu >= gioCucBo) return layMayChu('lay-ban-may-chu')
+  return giuCucBo('ban-cuc-bo-moi-hon')
 }
