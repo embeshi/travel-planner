@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import {
   KHOA_CHE_DO, CAC_CHE_DO, cheDo, docCheDo, datCheDo, cheDoThat, cheDoTiepTheo, apCheDo
@@ -84,6 +84,41 @@ describe('lựa chọn → màu thật đang áp', () => {
     apCheDo('sang')
     expect(document.documentElement.getAttribute('data-che-do')).toBe('sang')
   })
+
+  it('apCheDo đổi màu thanh trạng thái điện thoại (theme-color) theo màu thật đang áp', () => {
+    const meta = document.createElement('meta')
+    meta.name = 'theme-color'
+    meta.content = '#1F3A5F'
+    document.head.appendChild(meta)
+    apCheDo('toi')
+    expect(meta.content).toBe('#121923')
+    apCheDo('sang')
+    expect(meta.content).toBe('#1F3A5F')
+    meta.remove()
+  })
+})
+
+/* Luật tokens.css: linh kiện không viết màu thẳng — chỗ nào viết là chỗ đó
+   lệch màu ở chế độ tối. Lưới này bắt ngay lúc npm test, trước khi lên sóng. */
+describe('linh kiện không viết màu cứng', () => {
+  const thuMuc = resolve(process.cwd(), 'src')
+  const tepVue = readdirSync(thuMuc, { recursive: true })
+    .filter((f) => String(f).endsWith('.vue'))
+
+  it('có tìm thấy file .vue để soi', () => {
+    expect(tepVue.length).toBeGreaterThan(10)
+  })
+
+  for (const f of tepVue) {
+    it(String(f), () => {
+      const nguon = readFileSync(resolve(thuMuc, String(f)), 'utf8')
+      /* Dòng nào ghi «cố ý» là ngoại lệ đã cân nhắc (ví dụ màu giấy in trong
+         @media print — khi in app luôn dùng màu sáng, xem tokens.css). */
+      const style = (nguon.match(/<style[\s\S]*?<\/style>/g) || []).join('\n')
+        .split('\n').filter((d) => !d.includes('cố ý')).join('\n')
+      expect(style.match(/#[0-9A-Fa-f]{3,8}\b|rgba?\(/g)).toBe(null)
+    })
+  }
 })
 
 /* index.html có một đoạn script trong <head> áp chế độ TRƯỚC khi trang hiện.

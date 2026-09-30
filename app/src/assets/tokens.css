@@ -2,6 +2,8 @@
    Design tokens · Hướng 05 «Retro Boarding Pass»
    Chép nguyên từ mục 07 «Đặc tả bàn giao» của docs/bang-thiet-ke-v10.html.
    Đừng thêm màu mới ở đây mà không sửa bảng thiết kế trước.
+   Linh kiện KHÔNG viết màu thẳng (#hex, rgba) — luôn đi qua token, nếu
+   không chỗ đó sẽ lệch màu ở chế độ tối.
    ============================================================ */
 :root{
   --kem:#F6EFE3; --giay:#FFFDF7;
@@ -29,13 +31,14 @@
   --bong-the:4px 4px 0 var(--navy);
   --focus:3px solid var(--nghe);
 
+  /* Ba mô-típ viết lại theo token để dùng chung hai chế độ (v10.10) */
   --soc:repeating-linear-gradient(90deg,
-    var(--san-ho) 0 20px, var(--navy) 20px 40px,
+    var(--san-ho) 0 20px, var(--soc-giua) 20px 40px,
     var(--nghe) 40px 60px);
   --ma-vach:repeating-linear-gradient(90deg,
-    transparent 0 3px, rgba(255,255,255,.16) 3px 4px);
+    transparent 0 3px, var(--ma-vach-vet) 3px 4px);
   --dien-tin:repeating-linear-gradient(
-    var(--giay) 0 21px, #F3EBDD 21px 22px);
+    var(--giay) 0 21px, var(--dien-tin-vach) 21px 22px);
 
   --nhanh:120ms; --vua:200ms;
   --diu:cubic-bezier(.2,.8,.3,1);
@@ -43,7 +46,50 @@
   /* --- Bổ sung: mục 01 bảng thiết kế có nói nhưng khối bàn giao bỏ sót --- */
   --bong-the-con:3px 3px 0 var(--navy);   /* thẻ con */
   --chan:701px;                            /* breakpoint DUY NHẤT, chỉ để tra cứu */
+
+  /* --- Token mới v10.10 · chế độ sáng giữ ĐÚNG màu trước đây viết cứng --- */
+  color-scheme:light;
+  --nghe-dam:#8A5A00;            /* chữ cảnh báo (ConDau, ManDangNhap) */
+  --loi-press:#97201A;           /* nút phá huỷ khi rê chuột (NutBam) */
+  --phu-man:rgba(31,58,95,.55);  /* màn phủ sau hộp thoại */
+  --phu-bong:rgba(31,58,95,.18); /* bóng mềm hàng đang kéo */
+  --muc-tren-nghe:#1F3A5F;       /* chữ trên nền vàng nghệ */
+  --soc-giua:#1F3A5F;            /* sọc giữa của dải --soc */
+  --dien-tin-vach:#F3EBDD;
+  --ma-vach-vet:rgba(255,255,255,.16);
 }
+
+/* ============================================================
+   CHẾ ĐỘ TỐI · «Boarding Pass ban đêm» — bảng màu từ Claude Design (30/09/2026).
+   Chưa chép vào docs/bang-thiet-ke-v10.html — nhớ bổ sung mục 07.
+
+   Chỉ MỘT bộ chọn: lib/che-do.js (và script <head> trong index.html)
+   luôn gắn data-che-do="sang"|"toi" lên <html>, «Theo máy» đã được JS tính
+   sẵn. Đừng thêm khối @media (prefers-color-scheme) ở đây — nó sẽ đè lên
+   lựa chọn ☀ Sáng khi máy đang để tối.
+   Bọc trong @media screen: in / xuất PDF LUÔN dùng màu sáng, kẻo chữ kem
+   in ra trên giấy trắng (trình duyệt bỏ nền khi in).
+   ============================================================ */
+@media screen{ :root[data-che-do="toi"]{
+  color-scheme:dark;
+  --kem:#121923;      --giay:#1B2431;
+  --khoa:#232C39;     --khoa-muc:#8A94A3;
+  --navy:#EDE3D1;     --muc-phu:#B2BDCB;
+  --nhan:#9DA9BA;     --vach:#334052;
+  --san-ho:#F7766C;   --san-ho-hover:#FF8E85;
+  --san-ho-press:#E4625A; --san-ho-nhat:#3B2429;
+  --nghe:#F5C04F;     --nghe-hover:#FFD06E;
+  --nghe-nhat:#382D14;
+  --duyet:#6CC79A;    --duyet-nhat:#18362A;
+  --loi:#FF8F84;
+  --nghe-dam:#F2C86E; --loi-press:#EC6F64;
+  --phu-man:rgba(4,7,12,.68);
+  --phu-bong:rgba(0,0,0,.45);
+  --muc-tren-nghe:#121923;
+  --soc-giua:#4F6E99;
+  --dien-tin-vach:#273243;
+  --ma-vach-vet:rgba(18,25,35,.18);
+}}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;

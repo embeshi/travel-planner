@@ -132,7 +132,7 @@ function doiChe () {
 .dn__o { display: flex; flex-direction: column; gap: var(--sp-1); }
 .dn__loi { margin: 0; color: var(--loi); font-size: 13px; font-weight: 600; }
 .dn__bao {
-  margin: 0; font-size: 13px; line-height: 1.55; color: #8A5A00;
+  margin: 0; font-size: 13px; line-height: 1.55; color: var(--nghe-dam);
   background: var(--nghe-nhat); border-radius: var(--bo-nho); padding: var(--sp-2) var(--sp-3);
 }
 .dn__lien-ket {

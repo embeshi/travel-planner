@@ -48,6 +48,14 @@ Bản chạy thật bây giờ là app Vue trong `app/`, do GitHub Actions dựn
   Bộ tách câu offline vẫn là đường chính; AI chỉ là tầng phủ, mọi kết quả qua
   xem-trước-rồi-xác-nhận.
 
+- Chế độ tối (v10.10): nút ◐/☀/☾ ở header xoay Theo máy → Sáng → Tối. Lựa chọn nằm ở
+  localStorage riêng `ke-hoach-du-lich-che-do` (lib/che-do.js) — TÁCH BIỆT với sổ, không
+  vào `kho`/backup/Supabase. Màu tối là khối `:root[data-che-do="toi"]` trong tokens.css,
+  bọc `@media screen` để in/xuất PDF luôn màu sáng. Linh kiện KHÔNG viết màu cứng
+  (#hex/rgba) — che-do.test.js có lưới bắt. Script `<script data-che-do>` trong
+  app/index.html lặp lại luật chọn để khỏi chớp nền sáng — sửa che-do.js thì sửa cả nó.
+  Bảng màu tối lấy từ Claude Design 30/09/2026, CHƯA chép vào bang-thiet-ke-v10.html.
+
 **Chung cho cả hai**
 - Dữ liệu: Supabase (một khoản jsonb cho mỗi tài khoản) + bản offline trên máy người dùng.
 - Triển khai: đẩy lên `main` → workflow dựng `app/dist` → GitHub Pages tại

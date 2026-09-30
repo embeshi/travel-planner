@@ -306,7 +306,7 @@ function thaKeo (giu) {
 
 .dong--keo {
   transform: rotate(-0.6deg);
-  box-shadow: 0 6px 14px rgba(31, 58, 95, .18);
+  box-shadow: 0 6px 14px var(--phu-bong);
   border-left: 3px solid var(--san-ho);
   position: relative; z-index: 2;
 }

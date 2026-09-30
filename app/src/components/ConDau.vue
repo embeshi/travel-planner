@@ -35,6 +35,6 @@ const CHU = {
 }
 
 .dau--duyet { color: var(--duyet); background: var(--duyet-nhat); }
-.dau--canh-bao { color: #8A5A00; background: var(--nghe-nhat); }
+.dau--canh-bao { color: var(--nghe-dam); background: var(--nghe-nhat); }
 .dau--hoan-tat { color: var(--san-ho); background: var(--san-ho-nhat); }
 </style>

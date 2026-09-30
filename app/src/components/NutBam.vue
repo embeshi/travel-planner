@@ -48,14 +48,14 @@ defineProps({
 .nut--chinh:hover:not(:disabled) { background: var(--san-ho-hover); }
 .nut--chinh:active:not(:disabled) { background: var(--san-ho-press); }
 
-.nut--phu { background: var(--nghe); color: var(--navy); }
+.nut--phu { background: var(--nghe); color: var(--muc-tren-nghe); }
 .nut--phu:hover:not(:disabled) { background: var(--nghe-hover); }
 
 .nut--vien { background: var(--giay); color: var(--navy); }
 .nut--vien:hover:not(:disabled) { background: var(--kem); }
 
 .nut--pha-huy { background: var(--loi); color: var(--giay); }
-.nut--pha-huy:hover:not(:disabled) { background: #97201A; }
+.nut--pha-huy:hover:not(:disabled) { background: var(--loi-press); }
 
 .nut:disabled {
   background: var(--khoa);

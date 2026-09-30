@@ -262,7 +262,7 @@ async function keBangAI () {
   /* Đoạn tổng kết được in kèm — đây chính là «Xuất PDF» của bản nháp */
   .tk__ban-in {
     display: block; font-size: 14px; line-height: 1.7;
-    padding: 12px 0; border-top: 1px solid #999; margin-top: 12px;
+    padding: 12px 0; border-top: 1px solid #999; margin-top: 12px; /* màu giấy in, cố ý */
   }
   .tk { gap: 12px; }
   .cot-ngay, .tk__kpi > * { box-shadow: none; }

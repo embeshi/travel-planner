@@ -112,7 +112,7 @@ function batDau () {
   background: var(--giay); color: var(--navy); padding: 0;
   width: min(480px, calc(100vw - 32px));
 }
-.cm::backdrop { background: rgba(31, 58, 95, .55); }
+.cm::backdrop { background: var(--phu-man); }
 .cm__than { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-4); }
 .cm__dau { display: flex; align-items: center; justify-content: space-between; }
 .cm__dong { border: 0; background: transparent; font-size: 24px; line-height: 1;

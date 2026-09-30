@@ -324,7 +324,7 @@ function luu () {
   background: var(--giay); color: var(--navy);
   position: fixed; inset: auto 0 0 0;
 }
-.sheet::backdrop { background: rgba(31, 58, 95, .55); }
+.sheet::backdrop { background: var(--phu-man); }
 .sheet[open] { animation: truot 220ms var(--diu); }
 @keyframes truot { from { transform: translateY(100%) } to { transform: translateY(0) } }
 

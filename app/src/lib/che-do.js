@@ -45,8 +45,16 @@ export function cheDoTiepTheo (chon) {
   return CAC_CHE_DO[(CAC_CHE_DO.indexOf(chon) + 1) % CAC_CHE_DO.length]
 }
 
+/* Màu thanh trạng thái điện thoại — khớp --navy (sáng) / --kem (tối) của
+   tokens.css. Đổi bằng JS chứ không dùng <meta media=…>, vì media chỉ nghe
+   theo máy, không biết người dùng đã bấm tay ☀/☾. */
+const MAU_THANH = { sang: '#1F3A5F', toi: '#121923' }
+
 export function apCheDo (chon) {
-  document.documentElement.setAttribute('data-che-do', cheDoThat(chon))
+  const that = cheDoThat(chon)
+  document.documentElement.setAttribute('data-che-do', that)
+  document.querySelectorAll('meta[name="theme-color"]')
+    .forEach((m) => m.setAttribute('content', MAU_THANH[that]))
 }
 
 export function datCheDo (chon) {
