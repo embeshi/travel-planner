@@ -14,7 +14,8 @@ import Chip from './Chip.vue'
 const props = defineProps({
   mo: { type: Boolean, default: false },
   homNay: { type: String, required: true },
-  /* 'sheet' cho điện thoại · 'panel' cho laptop */
+  /* 'sheet' điện thoại · 'panel' laptop (L2, tab Kế hoạch) · 'l1' laptop Hôm nay:
+     thanh ✦ ở đầu + thẻ gọn Teleport vào cột trái của ManHomNay */
   kieu: { type: String, default: 'sheet' }
 })
 const emit = defineEmits(['dong', 'da-ghi', 'den-ty-gia'])
@@ -42,7 +43,7 @@ function phimTat (e) {
     e.preventDefault(); oCau.value?.focus()
   }
 }
-onMounted(() => { if (props.kieu === 'panel') window.addEventListener('keydown', phimTat) })
+onMounted(() => { if (props.kieu !== 'sheet') window.addEventListener('keydown', phimTat) })
 onUnmounted(() => window.removeEventListener('keydown', phimTat))
 
 const quyDoi = computed(() => {
@@ -208,7 +209,7 @@ function luu () {
   <!-- LAPTOP · bảng thiết kế L2: dải ngang đầu vùng nội dung, mở sẵn,
        KHÔNG che nội dung. Bốn ô một hàng, chip + Lưu góc phải, ✦ là thẻ riêng. -->
   <section v-else class="panel-khu">
-    <div class="panel">
+    <div v-if="kieu === 'panel'" class="panel">
       <div class="panel__dau">
         <span class="nhan-mono panel__ten">Panel ghi nhanh · mở sẵn, không che nội dung</span>
         <span class="panel__meo">Enter nhảy theo cột</span>
@@ -285,6 +286,32 @@ function luu () {
         <p v-if="loiAI" class="ai__loi">{{ loiAI }}</p>
       </div>
     </div>
+
+    <!-- L1 · thẻ «Ghi nhanh · luôn mở» — cùng một linh kiện với thanh ✦ ở trên
+         (để «Sửa tay» đổ đúng ô), nhưng dời vào cột trái của ManHomNay.
+         `defer`: đích được vẽ SAU thẻ này trong cùng một lượt (Vue 3.5). -->
+    <Teleport v-if="kieu === 'l1'" defer to="#hn-ghi-nhanh">
+      <div class="gon">
+        <span class="nhan-mono gon__ten">Ghi nhanh · luôn mở</span>
+        <div class="gon__hang">
+          <ONhap ref="oTen" v-model="ten" placeholder="Tên khoản chi…" @enter="enterTen" />
+          <ONhap ref="oTien" v-model="tien" type="number" :placeholder="'0 ' + kho.currency"
+                 can-phai @enter="enterTien" />
+        </div>
+        <div class="gon__chip">
+          <Chip v-for="d in DANH_MUC" :key="d.ma" :bieu-tuong="d.bt" :chon="cat === d.ma"
+                :title="d.ten" @click="cat = cat === d.ma ? '' : d.ma">{{ cat === d.ma ? d.ten : '' }}</Chip>
+          <Chip v-for="k in KENH_THANH_TOAN" :key="k" :chon="pay === k"
+                @click="pay = pay === k ? '' : k">{{ k }}</Chip>
+        </div>
+        <div class="gon__cuoi">
+          <NutBam kieu="chinh" :khoa="!luuDuoc" @click="luu">Lưu · Enter</NutBam>
+          <span class="gon__ghi">
+            <template v-if="quyDoi">≈ {{ quyDoi }} · </template>Ngày giờ và quy đổi VNĐ tự điền.
+          </span>
+        </div>
+      </div>
+    </Teleport>
   </section>
 </template>
 
@@ -405,4 +432,13 @@ function luu () {
 .ai__o dt { font-size: 9px; }
 .ai__o dd { margin: 3px 0 0; }
 .ai__ghi { font-size: 12.5px; color: var(--muc-phu); align-self: center; }
+
+/* ---------------- Thẻ gọn L1 (Hôm nay laptop) ---------------- */
+.gon { display: flex; flex-direction: column; gap: var(--sp-2); background: var(--giay);
+  border: var(--vien); border-radius: var(--bo-the); box-shadow: var(--bong-the-con); padding: var(--sp-3); }
+.gon__ten { color: var(--san-ho); }
+.gon__hang { display: grid; grid-template-columns: minmax(0, 1fr) 118px; gap: var(--sp-2); }
+.gon__chip { display: flex; flex-wrap: wrap; gap: 6px; }
+.gon__cuoi { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.gon__ghi { font-size: 12.5px; color: var(--muc-phu); }
 </style>

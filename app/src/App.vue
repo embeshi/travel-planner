@@ -187,7 +187,7 @@ function nhapBackup (e) {
 
           <!-- Panel ghi nhanh laptop (L2): dải ngang ĐẦU vùng nội dung, mở sẵn, không che gì -->
           <GhiChiNhanh v-if="!laDienThoai && !chuaCoChuyen && (tab === 'hom-nay' || tab === 'ke-hoach')"
-                       kieu="panel" :hom-nay="homNay" class="ve__panel" @da-ghi="daGhi"
+                       :kieu="tab === 'hom-nay' ? 'l1' : 'panel'" :hom-nay="homNay" class="ve__panel" @da-ghi="daGhi"
                        @den-ty-gia="denTyGia" />
 
           <!-- Sổ trống nhưng tab Tổng kết vẫn mở được — Kệ vé nằm ở đó (M9) -->

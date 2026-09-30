@@ -8,6 +8,7 @@ import { fmtFx, fmtVND, num } from '../lib/dinh-dang.js'
 import { homNayISO, ngayThuMay, mocChuyenDi } from '../lib/giai-doan.js'
 import { dayKeyInfo, pad2, weekdayOf } from '../lib/ngay.js'
 import { vuaGhiId } from '../lib/vua-ghi.js'
+import { nhipChi } from '../lib/nhip-chi.js'
 import TheKPI from './TheKPI.vue'
 
 const props = defineProps({
@@ -22,6 +23,7 @@ const daChi = computed(() => daChiHomNay(kho, props.homNay))
 const viCon = computed(() => viTienMatConLai(kho.rows, tongDaDoi(kho)))
 const thuMay = computed(() => ngayThuMay(kho, props.homNay))
 const coMoc = computed(() => mocChuyenDi(kho).tu !== 'chua-co')
+const nhip = computed(() => nhipChi(kho, props.homNay))
 
 const nhanNgay = computed(() => {
   const t = dayKeyInfo(props.homNay)
@@ -55,54 +57,75 @@ function tickMon (o) { o.m.packed = true; baoDoi() }
       </span>
     </div>
 
-    <div class="hn__kpi">
-      <TheKPI nhan="Đã chi hôm nay" :so="fmtFx(daChi) + ' ' + kho.currency"
-              :phu="kho.rate ? '≈ ' + fmtVND(daChi * kho.rate) : 'chưa có tỷ giá'" />
-      <TheKPI nhan="Ví tiền mặt còn" :so="fmtFx(viCon) + ' ' + kho.currency"
-              phu="Chỉ tính dòng chọn Tiền mặt" :canh-bao="viCon < 0" />
-    </div>
-    <!-- Hết ngõ cụt: «chưa có tỷ giá» phải có lối đi tiếp -->
-    <button v-if="!kho.rate" type="button" class="hn__lien-ket" @click="emit('sang-tab', 'ty-gia')">
-      Chưa có tỷ giá {{ kho.currency }} — điền ngay →
-    </button>
-
-    <h3 class="hn__khu">
-      Lịch trình hôm nay
-      <span class="hn__dem">{{ dong.length }} mục</span>
-    </h3>
-
-    <ul v-if="dong.length" class="viec">
-      <li v-for="r in dong" :key="r.id" class="viec__o"
-          :class="{ 'viec__o--xong': daXong(r), 'viec__o--vua-ghi': vuaGhiId === r.id }">
-        <button type="button" class="viec__tick" :aria-pressed="daXong(r)"
-                :title="daXong(r) ? 'Bỏ đánh dấu' : 'Đánh dấu đã xong'" @click="tick(r)">
-          <span aria-hidden="true">{{ daXong(r) ? '✓' : '' }}</span>
-        </button>
-        <span class="viec__ten">{{ r.activity || 'Chưa đặt tên' }}</span>
-        <span class="viec__dm" :class="{ 'viec__dm--trong': !r.cat }">{{ r.cat || CHUA_PHAN_LOAI }}</span>
-        <span class="viec__tien">
-          {{ num(r.tripCost) > 0 ? fmtFx(rowTotal(r)) + ' ' + kho.currency : '—' }}
-        </span>
-      </li>
-    </ul>
-
-    <p v-else class="hn__trong">
-      <template v-if="coMoc">Hôm nay chưa có việc nào trong lịch trình.</template>
-      <template v-else>Chưa có chuyến nào. Sang tab Kế hoạch để bắt đầu.</template>
-      <button type="button" class="hn__lien-ket" @click="emit('sang-tab', 'ke-hoach')">
-        Mở Kế hoạch →
-      </button>
-    </p>
-
-    <template v-if="tickNhanh.length">
-      <h3 class="hn__khu">Tick nhanh sổ tay</h3>
-      <div class="nhanh">
-        <button v-for="o in tickNhanh" :key="o.khoa + o.m.id" type="button"
-                class="nhanh__chip" @click="tickMon(o)">
-          <span aria-hidden="true">{{ o.bt }}</span> {{ o.m.name }}
+    <!-- Bảng thiết kế L1: laptop hai cột 1.55fr/1fr — trái: lịch trình hôm nay
+         + thẻ ghi nhanh gọn; phải: KPI · tick nhanh · ✦ nhịp chi.
+         Điện thoại: KPI → lịch trình → phần còn lại (thứ tự cũ). -->
+    <div class="hn__than">
+      <div class="hn__kpi-khu">
+        <div class="hn__kpi">
+          <TheKPI nhan="Đã chi hôm nay" :so="fmtFx(daChi) + ' ' + kho.currency"
+                  :phu="kho.rate ? '≈ ' + fmtVND(daChi * kho.rate) : 'chưa có tỷ giá'" />
+          <TheKPI nhan="Ví tiền mặt còn" :so="fmtFx(viCon) + ' ' + kho.currency"
+                  phu="Chỉ tính dòng chọn Tiền mặt" :canh-bao="viCon < 0" />
+        </div>
+        <!-- Hết ngõ cụt: «chưa có tỷ giá» phải có lối đi tiếp -->
+        <button v-if="!kho.rate" type="button" class="hn__lien-ket" @click="emit('sang-tab', 'ty-gia')">
+          Chưa có tỷ giá {{ kho.currency }} — điền ngay →
         </button>
       </div>
-    </template>
+
+      <div class="hn__trai">
+        <h3 class="hn__khu">
+          Lịch trình hôm nay
+          <span class="hn__dem">{{ dong.length }} mục</span>
+        </h3>
+
+        <ul v-if="dong.length" class="viec">
+          <li v-for="r in dong" :key="r.id" class="viec__o"
+              :class="{ 'viec__o--xong': daXong(r), 'viec__o--vua-ghi': vuaGhiId === r.id }">
+            <button type="button" class="viec__tick" :aria-pressed="daXong(r)"
+                    :title="daXong(r) ? 'Bỏ đánh dấu' : 'Đánh dấu đã xong'" @click="tick(r)">
+              <span aria-hidden="true">{{ daXong(r) ? '✓' : '' }}</span>
+            </button>
+            <span class="viec__ten">{{ r.activity || 'Chưa đặt tên' }}</span>
+            <span class="viec__dm" :class="{ 'viec__dm--trong': !r.cat }">{{ r.cat || CHUA_PHAN_LOAI }}</span>
+            <span class="viec__tien">
+              {{ num(r.tripCost) > 0 ? fmtFx(rowTotal(r)) + ' ' + kho.currency : '—' }}
+            </span>
+          </li>
+        </ul>
+
+        <p v-else class="hn__trong">
+          <template v-if="coMoc">Hôm nay chưa có việc nào trong lịch trình.</template>
+          <template v-else>Chưa có chuyến nào. Sang tab Kế hoạch để bắt đầu.</template>
+          <button type="button" class="hn__lien-ket" @click="emit('sang-tab', 'ke-hoach')">
+            Mở Kế hoạch →
+          </button>
+        </p>
+
+        <!-- L1: thẻ «Ghi nhanh · luôn mở» của laptop được Teleport vào đây
+             (GhiChiNhanh kieu="l1") — rỗng trên điện thoại. -->
+        <div id="hn-ghi-nhanh" class="hn__ghi-nhanh" />
+      </div>
+
+      <div class="hn__duoi">
+        <template v-if="tickNhanh.length">
+          <h3 class="hn__khu">Tick nhanh sổ tay</h3>
+          <div class="nhanh">
+            <button v-for="o in tickNhanh" :key="o.khoa + o.m.id" type="button"
+                    class="nhanh__chip" @click="tickMon(o)">
+              <span aria-hidden="true">{{ o.bt }}</span> {{ o.m.name }}
+            </button>
+          </div>
+        </template>
+
+        <div class="nhip" :class="{ 'nhip--thieu': !nhip.du }">
+          <span class="nhan-mono nhip__ten">✦ Nhịp chi</span>
+          <p class="nhip__chu">{{ nhip.chu }}</p>
+          <span class="nhip__ghi">Tính từ số liệu thật trên máy — không cần mạng, không gọi AI.</span>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -116,6 +139,27 @@ function tickMon (o) { o.m.packed = true; baoDoi() }
 .hn__ngay { font-family: var(--font-nhan); font-size: 11px; color: var(--nhan); }
 
 .hn__kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--sp-3); }
+
+/* Điện thoại: một cột, thứ tự KPI → lịch trình → còn lại */
+.hn__than { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: 'kpi' 'trai' 'duoi'; gap: var(--sp-3); }
+.hn__kpi-khu { grid-area: kpi; display: flex; flex-direction: column; gap: var(--sp-2); }
+.hn__trai { grid-area: trai; display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.hn__duoi { grid-area: duoi; display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.hn__trai .hn__khu, .hn__duoi .hn__khu { margin-top: 0; }
+.hn__ghi-nhanh:empty { display: none; }
+/* Laptop (L1): hai cột 1.55fr/1fr, cột phải xếp KPI rồi phần còn lại */
+@media (min-width: 701px) {
+  .hn__than { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); grid-template-areas: 'trai kpi' 'trai duoi'; align-items: start; gap: var(--sp-4); }
+  .hn__kpi { grid-template-columns: 1fr; }
+}
+
+/* ✦ Nhịp chi */
+.nhip { display: flex; flex-direction: column; gap: var(--sp-1); background: var(--giay);
+  border: 1.5px dashed var(--vach); border-radius: var(--bo-the); padding: var(--sp-3); }
+.nhip__ten { color: var(--san-ho); }
+.nhip__chu { margin: 0; font-size: 13.5px; line-height: 1.55; }
+.nhip--thieu .nhip__chu { color: var(--muc-phu); }
+.nhip__ghi { font-size: 11px; color: var(--nhan); }
 
 .hn__khu {
   margin: var(--sp-3) 0 0; display: flex; align-items: baseline; gap: var(--sp-2);

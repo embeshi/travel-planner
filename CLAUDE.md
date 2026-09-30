@@ -35,6 +35,10 @@ Bản chạy thật bây giờ là app Vue trong `app/`, do GitHub Actions dựn
   Quy đổi · Thanh toán ▾), chip + «Lưu · Enter» góc phải, Enter nhảy theo cột, thẻ ✦ riêng
   có ⌘K và bản xem trước bốn ô ngang. Đừng kéo nó về thẻ dọc 420px ở đáy trang nữa —
   v10.0–10.7 từng làm vậy và bị chủ dự án bắt lệch bản vẽ.
+- Hôm nay laptop theo bảng thiết kế L1 (`ManHomNay.vue`): thanh ✦ trên cùng, hai cột
+  1.55fr/1fr — trái: lịch trình hôm nay + thẻ «Ghi nhanh · luôn mở» (GhiChiNhanh
+  kieu="l1", Teleport `defer` vào `#hn-ghi-nhanh`); phải: KPI · tick nhanh · «✦ Nhịp chi»
+  (`lib/nhip-chi.js`, tính thuần từ số liệu, không gọi AI). Kế hoạch vẫn dùng panel L2.
 - `vite.config.js` đặt `base: '/travel-planner/'`. Sai chỗ này chỉ lộ ra lúc deploy.
   Dev server chạy ở `http://localhost:5173/travel-planner/`, không phải ở gốc.
 - Tầng AI (✦) chạy theo «cách c»: người dùng tự dán khoá API. Từ v10.3 nhà cung cấp

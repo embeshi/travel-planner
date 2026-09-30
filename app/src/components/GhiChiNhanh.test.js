@@ -272,3 +272,52 @@ describe('panel laptop · đúng bản vẽ L2 (v10.8)', () => {
     w.unmount()
   })
 })
+
+describe('kieu l1 · Hôm nay laptop (v10.9)', () => {
+  const dungL1 = () => {
+    const dich = document.createElement('div'); dich.id = 'hn-ghi-nhanh'; document.body.appendChild(dich)
+    const w = mount(GhiChiNhanh, { props: { kieu: 'l1', homNay: '2026-08-04' }, attachTo: document.body })
+    return { w, dich, xong: () => { w.unmount(); dich.remove() } }
+  }
+
+  it('thanh ✦ nằm trong linh kiện, thẻ gọn được dời vào #hn-ghi-nhanh, KHÔNG có panel L2', () => {
+    const { w, dich, xong } = dungL1()
+    expect(w.find('.panel-ai').exists()).toBe(true)
+    expect(w.find('.panel').exists()).toBe(false)
+    expect(dich.querySelector('.gon')).toBeTruthy()
+    expect(dich.querySelectorAll('input')).toHaveLength(2)
+    expect(dich.textContent).toContain('Ngày giờ và quy đổi VNĐ tự điền')
+    xong()
+  })
+
+  it('Enter: tên → số tiền → lưu; danh mục chưa chọn chỉ hiện biểu tượng', async () => {
+    const { dich, xong } = dungL1()
+    const [oTen, oTien] = dich.querySelectorAll('input')
+    oTen.value = 'Xôi'; oTen.dispatchEvent(new Event('input', { bubbles: true }))
+    oTen.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    await new Promise((r) => setTimeout(r, 0))
+    expect(document.activeElement).toBe(oTien)
+    oTien.value = '30'; oTien.dispatchEvent(new Event('input', { bubbles: true }))
+    await new Promise((r) => setTimeout(r, 0))
+    oTien.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    await new Promise((r) => setTimeout(r, 0))
+    expect(kho.rows).toHaveLength(1)
+    expect(kho.rows[0]).toMatchObject({ activity: 'Xôi', tripCost: '30', date: '2026-08-04' })
+    const chips = [...dich.querySelectorAll('.chip')]
+    expect(chips.length).toBe(6 + 5)
+    xong()
+  })
+
+  it('«Sửa tay» từ thanh ✦ đổ đúng vào thẻ gọn (cùng một linh kiện)', async () => {
+    const { w, dich, xong } = dungL1()
+    const oCau = w.find('.panel-ai input')
+    await oCau.setValue('taxi 1.200 thẻ')
+    await oCau.trigger('keydown', { key: 'Enter' })
+    await w.findAll('.ai__nut .nut--vien')[0].trigger('click')
+    await w.vm.$nextTick()
+    expect(dich.querySelectorAll('input')[0].value).toBe('Taxi')
+    expect(dich.querySelectorAll('input')[1].value).toBe('1200')
+    expect(kho.rows).toHaveLength(0)
+    xong()
+  })
+})
