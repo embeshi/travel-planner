@@ -1,0 +1,65 @@
+# Robot giữ ấm Supabase — mỗi ngày gõ cửa một lần để dự án miễn phí không bị
+# đưa vào trạng thái ngủ vì lâu không ai đụng tới.
+#
+# Cách gõ: MỘT truy vấn HEAD đếm dòng bảng trips bằng khoá công khai
+# (publishable). Không tải dữ liệu, không in dữ liệu ra log — chỉ in mã HTTP
+# và số dòng khách vô danh thấy được.
+#
+# Kiêm luôn lính canh RLS: khách vô danh phải thấy ĐÚNG 0 dòng. Khác 0 là
+# RLS đã tắt → robot đỏ → GitHub gửi email cho chủ dự án.
+#
+# Lưu ý của GitHub: lịch (schedule) tự tắt sau 60 ngày repo không có commit
+# mới — khi đó sẽ có email báo; đẩy bất kỳ commit nào là lịch chạy lại.
+name: Giữ ấm Supabase
+
+on:
+  schedule:
+    - cron: '0 21 * * *'        # 21:00 UTC = 04:00 sáng giờ Việt Nam, hằng ngày
+  workflow_dispatch:            # bấm tay trên tab Actions khi muốn thử
+  push:
+    paths:
+      - .github/workflows/giu-am.yml   # tự chạy khi chính file này đổi, để kiểm ngay
+
+permissions: {}
+
+jobs:
+  go-cua:
+    name: Gõ cửa một cái
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Đọc địa chỉ + khoá công khai từ cau-hinh.js (một nguồn duy nhất)
+        id: cfg
+        run: |
+          URL=$(grep -o "SUPABASE_URL = '[^']*'" app/src/lib/cau-hinh.js | cut -d"'" -f2)
+          KEY=$(grep -o "SUPABASE_KEY = '[^']*'" app/src/lib/cau-hinh.js | cut -d"'" -f2)
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "::error::Không đọc được SUPABASE_URL / SUPABASE_KEY trong app/src/lib/cau-hinh.js"
+            exit 1
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "key=$KEY" >> "$GITHUB_OUTPUT"
+
+      - name: HEAD /rest/v1/trips · đếm dòng · không tải dữ liệu
+        env:
+          URL: ${{ steps.cfg.outputs.url }}
+          KEY: ${{ steps.cfg.outputs.key }}
+        run: |
+          HDR=$(curl -sS -I --max-time 30 "$URL/rest/v1/trips?select=id" \
+                  -H "apikey: $KEY" -H "Authorization: Bearer $KEY" \
+                  -H "Prefer: count=exact")
+          STATUS=$(printf '%s\n' "$HDR" | head -1 | awk '{print $2}')
+          RANGE=$(printf '%s\n' "$HDR" | tr -d '\r' | grep -i '^content-range' | awk '{print $2}')
+          echo "HTTP $STATUS · content-range ${RANGE:-?}"
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Supabase không trả 200 — dự án có thể đang ngủ hoặc đang lỗi. Mở dashboard xem."
+            exit 1
+          fi
+          COUNT=${RANGE##*/}
+          if [ "$COUNT" != "0" ]; then
+            echo "::error::KHÁCH VÔ DANH THẤY $COUNT DÒNG — RLS đang TẮT. Vào Supabase → Authentication → Policies bật lại ngay."
+            exit 1
+          fi
+          echo "✓ Máy chủ thức, RLS còn khoá (khách vô danh thấy 0 dòng)."
