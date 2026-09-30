@@ -221,3 +221,54 @@ describe('✦ câu khó · AI chỉ ra tay khi bộ tách offline chịu thua', 
     luuKhoaAI('')
   })
 })
+
+describe('panel laptop · đúng bản vẽ L2 (v10.8)', () => {
+  const dungPanel = () => mount(GhiChiNhanh, { props: { kieu: 'panel', homNay: '2026-08-04' }, attachTo: document.body })
+
+  it('bốn ô một hàng: Hoạt động · Chi phí · Quy đổi · Thanh toán ▾, chip + Lưu, ✦ là thẻ riêng', () => {
+    const w = dungPanel()
+    expect(w.findAll('.panel__hang > .panel__o')).toHaveLength(4)
+    expect(w.find('.panel__quy').exists()).toBe(true)
+    expect(w.find('select.panel__chon').findAll('option')).toHaveLength(6)   /* — + 5 kênh */
+    expect(w.find('.panel .nut--chinh').text()).toBe('Lưu · Enter')
+    expect(w.find('.panel-ai').exists()).toBe(true)
+    expect(w.text()).toContain('Enter nhảy theo cột')
+    w.unmount()
+  })
+
+  it('Enter nhảy theo cột: Hoạt động → Chi phí; Chi phí trống → Thanh toán; có số → lưu', async () => {
+    const w = dungPanel()
+    const o = w.findAll('input')
+    await o[0].setValue('Cà phê')
+    await o[0].trigger('keydown', { key: 'Enter' })
+    expect(document.activeElement).toBe(o[1].element)
+    expect(kho.rows).toHaveLength(0)
+    await o[1].trigger('keydown', { key: 'Enter' })
+    expect(document.activeElement).toBe(w.find('select.panel__chon').element)
+    expect(kho.rows).toHaveLength(0)
+    await o[1].setValue('85')
+    await w.find('select.panel__chon').setValue('Momo')
+    await w.find('select.panel__chon').trigger('keydown', { key: 'Enter' })
+    expect(kho.rows).toHaveLength(1)
+    expect(kho.rows[0]).toMatchObject({ activity: 'Cà phê', tripCost: '85', pay: 'Momo' })
+    w.unmount()
+  })
+
+  it('⌘K / Ctrl+K đưa con trỏ vào ô ✦', async () => {
+    const w = dungPanel()
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))
+    expect(document.activeElement).toBe(w.find('.panel-ai input').element)
+    w.unmount()
+  })
+
+  it('bản xem trước ở panel là BỐN Ô NGANG, ô danh mục đoán được thì nổi bật', async () => {
+    const w = dungPanel()
+    const oCau = w.find('.panel-ai input')
+    await oCau.setValue('bolt về khách sạn 120 baht tiền mặt')
+    await oCau.trigger('keydown', { key: 'Enter' })
+    expect(w.findAll('.ai__bang--o .ai__o')).toHaveLength(4)
+    expect(w.find('.ai__o--doan').text()).toContain('Di chuyển')
+    expect(kho.rows).toHaveLength(0)                                   /* vẫn chưa ghi */
+    w.unmount()
+  })
+})

@@ -30,6 +30,11 @@ Bản chạy thật bây giờ là app Vue trong `app/`, do GitHub Actions dựn
   bên phải ba thẻ bê từ ba khu v9.6 từng bị rơi lúc dựng v10 — `TheTyGia` (sec-fx),
   `TheGoiBay` (sec-book), `TheDoiTien` (sec-cash). Mọi chỗ báo «thiếu tỷ giá» đều là nút
   dẫn tới `#the-ty-gia`, không còn ngõ cụt.
+- Panel ghi nhanh laptop (`GhiChiNhanh.vue` kieu="panel") theo bảng thiết kế L2: dải
+  ngang ĐẦU vùng nội dung ở tab Hôm nay và Kế hoạch, bốn ô một hàng (Hoạt động · Chi phí ·
+  Quy đổi · Thanh toán ▾), chip + «Lưu · Enter» góc phải, Enter nhảy theo cột, thẻ ✦ riêng
+  có ⌘K và bản xem trước bốn ô ngang. Đừng kéo nó về thẻ dọc 420px ở đáy trang nữa —
+  v10.0–10.7 từng làm vậy và bị chủ dự án bắt lệch bản vẽ.
 - `vite.config.js` đặt `base: '/travel-planner/'`. Sai chỗ này chỉ lộ ra lúc deploy.
   Dev server chạy ở `http://localhost:5173/travel-planner/`, không phải ở gốc.
 - Tầng AI (✦) chạy theo «cách c»: người dùng tự dán khoá API. Từ v10.3 nhà cung cấp

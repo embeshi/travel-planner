@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { kho, dongMoi, DANH_MUC, KENH_THANH_TOAN } from '../lib/kho.js'
 import { sortByDate } from '../lib/xep-dong.js'
 import { bam, deLuu, deHien, PHIM } from '../lib/ban-phim-so.js'
@@ -25,6 +25,25 @@ const cat = ref('')
 const pay = ref('')
 const hopThoai = ref(null)
 const oTen = ref(null)
+const oTien = ref(null)
+const oKenh = ref(null)
+const oCau = ref(null)
+
+/* ============================================================
+   PANEL LAPTOP — bảng thiết kế L2: «Enter nhảy theo cột».
+   Hoạt động ⏎ → Chi phí · Chi phí ⏎ → lưu (có số) hoặc → Thanh toán ·
+   Thanh toán ⏎ → lưu. Cùng họ với vết sẹo Enter hai chế độ của bảng.
+   ⌘K / Ctrl+K đưa con trỏ vào ô ✦ (thanh lệnh của L1/L2).
+   ============================================================ */
+function enterTen () { oTien.value?.focus() }
+function enterTien () { if (luuDuoc.value) return luu(); oKenh.value?.focus() }
+function phimTat (e) {
+  if ((e.metaKey || e.ctrlKey) && String(e.key).toLowerCase() === 'k') {
+    e.preventDefault(); oCau.value?.focus()
+  }
+}
+onMounted(() => { if (props.kieu === 'panel') window.addEventListener('keydown', phimTat) })
+onUnmounted(() => window.removeEventListener('keydown', phimTat))
 
 const quyDoi = computed(() => {
   const n = num(deLuu(tien.value))
@@ -186,67 +205,86 @@ function luu () {
     </form>
   </dialog>
 
-  <!-- LAPTOP · panel mở sẵn, KHÔNG che nội dung (PRD F1) -->
-  <section v-else class="panel">
-    <div class="panel__dau">
-      <span class="nhan-mono">Ghi nhanh · luôn mở</span>
-      <span class="panel__meo">Enter để lưu</span>
-    </div>
+  <!-- LAPTOP · bảng thiết kế L2: dải ngang đầu vùng nội dung, mở sẵn,
+       KHÔNG che nội dung. Bốn ô một hàng, chip + Lưu góc phải, ✦ là thẻ riêng. -->
+  <section v-else class="panel-khu">
+    <div class="panel">
+      <div class="panel__dau">
+        <span class="nhan-mono panel__ten">Panel ghi nhanh · mở sẵn, không che nội dung</span>
+        <span class="panel__meo">Enter nhảy theo cột</span>
+      </div>
 
-    <div class="panel__o">
-      <label class="nhan-mono">Hoạt động</label>
-      <ONhap ref="oTen" v-model="ten" placeholder="Tên khoản chi" @enter="luu" />
-    </div>
-    <div class="panel__o">
-      <label class="nhan-mono">Chi phí ({{ kho.currency }})</label>
-      <ONhap v-model="tien" type="number" placeholder="0" can-phai @enter="luu" />
-    </div>
-    <p class="panel__quy">
-      <template v-if="quyDoi">≈ {{ quyDoi }}</template>
-      <template v-else-if="kho.rate">—</template>
-      <button v-else type="button" class="tien__thieu" @click="emit('den-ty-gia')">
-        chưa có tỷ giá {{ kho.currency }} — điền ngay →
-      </button>
-    </p>
-
-    <div class="hang">
-      <Chip v-for="d in DANH_MUC" :key="d.ma" :bieu-tuong="d.bt" :chon="cat === d.ma"
-            @click="cat = cat === d.ma ? '' : d.ma">{{ d.ten }}</Chip>
-    </div>
-    <div class="hang">
-      <Chip v-for="k in KENH_THANH_TOAN" :key="k" :chon="pay === k"
-            @click="pay = pay === k ? '' : k">{{ k }}</Chip>
-    </div>
-
-    <NutBam kieu="chinh" rong :khoa="!luuDuoc" @click="luu">Lưu · Enter</NutBam>
-
-    <div class="ai">
-        <span class="nhan-mono">✦ Hoặc gõ một câu</span>
-        <ONhap v-model="cauTuNhien" placeholder="bolt về khách sạn 120 baht tiền mặt"
-               @enter="docCau" />
-        <div v-if="banXemTruoc" class="ai__xem">
-          <p class="ai__nhan">Đọc được — sửa được trước khi ghi</p>
-          <dl class="ai__bang">
-            <dt>Hoạt động</dt><dd>{{ banXemTruoc.activity || '—' }}</dd>
-            <dt>Chi phí</dt><dd>{{ banXemTruoc.tripCost || '—' }} {{ kho.currency }}</dd>
-            <dt>Thanh toán</dt><dd>{{ banXemTruoc.pay || 'chưa đọc ra' }}</dd>
-            <dt>Danh mục</dt><dd>{{ banXemTruoc.cat || 'chưa đoán được' }}</dd>
-          </dl>
-          <div class="ai__nut">
-            <NutBam kieu="chinh" :khoa="!duDeGhi(banXemTruoc)" @click="xacNhanGhi">Xác nhận ghi</NutBam>
-            <NutBam kieu="vien" @click="suaTay">Sửa tay</NutBam>
-            <NutBam v-if="!duDeGhi(banXemTruoc) && khoaAI" kieu="phu"
-                    :khoa="dangHoiAI" @click="hoiAI">
-              {{ dangHoiAI ? '✦ Đang đọc…' : '✦ Hỏi AI câu này' }}
-            </NutBam>
+      <div class="panel__hang">
+        <div class="panel__o">
+          <label class="nhan-mono">Hoạt động</label>
+          <ONhap ref="oTen" v-model="ten" placeholder="Tên khoản chi" @enter="enterTen" />
+        </div>
+        <div class="panel__o">
+          <label class="nhan-mono">Chi phí</label>
+          <ONhap ref="oTien" v-model="tien" type="number" :placeholder="'0 ' + kho.currency"
+                 can-phai @enter="enterTien" />
+        </div>
+        <div class="panel__o">
+          <span class="nhan-mono">Quy đổi</span>
+          <div class="panel__quy" :class="{ 'panel__quy--co': quyDoi }">
+            <template v-if="quyDoi">{{ quyDoi }}</template>
+            <template v-else-if="kho.rate">—</template>
+            <button v-else type="button" class="tien__thieu" @click="emit('den-ty-gia')">
+              chưa có tỷ giá {{ kho.currency }} — điền ngay →
+            </button>
           </div>
-          <p v-if="!duDeGhi(banXemTruoc) && !khoaAI" class="ai__meo">
-            Bộ tách chưa đọc đủ. Dán khoá API ở tab Tổng kết thì hỏi được AI, hoặc bấm Sửa tay.
-          </p>
-          <p v-if="loiAI" class="ai__loi">{{ loiAI }}</p>
+        </div>
+        <div class="panel__o">
+          <label class="nhan-mono" for="panel-kenh">Thanh toán</label>
+          <select id="panel-kenh" ref="oKenh" v-model="pay" class="panel__chon"
+                  @keydown.enter.prevent="luu">
+            <option value="">—</option>
+            <option v-for="k in KENH_THANH_TOAN" :key="k" :value="k">{{ k }}</option>
+          </select>
         </div>
       </div>
 
+      <div class="panel__chip">
+        <Chip v-for="d in DANH_MUC" :key="d.ma" :bieu-tuong="d.bt" :chon="cat === d.ma"
+              @click="cat = cat === d.ma ? '' : d.ma">{{ d.ten }}</Chip>
+        <span class="panel__cach" />
+        <NutBam kieu="chinh" :khoa="!luuDuoc" @click="luu">Lưu · Enter</NutBam>
+      </div>
+    </div>
+
+    <!-- ✦ thẻ riêng (L2): thanh câu + ⌘K, bản xem trước bốn ô ngang -->
+    <div class="panel-ai">
+      <div class="panel-ai__dau">
+        <span class="panel-ai__sao" aria-hidden="true">✦</span>
+        <ONhap ref="oCau" v-model="cauTuNhien" class="panel-ai__o"
+               placeholder="Hoặc gõ một câu: «bolt về khách sạn 120 baht tiền mặt»"
+               @enter="docCau" />
+        <kbd class="panel-ai__phim" title="Ctrl/⌘ + K">⌘K</kbd>
+      </div>
+      <div v-if="banXemTruoc" class="ai__xem ai__xem--ngang">
+        <p class="ai__nhan">Bản xem trước — sửa được từng ô trước khi ghi</p>
+        <dl class="ai__bang ai__bang--o">
+          <div class="ai__o"><dt>Hoạt động</dt><dd>{{ banXemTruoc.activity || '—' }}</dd></div>
+          <div class="ai__o"><dt>Chi phí</dt><dd>{{ banXemTruoc.tripCost || '—' }} {{ kho.currency }}</dd></div>
+          <div class="ai__o"><dt>Thanh toán</dt><dd>{{ banXemTruoc.pay || 'chưa đọc ra' }}</dd></div>
+          <div class="ai__o" :class="{ 'ai__o--doan': banXemTruoc.cat }">
+            <dt>Danh mục · đoán</dt><dd>{{ banXemTruoc.cat || 'chưa đoán được' }}</dd></div>
+        </dl>
+        <div class="ai__nut">
+          <NutBam kieu="chinh" :khoa="!duDeGhi(banXemTruoc)" @click="xacNhanGhi">Xác nhận ghi</NutBam>
+          <NutBam kieu="vien" @click="suaTay">Sửa tay</NutBam>
+          <NutBam v-if="!duDeGhi(banXemTruoc) && khoaAI" kieu="phu"
+                  :khoa="dangHoiAI" @click="hoiAI">
+            {{ dangHoiAI ? '✦ Đang đọc…' : '✦ Hỏi AI câu này' }}
+          </NutBam>
+          <span class="ai__ghi">Không có mạng thì bộ tách nội bộ vẫn chạy, chỉ kém linh hoạt hơn với câu lạ.</span>
+        </div>
+        <p v-if="!duDeGhi(banXemTruoc) && !khoaAI" class="ai__meo">
+          Bộ tách chưa đọc đủ. Dán khoá API ở tab Tổng kết thì hỏi được AI, hoặc bấm Sửa tay.
+        </p>
+        <p v-if="loiAI" class="ai__loi">{{ loiAI }}</p>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -312,14 +350,59 @@ function luu () {
 .ai__meo { margin: var(--sp-1) 0 0; font-size: 12px; color: var(--muc-phu); }
 .ai__loi { margin: var(--sp-1) 0 0; font-size: 12.5px; font-weight: 600; color: var(--loi); }
 
-/* ---------------- Panel laptop ---------------- */
+/* ---------------- Panel laptop (L2) ---------------- */
+.panel-khu { display: flex; flex-direction: column; gap: var(--sp-3); }
 .panel {
   display: flex; flex-direction: column; gap: var(--sp-3);
   background: var(--giay); border: var(--vien); border-radius: var(--bo-the);
-  box-shadow: var(--bong-the-con); padding: var(--sp-4);
+  box-shadow: var(--bong-the-con); padding: var(--sp-3) var(--sp-4);
 }
 .panel__dau { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-2); }
-.panel__meo { font-size: 12px; color: var(--muc-phu); }
-.panel__o { display: flex; flex-direction: column; gap: var(--sp-1); }
-.panel__quy { margin: 0; font-family: var(--font-nhan); font-size: 12px; color: var(--nhan); }
+.panel__ten { color: var(--san-ho); }
+.panel__meo { font-family: var(--font-nhan); font-size: 10px; font-weight: 600; color: var(--nhan); }
+
+/* Bốn ô một hàng — đúng tỷ lệ bản vẽ L2 */
+.panel__hang {
+  display: grid; grid-template-columns: minmax(0, 1.6fr) 130px minmax(0, 1fr) 150px;
+  gap: var(--sp-2); align-items: end;
+}
+.panel__o { display: flex; flex-direction: column; gap: var(--sp-1); min-width: 0; }
+.panel__quy {
+  border: 1.5px dashed var(--vach); border-radius: var(--bo-nho); background: var(--kem);
+  padding: 9px var(--sp-3); min-height: 41px; box-sizing: border-box;
+  font-family: var(--font-nhan); font-size: 13px; font-weight: 600; color: var(--muc-phu);
+  text-align: right; display: flex; align-items: center; justify-content: flex-end;
+}
+.panel__quy--co { color: var(--navy); }
+.panel__chon {
+  font-family: var(--font-noi-dung); font-size: 14px; color: var(--navy);
+  background: var(--giay); border: 1.5px solid var(--navy); border-radius: var(--bo-nho);
+  padding: 9px 8px; min-width: 0; width: 100%;
+}
+.panel__chon:focus-visible { outline: var(--focus); outline-offset: 2px; }
+.panel__chip { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+.panel__cach { flex: 1; }
+
+/* ✦ thẻ riêng */
+.panel-ai {
+  background: var(--giay); border: var(--vien); border-radius: var(--bo-the);
+  box-shadow: var(--bong-the-con); overflow: hidden;
+}
+.panel-ai__dau {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3); background: var(--kem); border-bottom: 1.5px solid var(--vach);
+}
+.panel-ai__sao { color: var(--san-ho); font-weight: 600; }
+.panel-ai__o { flex: 1; min-width: 0; }
+.panel-ai__phim {
+  font-family: var(--font-nhan); font-size: 10px; font-weight: 600;
+  border: 1.5px solid var(--navy); border-radius: 3px; padding: 2px 6px; background: var(--giay);
+}
+.ai__xem--ngang { border: 0; border-radius: 0; padding: var(--sp-3); }
+.ai__bang--o { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-2); }
+.ai__o { border: 1.5px solid var(--vach); border-radius: var(--bo-nho); padding: 8px 10px; background: var(--giay); min-width: 0; }
+.ai__o--doan { border-color: var(--san-ho); border-style: dashed; background: var(--san-ho-nhat); }
+.ai__o dt { font-size: 9px; }
+.ai__o dd { margin: 3px 0 0; }
+.ai__ghi { font-size: 12.5px; color: var(--muc-phu); align-self: center; }
 </style>

@@ -185,6 +185,11 @@ function nhapBackup (e) {
           <BangRon v-if="hienBangRon" class="ve__bang-ron"
                    @dong="dongBangRon" @xem="dongBangRon(); tab = 'tong-ket'" />
 
+          <!-- Panel ghi nhanh laptop (L2): dải ngang ĐẦU vùng nội dung, mở sẵn, không che gì -->
+          <GhiChiNhanh v-if="!laDienThoai && !chuaCoChuyen && (tab === 'hom-nay' || tab === 'ke-hoach')"
+                       kieu="panel" :hom-nay="homNay" class="ve__panel" @da-ghi="daGhi"
+                       @den-ty-gia="denTyGia" />
+
           <!-- Sổ trống nhưng tab Tổng kết vẫn mở được — Kệ vé nằm ở đó (M9) -->
           <ManRong v-if="chuaCoChuyen && tab !== 'tong-ket'"
                    @xong="tab = tabMoDau(kho, homNay)" @xem-ke="tab = 'tong-ket'" />
@@ -193,9 +198,6 @@ function nhapBackup (e) {
           <ManSoTay v-else-if="tab === 'so-tay'" />
           <ManTongKet v-else-if="tab === 'tong-ket'" @den-ty-gia="denTyGia" />
 
-          <GhiChiNhanh v-if="!laDienThoai && !chuaCoChuyen && (tab === 'hom-nay' || tab === 'ke-hoach')"
-                       kieu="panel" :hom-nay="homNay" class="ve__panel" @da-ghi="daGhi"
-                       @den-ty-gia="denTyGia" />
 
           <p class="ve__van-tay">{{ vanTay.dong }} dòng · {{ vanTay.tong }}</p>
         </template>
@@ -258,7 +260,7 @@ function nhapBackup (e) {
   font-size: 11px; letter-spacing: .06em; color: var(--nhan);
 }
 .ve__tabs { position: sticky; bottom: 0; }
-.ve__panel { margin-top: var(--sp-4); max-width: 420px; }
+.ve__panel { margin-bottom: var(--sp-4); }
 
 .fab {
   position: fixed; right: var(--sp-4); bottom: 76px; z-index: 30;
