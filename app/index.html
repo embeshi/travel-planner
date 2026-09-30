@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Kế hoạch du lịch</title>
   <meta name="theme-color" content="#1F3A5F">
+  <script data-che-do>
+    /* Áp chế độ sáng/tối TRƯỚC khi trang hiện — khỏi chớp nền sáng khi đang
+       chọn tối. Lặp lại khoá lưu và luật chọn của src/lib/che-do.js; đổi bên
+       kia thì đổi cả ở đây (che-do.test.js chạy thật đoạn này để canh). */
+    (function () {
+      var c = 'theo-may'
+      try { c = window.localStorage.getItem('ke-hoach-du-lich-che-do') || c } catch (e) {}
+      var toi = c === 'toi'
+      if (c !== 'toi' && c !== 'sang') {
+        try { toi = window.matchMedia('(prefers-color-scheme: dark)').matches } catch (e) {}
+      }
+      document.documentElement.setAttribute('data-che-do', toi ? 'toi' : 'sang')
+    })()
+  </script>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
