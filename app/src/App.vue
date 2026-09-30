@@ -19,6 +19,7 @@ import { fmtVND, fmtFx } from './lib/dinh-dang.js'
 import { tabMoDau, giaiDoan, homNayISO, mocChuyenDi } from './lib/giai-doan.js'
 import { khoiDong, henLuu, trangThai, nguoiDung, dongBoOk, chuTrangThaiLuu, dangXuat, thongBaoDongBo } from './lib/khoi-dong.js'
 import { taiXuong } from './lib/backup.js'
+import { cheDo, datCheDo, cheDoTiepTheo } from './lib/che-do.js'
 
 const TABS = [
   { ma: 'hom-nay', nhan: 'Hôm nay', bieuTuong: '🏠' },
@@ -29,6 +30,9 @@ const TABS = [
 const homNay = ref(new URLSearchParams(location.search).get('ngay') || homNayISO())
 const tab = ref('ke-hoach')
 const hienDangNhap = ref(false)
+
+/* Nút chế độ ở header — lựa chọn của MÁY NÀY, không vào sổ (lib/che-do.js) */
+const NHAN_CHE_DO = { sang: '☀ Sáng', toi: '☾ Tối', 'theo-may': '◐ Theo máy' }
 
 const gd = computed(() => giaiDoan(kho, homNay.value))
 const chuaCoChuyen = computed(() => mocChuyenDi(kho).tu === 'chua-co' && !kho.rows.length)
@@ -167,6 +171,9 @@ function nhapBackup (e) {
         <div class="ve__phai">
           <ConDau :loai="nguoiDung && dongBoOk ? 'duyet' : 'canh-bao'" />
           <TemPhienBan />
+          <button type="button" class="ve__dn ve__che-do"
+                  title="Chế độ hiển thị · bấm để đổi"
+                  @click="datCheDo(cheDoTiepTheo(cheDo))">{{ NHAN_CHE_DO[cheDo] }}</button>
           <!-- Hiện email đang đăng nhập — để không bao giờ nhầm mình đang ở
                tài khoản THẬT hay tài khoản THỬ. Nhầm chỗ này là nhầm đúng chỗ
                nguy hiểm nhất (luật 7). -->
