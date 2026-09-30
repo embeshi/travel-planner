@@ -53,6 +53,10 @@ Bản chạy thật bây giờ là app Vue trong `app/`, do GitHub Actions dựn
 - Triển khai: đẩy lên `main` → workflow dựng `app/dist` → GitHub Pages tại
   embeshi.github.io/travel-planner. Không ai upload file bằng tay nữa.
 - Breakpoint DUY NHẤT: 700px (mobile ≤700, laptop ≥701).
+- Robot giữ ấm: `.github/workflows/giu-am.yml` chạy hằng ngày 04:00 giờ VN, gõ cửa Supabase
+  bằng MỘT truy vấn HEAD đếm dòng (khoá công khai đọc từ `cau-hinh.js`, không tải dữ liệu)
+  để dự án miễn phí không bị ngủ, kiêm lính canh RLS (khách vô danh thấy ≠ 0 dòng → đỏ → email).
+  GitHub tự tắt lịch sau 60 ngày repo không có commit — có email báo, đẩy commit là chạy lại.
 
 ## LUẬT KHÔNG ĐƯỢC PHÁ
 App đang chạy thật với **MỘT tài khoản duy nhất: chủ dự án**. Dữ liệu một chuyến đi
