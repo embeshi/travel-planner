@@ -16,7 +16,7 @@ import ChuyenMoi from './ChuyenMoi.vue'
    · đông vé: kệ cuộn trong khung riêng, không kéo dài cả trang
    · nút rút gọn «＋ CHUYẾN MỚI» để giữ luật mono in hoa ≤3 chữ
    ============================================================ */
-const emit = defineEmits(['doi'])
+const emit = defineEmits(['doi', 'den-ty-gia'])
 const moChuyenMoi = ref(false)
 const dangHoiXoa = ref('')          /* id vé đang chờ xác nhận xoá */
 const cacVe = computed(() => kho.chuyenDaCat)
@@ -80,7 +80,8 @@ function xoa (id) {
       </article>
     </div>
 
-    <ChuyenMoi :mo="moChuyenMoi" @dong="moChuyenMoi = false" @xong="emit('doi')" />
+    <ChuyenMoi :mo="moChuyenMoi" @dong="moChuyenMoi = false" @xong="emit('doi')"
+               @den-ty-gia="emit('den-ty-gia')" />
   </section>
 </template>
 

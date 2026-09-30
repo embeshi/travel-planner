@@ -17,7 +17,8 @@
    · skincare, makeup, essentials — GIỮ NGUYÊN DANH SÁCH MÓN, chỉ bỏ
      tick. Gần 40 món này gõ tay qua nhiều chuyến; dọn mất là bắt người
      dùng gõ lại — đúng điều dự án thề không làm.
-   · currency, bkCurrency — thói quen, sửa được trong mười giây
+   · currency, bkCurrency — giữ làm MẶC ĐỊNH cho lần sau; màn «Cuống vé chưa
+     in» hỏi lại tiền tệ khi tạo chuyến mới và tự lấy tỷ giá (v10.6)
    · activePack, activeNote, packSeed1/2 — trạng thái giao diện vô hại
    ============================================================ */
 export function donSoChoChuyenMoi (kho) {

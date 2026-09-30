@@ -92,3 +92,22 @@ describe('v10.5 · nấc 2 cất vé lên kệ trước khi dọn', () => {
     w.unmount()
   })
 })
+
+describe('v10.6 · cất vé khi còn thiếu tỷ giá thì hỏi trước', () => {
+  it('thiếu tỷ giá → hiện cảnh báo + lối «Điền tỷ giá trước», bấm thì đóng hộp và phát tín hiệu', async () => {
+    kho.rate = null                                   /* sổ mẫu có 61 dòng có tiền */
+    const w = dung()
+    expect(w.find('.cm__thieu').text()).toContain('thiếu tỷ giá THB')
+    expect(w.find('.cm__thieu').text()).toContain('0 ₫')
+    await w.find('.cm__thieu .nut--phu').trigger('click')
+    expect(w.emitted('den-ty-gia')).toHaveLength(1)
+    expect(w.emitted('dong')).toHaveLength(1)
+    expect(kho.rows).toHaveLength(61)                 /* chưa cất, chưa dọn */
+    w.unmount()
+  })
+  it('đủ tỷ giá → không cảnh báo gì', () => {
+    const w = dung()
+    expect(w.find('.cm__thieu').exists()).toBe(false)
+    w.unmount()
+  })
+})

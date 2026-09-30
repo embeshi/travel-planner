@@ -26,6 +26,10 @@ Bản chạy thật bây giờ là app Vue trong `app/`, do GitHub Actions dựn
 - `app/index.html` — app thật · `app/linh-kien.html` — bảng linh kiện (tài liệu sống)
 - `app/src/assets/tokens.css` — chép từ mục 07 bảng thiết kế, nguồn duy nhất của màu và thang
 - `app/src/components/` — linh kiện dùng chung · `app/src/lib/` — logic thuần bê từ v9.6
+- Tab Kế hoạch = `ManKeHoach.vue` (bảng thiết kế L3 hai pane): `BangLichTrinh` bên trái,
+  bên phải ba thẻ bê từ ba khu v9.6 từng bị rơi lúc dựng v10 — `TheTyGia` (sec-fx),
+  `TheGoiBay` (sec-book), `TheDoiTien` (sec-cash). Mọi chỗ báo «thiếu tỷ giá» đều là nút
+  dẫn tới `#the-ty-gia`, không còn ngõ cụt.
 - `vite.config.js` đặt `base: '/travel-planner/'`. Sai chỗ này chỉ lộ ra lúc deploy.
   Dev server chạy ở `http://localhost:5173/travel-planner/`, không phải ở gốc.
 - Tầng AI (✦) chạy theo «cách c»: người dùng tự dán khoá API. Từ v10.3 nhà cung cấp
@@ -153,7 +157,10 @@ lùi-về-v9.6-rồi-lên-lại sẽ xoá nó.
 - Không so sánh sai phạm trù trong lời nhắc tiền bạc.
 - PHẢI GIỮ: Enter thông minh hai chế độ, giáp bộ gõ tiếng Việt (isComposing),
   tự xếp nhóm theo ngày ở cả ba bảng, kéo thả hàng bằng tay nắm, nút ⟳ trị cache,
-  tem phiên bản luôn hiển thị, backup xuất/nhập JSON.
+  tem phiên bản luôn hiển thị, backup xuất/nhập JSON, và BA KHU của tab Kế hoạch:
+  💱 tiền tệ & tỷ giá (cả chuyến lẫn gói bay, có ⟳ tự lấy) · ✈️🏨 gói bay & khách sạn
+  (số đêm tự tính) · 💵 đổi tiền (tỷ giá thực tế, lời nhắc đủ/vượt/mẹo) — v10.0–10.5
+  từng làm rơi cả ba dù kho vẫn giữ đủ dữ liệu.
 
 ## Tài liệu trong repo
 - `docs/prd-ke-hoach-du-lich.html` — PRD đầy đủ cho bản v10

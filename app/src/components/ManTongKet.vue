@@ -13,7 +13,7 @@ import KhoaAI from './KhoaAI.vue'
 import KeVe from './KeVe.vue'
 import { coKhoaAI, khoaAI, keChuyenBangAI, banNhapNoiBo } from '../lib/ai.js'
 
-const emit = defineEmits(['doi'])
+const emit = defineEmits(['doi', 'den-ty-gia'])
 
 const tong = computed(() => tongChiPhiCaChuyen(kho))
 const tb = computed(() => trungBinhMoiNgay(kho))
@@ -86,8 +86,23 @@ async function keBangAI () {
               :canh-bao="viCon < 0" />
     </div>
 
+    <!-- Hai dòng như v9.6: tổng tách theo nguồn, mỗi dòng tự báo thiếu tỷ giá -->
+    <dl class="tk__hai-dong">
+      <div><dt>Lịch trình</dt>
+        <dd>{{ fmtFx(tong.tripFx) }} {{ kho.currency }} →
+          <strong :class="{ 'tk__thieu-so': tong.tripVnd === null && tong.tripFx > 0 }">
+            {{ tong.tripVnd !== null ? fmtVND(tong.tripVnd) : (tong.tripFx > 0 ? 'thiếu tỷ giá ' + kho.currency : '0 ₫') }}
+          </strong></dd></div>
+      <div><dt>Gói bay &amp; KS</dt>
+        <dd>{{ fmtFx(tong.bkFx) }} {{ kho.bkCurrency }} →
+          <strong :class="{ 'tk__thieu-so': tong.bkVnd === null && tong.bkFx > 0 }">
+            {{ tong.bkVnd !== null ? fmtVND(tong.bkVnd) : (tong.bkFx > 0 ? 'thiếu tỷ giá ' + kho.bkCurrency : '0 ₫') }}
+          </strong></dd></div>
+    </dl>
+
     <p v-if="tong.thieuTyGia.length" class="tk__thieu">
       Thiếu tỷ giá {{ tong.thieuTyGia.join(', ') }} — tổng phía trên chưa đủ.
+      <NutBam kieu="phu" @click="emit('den-ty-gia')">Điền tỷ giá →</NutBam>
     </p>
 
     <!-- Ngân sách dự trù -->
@@ -167,7 +182,7 @@ async function keBangAI () {
     <div v-if="banNhap" class="tk__ban-in" aria-hidden="true">{{ banNhap }}</div>
 
     <!-- 🎫 Kệ vé (M9) — chuyến sau bắt đầu từ đây, chuyến cũ nằm lại đây -->
-    <KeVe @doi="chuyenMoiXong" />
+    <KeVe @doi="chuyenMoiXong" @den-ty-gia="emit('den-ty-gia')" />
   </section>
 </template>
 
@@ -179,7 +194,15 @@ async function keBangAI () {
   letter-spacing: var(--nhan-gian); text-transform: uppercase; color: var(--san-ho);
 }
 .tk__kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--sp-3); }
-.tk__thieu { margin: 0; color: var(--loi); font-size: 13px; font-weight: 600; }
+.tk__thieu { margin: 0; color: var(--loi); font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+.tk__hai-dong { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-2); }
+.tk__hai-dong > div { display: flex; align-items: baseline; gap: var(--sp-2); font-size: 13px;
+  background: var(--giay); border: 1.5px solid var(--vach); border-radius: var(--bo-nho); padding: 8px var(--sp-3); }
+.tk__hai-dong dt { font-family: var(--font-nhan); font-size: 10px; font-weight: 600; letter-spacing: var(--nhan-gian);
+  text-transform: uppercase; color: var(--nhan); white-space: nowrap; }
+.tk__hai-dong dd { margin: 0; font-family: var(--font-nhan); font-size: 12px; }
+.tk__thieu-so { color: var(--loi); }
 .tk__du-tru { display: flex; flex-direction: column; gap: var(--sp-1); max-width: 260px; }
 
 .tk__khu {

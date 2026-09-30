@@ -61,6 +61,10 @@ function tickMon (o) { o.m.packed = true; baoDoi() }
       <TheKPI nhan="Ví tiền mặt còn" :so="fmtFx(viCon) + ' ' + kho.currency"
               phu="Chỉ tính dòng chọn Tiền mặt" :canh-bao="viCon < 0" />
     </div>
+    <!-- Hết ngõ cụt: «chưa có tỷ giá» phải có lối đi tiếp -->
+    <button v-if="!kho.rate" type="button" class="hn__lien-ket" @click="emit('sang-tab', 'ty-gia')">
+      Chưa có tỷ giá {{ kho.currency }} — điền ngay →
+    </button>
 
     <h3 class="hn__khu">
       Lịch trình hôm nay

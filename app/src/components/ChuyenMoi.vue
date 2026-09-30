@@ -4,6 +4,7 @@ import { kho } from '../lib/kho.js'
 import { donSoChoChuyenMoi } from '../lib/chuyen-moi.js'
 import { catChuyenLenKe, coGiDeCat } from '../lib/ke-ve.js'
 import { taiXuong } from '../lib/backup.js'
+import { tongChiPhiCaChuyen } from '../lib/tong-hop.js'
 import NutBam from './NutBam.vue'
 
 /* ============================================================
@@ -18,7 +19,7 @@ import NutBam from './NutBam.vue'
    phải nói thẳng điều đó, không để người dùng tưởng còn nút undo.
    ============================================================ */
 const props = defineProps({ mo: { type: Boolean, default: false } })
-const emit = defineEmits(['dong', 'xong'])
+const emit = defineEmits(['dong', 'xong', 'den-ty-gia'])
 
 const hop = ref(null)
 const tenFileDaXuat = ref('')
@@ -31,6 +32,10 @@ watch(() => props.mo, (v) => {
 })
 
 const soDong = computed(() => kho.rows.length)
+/* v10.6: cất vé khi còn thiếu tỷ giá thì tổng trên vé sẽ là 0 ₫ cho phần đó —
+   hỏi trước, cho một lối đi điền tỷ giá, nhưng không cấm. */
+const thieuTyGia = computed(() => tongChiPhiCaChuyen(kho).thieuTyGia)
+function diDienTyGia () { emit('dong'); emit('den-ty-gia') }
 
 function xuat () {
   loi.value = ''
@@ -71,6 +76,12 @@ function batDau () {
             chỉ bỏ dấu tick.</li>
         <li>Nên gửi file backup ra khỏi máy (tự email cho mình / thả Drive).</li>
       </ul>
+
+      <div v-if="thieuTyGia.length" class="cm__thieu">
+        <strong>Đang thiếu tỷ giá {{ thieuTyGia.join(', ') }}</strong> — tổng trên vé sẽ là
+        0 ₫ cho phần đó. Điền tỷ giá trước?
+        <NutBam kieu="phu" @click="diDienTyGia">Điền tỷ giá trước</NutBam>
+      </div>
 
       <!-- Nấc 1 · ép xuất backup -->
       <div class="cm__buoc" :class="{ 'cm__buoc--xong': tenFileDaXuat }">
@@ -115,6 +126,9 @@ function batDau () {
 .cm__da-xuat { margin: 0; font-size: 13px; color: var(--duyet); font-weight: 600; }
 .cm__da-xuat code { font-family: var(--font-nhan); font-size: 11px; }
 .cm__loi { margin: 0; color: var(--loi); font-size: 13px; font-weight: 600; }
+.cm__thieu { font-size: 13px; line-height: 1.6; color: var(--navy); background: var(--nghe-nhat);
+  border: 1.5px dashed var(--nghe); border-radius: var(--bo-nho); padding: var(--sp-2) var(--sp-3);
+  display: flex; flex-direction: column; gap: var(--sp-2); align-items: flex-start; }
 .cm__hang-nut { display: flex; gap: var(--sp-2); flex-wrap: wrap; }
 .cm__khoa-vi { margin: 0; font-size: 12px; color: var(--khoa-muc); }
 </style>

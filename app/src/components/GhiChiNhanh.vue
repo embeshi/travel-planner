@@ -17,7 +17,7 @@ const props = defineProps({
   /* 'sheet' cho điện thoại · 'panel' cho laptop */
   kieu: { type: String, default: 'sheet' }
 })
-const emit = defineEmits(['dong', 'da-ghi'])
+const emit = defineEmits(['dong', 'da-ghi', 'den-ty-gia'])
 
 const tien = ref('')
 const ten = ref('')
@@ -129,7 +129,13 @@ function luu () {
         <span class="tien__so">{{ deHien(tien) }}</span>
         <span class="tien__dv">{{ kho.currency }}</span>
       </div>
-      <p class="tien__quy">{{ quyDoi ? '≈ ' + quyDoi : 'chưa có tỷ giá ' + kho.currency }}</p>
+      <p class="tien__quy">
+        <template v-if="quyDoi">≈ {{ quyDoi }}</template>
+        <template v-else-if="kho.rate">—</template>
+        <button v-else type="button" class="tien__thieu" @click="emit('den-ty-gia')">
+          chưa có tỷ giá {{ kho.currency }} — điền ngay →
+        </button>
+      </p>
 
       <ONhap v-model="ten" placeholder="Tên khoản chi (không bắt buộc)" />
 
@@ -195,7 +201,13 @@ function luu () {
       <label class="nhan-mono">Chi phí ({{ kho.currency }})</label>
       <ONhap v-model="tien" type="number" placeholder="0" can-phai @enter="luu" />
     </div>
-    <p class="panel__quy">{{ quyDoi ? '≈ ' + quyDoi : '—' }}</p>
+    <p class="panel__quy">
+      <template v-if="quyDoi">≈ {{ quyDoi }}</template>
+      <template v-else-if="kho.rate">—</template>
+      <button v-else type="button" class="tien__thieu" @click="emit('den-ty-gia')">
+        chưa có tỷ giá {{ kho.currency }} — điền ngay →
+      </button>
+    </p>
 
     <div class="hang">
       <Chip v-for="d in DANH_MUC" :key="d.ma" :bieu-tuong="d.bt" :chon="cat === d.ma"
@@ -262,6 +274,9 @@ function luu () {
 .tien__so { font-family: var(--font-nhan); font-size: 40px; font-weight: 600; line-height: 1; }
 .tien__dv { font-family: var(--font-nhan); font-size: 16px; color: var(--muc-phu); }
 .tien__quy { margin: 0; font-size: 13px; color: var(--muc-phu); }
+.tien__thieu { font: inherit; font-weight: 600; color: var(--san-ho); background: transparent;
+  border: 0; padding: 0; cursor: pointer; text-decoration: underline dotted; }
+.tien__thieu:focus-visible { outline: var(--focus); outline-offset: 2px; }
 
 .hang { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 

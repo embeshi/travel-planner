@@ -1,9 +1,9 @@
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import ThanhTab from './components/ThanhTab.vue'
 import ConDau from './components/ConDau.vue'
 import TemPhienBan from './components/TemPhienBan.vue'
-import BangLichTrinh from './components/BangLichTrinh.vue'
+import ManKeHoach from './components/ManKeHoach.vue'
 import ManHomNay from './components/ManHomNay.vue'
 import ManSoTay from './components/ManSoTay.vue'
 import ManTongKet from './components/ManTongKet.vue'
@@ -14,6 +14,7 @@ import GhiChiNhanh from './components/GhiChiNhanh.vue'
 import ToastHoanTac from './components/ToastHoanTac.vue'
 import { kho, applyData, ruotCuaBackup, danhMucCua } from './lib/kho.js'
 import { rowTotal } from './lib/xep-dong.js'
+import { tongChiPhiCaChuyen } from './lib/tong-hop.js'
 import { fmtVND, fmtFx } from './lib/dinh-dang.js'
 import { tabMoDau, giaiDoan, homNayISO, mocChuyenDi } from './lib/giai-doan.js'
 import { khoiDong, henLuu, trangThai, nguoiDung, dongBoOk, chuTrangThaiLuu, dangXuat } from './lib/khoi-dong.js'
@@ -31,10 +32,28 @@ const hienDangNhap = ref(false)
 
 const gd = computed(() => giaiDoan(kho, homNay.value))
 const chuaCoChuyen = computed(() => mocChuyenDi(kho).tu === 'chua-co' && !kho.rows.length)
-const vanTay = computed(() => ({
-  dong: kho.rows.length,
-  tong: fmtVND(kho.rows.reduce((s, r) => s + rowTotal(r), 0) * (kho.rate || 0))
-}))
+/* Vân tay đầu trang dùng CHUNG công thức với Tổng kết (tongChiPhiCaChuyen):
+   thiếu tỷ giá thì nói «thiếu tỷ giá», không in 0 ₫ giả. */
+const vanTay = computed(() => {
+  const t = tongChiPhiCaChuyen(kho)
+  return {
+    dong: kho.rows.length,
+    tong: t.thieuTyGia.length ? 'thiếu tỷ giá ' + t.thieuTyGia.join(', ') : fmtVND(t.tong)
+  }
+})
+
+/* Hết ngõ cụt: mọi chỗ báo «thiếu tỷ giá» đều dẫn thẳng tới thẻ 💱 ở Kế hoạch */
+async function denTyGia () {
+  moSheet.value = false
+  tab.value = 'ke-hoach'
+  await nextTick()
+  const el = document.getElementById('the-ty-gia')
+  if (!el) return
+  el.scrollIntoView({ block: 'center' })
+  el.classList.add('the--nhay')
+  setTimeout(() => el.classList.remove('the--nhay'), 1600)
+}
+function sangTab (x) { if (x === 'ty-gia') return denTyGia(); tab.value = x }
 
 /* ---------------- Băng-rôn hoàn tất: hiện ĐÚNG MỘT LẦN ---------------- */
 const KHOA_BANG_RON = 'ke-hoach-du-lich-v10-bangron'
@@ -162,13 +181,14 @@ function nhapBackup (e) {
           <!-- Sổ trống nhưng tab Tổng kết vẫn mở được — Kệ vé nằm ở đó (M9) -->
           <ManRong v-if="chuaCoChuyen && tab !== 'tong-ket'"
                    @xong="tab = tabMoDau(kho, homNay)" @xem-ke="tab = 'tong-ket'" />
-          <ManHomNay v-else-if="tab === 'hom-nay'" :hom-nay="homNay" @sang-tab="tab = $event" />
-          <BangLichTrinh v-else-if="tab === 'ke-hoach'" />
+          <ManHomNay v-else-if="tab === 'hom-nay'" :hom-nay="homNay" @sang-tab="sangTab" />
+          <ManKeHoach v-else-if="tab === 'ke-hoach'" />
           <ManSoTay v-else-if="tab === 'so-tay'" />
-          <ManTongKet v-else-if="tab === 'tong-ket'" />
+          <ManTongKet v-else-if="tab === 'tong-ket'" @den-ty-gia="denTyGia" />
 
           <GhiChiNhanh v-if="!laDienThoai && !chuaCoChuyen && (tab === 'hom-nay' || tab === 'ke-hoach')"
-                       kieu="panel" :hom-nay="homNay" class="ve__panel" @da-ghi="daGhi" />
+                       kieu="panel" :hom-nay="homNay" class="ve__panel" @da-ghi="daGhi"
+                       @den-ty-gia="denTyGia" />
 
           <p class="ve__van-tay">{{ vanTay.dong }} dòng · {{ vanTay.tong }}</p>
         </template>
@@ -178,7 +198,7 @@ function nhapBackup (e) {
               aria-label="Ghi một khoản chi" @click="moSheet = true">＋</button>
 
       <GhiChiNhanh v-if="laDienThoai" kieu="sheet" :mo="moSheet" :hom-nay="homNay"
-                   @dong="moSheet = false" @da-ghi="daGhi" />
+                   @dong="moSheet = false" @da-ghi="daGhi" @den-ty-gia="denTyGia" />
 
       <div v-if="toast" class="ve__toast">
         <ToastHoanTac :hien="!!toast" :noi-dung="toast.noiDung || 'Đã ghi ✓'"
@@ -191,6 +211,12 @@ function nhapBackup (e) {
   </div>
 </template>
 
+<style>
+/* Nháy nhẹ thẻ tỷ giá khi được dẫn tới từ một chỗ báo thiếu — không scoped
+   vì thẻ nằm trong linh kiện con. */
+.the--nhay { animation: the-nhay 1600ms var(--diu); }
+@keyframes the-nhay { 0%, 60% { outline: 3px solid var(--nghe); outline-offset: 4px } 100% { outline: 3px solid transparent } }
+</style>
 <style scoped>
 .ve { min-height: 100dvh; display: flex; flex-direction: column; background: var(--kem); }
 .cho { padding: var(--sp-8) var(--sp-4); text-align: center; color: var(--muc-phu); }
